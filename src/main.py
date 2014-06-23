@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import pygame, sys, glob
 from pygame import *
-from SpriteAnimation import SpriteAnimation
-from Player import Player
+from spriteanimation import SpriteAnimation
+from player import Player
 import time
 import ntpath
 
@@ -187,6 +187,16 @@ kickDamage = 2
 hitDefended = 0.4
 powerDamage = 10
 powerDamageDefended = 2
+player1.punchDamage = punchDamage
+player2.punchDamage = punchDamage
+player1.kickDamage = kickDamage
+player2.kickDamage = kickDamage
+player1.hitDefended = hitDefended
+player2.hitDefended = hitDefended
+player1.powerDamage = powerDamage
+player2.powerDamage = powerDamage
+player1.powerDamageDefended = powerDamageDefended
+player2.powerDamageDefended = powerDamageDefended
 HP = 140
 XP = 30
 player1.HP = HP
@@ -501,312 +511,6 @@ def loadMusic (music):
     #pygame.mixer.music.play(-1,9)
     pygame.mixer.music.play(-1)
 
-def playPlayer1(eventArg):
-    global powerDamage
-    global powerDamageDefended
-    global punchDamage
-    global kickDamage
-    global hitDefended
-    global inicio
-    if player1.HP>0:
-        event = eventArg
-        if event.type == KEYDOWN:
-            #Goku
-            if event.key == K_s:
-                player1.acao = "down"
-                player1.pos = 1
-                player1.movey+=1
-            if event.key == K_w:
-                player1.acao = "up"
-                player1.pos = 1
-                player1.movey-=1
-            
-            if event.key == K_p:
-                player1.acao = "defend"
-                player1.pos = 1
-                player1.Defending = True
-            if event.key == K_m:
-                global background
-                global scenery
-                background = pygame.image.load(scenery[0])
-            if player1.facingRight == True:
-                if event.key == K_d:
-                    player1.acao = "right"
-                    player1.pos = 1
-                    player1.movex+=1
-                if event.key == K_a:
-                    player1.acao = "up"
-                    player1.pos = 1
-                    player1.movex-=1
-            if player1.facingRight == False:
-                if event.key == K_d:
-                    player1.acao = "up"
-                    player1.pos = 1
-                    player1.movex+=1
-                if event.key == K_a:
-                    player1.acao = "right"
-                    player1.pos = 1
-                    player1.movex-=1
-            if event.key == K_u:
-                if player1.XP > 0:
-                    player1.acao = "kameham-1"
-                    power1.acao = "kame"
-                    player1.pressed = True
-                    power1.pressed = True
-                    player1.pos = 1
-                    player1.Attacking = True
-                    player1.Defending = False
-                    if player1.facingRight == True:
-                        player1AttackRect = Rect(player1.x+30, player1.y+20, 1000, 60)
-                        #pygame.draw.rect(screen, (0,255,0), player1AttackRect)
-                    else:
-                        player1AttackRect = Rect(player1.x-1000, player1.y+20, 1000, 60)
-                        #pygame.draw.rect(screen, (0,255,0), player1AttackRect)
-                    if player1AttackRect.colliderect(player2.Rect) == True:
-                        if player2.Defending == False:
-                            player2.HP -= powerDamage
-                            player2.acao = "hited"
-                            inicio = time.time()
-                        if player2.Defending == True and player2.Attacking == False:
-                            player2.HP -= powerDamageDefended
-                    player1.XP-=10
-            if event.key == K_i:
-                player1.acao = "punch"
-                player1.pressed = True
-                player1.pos = 1
-                player1.Attacking = True
-                player1.Defending = False
-                if player1.facingRight == True:
-                    player1AttackRect = Rect(player1.x+30, player1.y, 35, 70)
-                    #pygame.draw.rect(screen, (0,0,255), player1AttackRect)
-                if player1.facingRight == False:
-                    player1AttackRect = Rect(player1.x-5, player1.y, 35, 70)
-                    #pygame.draw.rect(screen, (0,0,255), player1AttackRect)
-                if player1AttackRect.colliderect(player2.Rect) == True:
-                    if player2.Defending == False:
-                        player2.HP -= punchDamage
-                        player2.acao = "hited"
-                        inicio = time.time()
-                    if player2.Defending == True and player2.Attacking == False:
-                        player2.HP -= hitDefended
-            if event.key == K_o:
-                player1.acao = "kick"
-                player1.pressed = True
-                player1.pos = 1
-                player1.Attacking = True
-                player1.Defending = False
-                if player1.facingRight == True:
-                    player1AttackRect = Rect(player1.x+30, player1.y, 35, 70)
-                    #pygame.draw.rect(screen, (255,0,0), player1AttackRect)
-                if player1.facingRight == False:
-                    player1AttackRect = Rect(player1.x-5, player1.y, 35, 70)
-                    #pygame.draw.rect(screen, (255,0,0), player1AttackRect)
-                if player1AttackRect.colliderect(player2.Rect) == True:
-                    if player2.Defending == False:
-                        player2.HP -= kickDamage
-                        player2.acao = "hited"
-                        inicio = time.time()
-                    if player2.Defending == True and player2.Attacking == False:
-                        player2.HP -= hitDefended
-
-            if event.key == K_j:
-                player1.acao = "load"
-                player1.pressed = True
-                player1.pos = 1
-                player1.XP+= 5 
-            if event.key == K_ESCAPE:
-                global gameState
-                global previousGameState
-                gameState = 1
-                previousGameState = 2
-                
-        if event.type == KEYUP:
-            if event.key == K_s:
-                player1.acao = "down"
-                player1.pos = 0
-                player1.movey=0
-            if event.key == K_w:
-                player1.acao = "up"
-                player1.pos = 0
-                player1.movey=0
-            if event.key == K_p:
-                player1.acao = "defend"
-                player1.pos = 0
-                player1.Defending = False
-            if event.key == K_i:
-                player1.Attacking = False
-            if player1.facingRight  == True:
-                if event.key == K_d:
-                    player1.acao = "right"
-                    player1.pos = 0
-                    player1.movex=0
-                if event.key == K_a:
-                    player1.acao = "up"
-                    player1.pos = 0
-                    player1.movex=0
-            if player1.facingRight  == False:
-                if event.key == K_a:
-                    player1.acao = "right"
-                    player1.pos = 0
-                    player1.movex=0
-                if event.key == K_d:
-                    player1.acao = "up"
-                    player1.pos = 0
-                    player1.movex=0
-
-            if event.key == K_u:
-                player1.acao = "kameham-1"
-                power1.acao = "void"
-                player1.pos = 0
-                player1.movex=0
-
-def playPlayer2(eventArg):
-    global inicio
-    global powerDamage
-    global powerDamageDefended
-    global punchDamage
-    global kickDamage
-    global hitDefended
-    if player2.HP>0:
-        event = eventArg
-        #Vegeta
-        if event.type == KEYDOWN:
-            if event.key == K_DOWN:
-                player2.acao = "down"
-                player2.pos = 1
-                player2.movey+=1
-            if event.key == K_UP:
-                player2.acao = "up"
-                player2.pos = 1
-                player2.movey-=1
-            if player2.facingRight == False:
-                if event.key == K_LEFT:
-                    player2.acao = "right"
-                    player2.pos = 1
-                    player2.movex-=1
-                if event.key == K_RIGHT:
-                    player2.acao = "up"
-                    player2.pos = 1
-                    player2.movex+=1
-            if player2.facingRight == True:
-                if event.key == K_LEFT:
-                    player2.acao = "up"
-                    player2.pos = 1
-                    player2.movex-=1
-                if event.key == K_RIGHT:
-                    inicio = time.time()
-                    player2.acao = "right"
-                    player2.pos = 1
-                    player2.movex+=1
-            if event.key == K_KP5:
-                player2.acao = "defend"
-                player2.pos = 1
-                player2.Defending = True
-            if event.key == K_KP8 or event.key == K_8:
-                inicio = time.time()
-                player2.acao = "punch"
-                player2.pos = 1
-                player2.pressed = True
-                player2.Attacking = True
-                player2.Defending = False
-                if player2.facingRight == False:
-                    player2AttackRect = Rect(player2.x-15, player2.y, 35, 70)
-                    #pygame.draw.rect(screen, (0,0,255), player2AttackRect)
-                elif player2.facingRight == True:
-                    player2AttackRect = Rect(player2.x+30, player2.y, 35, 70)
-                    #pygame.draw.rect(screen, (0,0,255), player2AttackRect)
-                if player2AttackRect.colliderect(player1.Rect) == True:
-                    if player1.Defending == False:
-                        player1.HP -= punchDamage
-                        player1.acao = "hited"
-                    if player1.Defending == True and player1.Attacking == False:
-                        player1.HP -= hitDefended
-            if event.key == K_KP9:
-                inicio = time.time()
-                player2.acao = "kick"
-                player2.pos = 1
-                player2.pressed = True
-                player2.Attacking = True
-                player2.Defending = False
-                if player2.facingRight == False:
-                    player2AttackRect = Rect(player2.x-5, player2.y, 35, 70)
-                    #pygame.draw.rect(screen, (0,0,255), player2AttackRect)
-                if player2.facingRight == True:
-                    player2AttackRect = Rect(player2.x+30, player2.y, 35, 70)
-                    #pygame.draw.rect(screen, (0,0,255), player2AttackRect)
-                if player2AttackRect.colliderect(player1.Rect) == True:
-                    if player1.Defending == False:
-                        player1.HP -= kickDamage
-                        player1.acao = "hited"
-                    if player1.Defending == True and player1.Attacking == False:
-                        player1.HP -= hitDefended
-            if event.key == K_KP7 or event.key == K_9:
-                if player2.XP > 0:
-                    inicio = time.time()
-                    player2.acao = "kameham"
-                    power2.acao = "kame"
-                    player2.pressed = True
-                    power2.pressed = True
-                    player2.pos = 1
-                    player2.Attacking = True
-                    player2.Defending = False
-                    if player2.facingRight == False:
-                        player2AttackRect = Rect(player2.x-950, player2.y+10, 1000, 60)
-                        #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-                    elif player2.facingRight == True:
-                        player2AttackRect = Rect(player2.x+45, player2.y+10, 1000, 60)
-                        #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-                    if player2AttackRect.colliderect(player1.Rect) == True:
-                        if player1.Defending == False:
-                            player1.HP -= powerDamage
-                            player1.acao = "hited"
-                        if player1.Defending == True and player1.Attacking == False:
-                            player1.HP -= powerDamageDefended
-                    player2.XP-=10
-            if event.key == K_KP4:
-                player2.acao = "load"
-                player2.pressed = True
-                player2.pos = 1
-                player2.XP+= 5 
-                inicio = time.time()
-            if event.key == K_ESCAPE:
-                global gameState
-                global previousGameState
-                gameState = 1
-                previousGameState = 2
-
-        if event.type == KEYUP:
-            if event.key == K_DOWN:
-                player2.acao = "down"
-                player2.pos = 0
-                player2.movey=0
-            if event.key == K_UP:
-                player2.acao = "up"
-                player2.pos = 0
-                player2.movey=0
-            if event.key == K_KP5:
-                player2.acao = "defend"
-                player2.pos = 0
-                player2.Defending = False
-            if player2.facingRight == False:
-                if event.key == K_LEFT:
-                    player2.acao = "right"
-                    player2.pos = 0
-                    player2.movex=0
-                if event.key == K_RIGHT:
-                    player2.acao = "up"
-                    player2.pos = 0
-                    player2.movex=0
-            if player2.facingRight == True:
-                if event.key == K_LEFT:
-                    player2.acao = "up"
-                    player2.pos = 0
-                    player2.movex=0
-                if event.key == K_RIGHT:
-                    player2.acao = "right"
-                    player2.pos = 0
-                    player2.movex=0
-
 def playPC():
     if player2.XP > 20:
         player2.acao = "kameham"
@@ -837,19 +541,24 @@ def playPC():
 
 def playLoop():
     global vsPC
-    global inicio
     screen.blit(background, (0,0))
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
         if vsPC == False:
-            playPlayer1(event)
-            playPlayer2(event)
+            player1.playPlayer1(event,player2,power1)
+            player2.playPlayer2(event,player1,power2)
         #playPlayer2(event)
         elif vsPC == True:
-            playPlayer1(event)
+            player1.playPlayer1(event,player2,power1)
             #playPC() 
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                global gameState
+                global previousGameState
+                gameState = 1
+                previousGameState = 2
     #Virar automaticamente
     if player1.x > player2.x:
         player1.facingRight = False
@@ -859,7 +568,7 @@ def playLoop():
         player2.facingRight = False
 
     if player2.movex or player2.movey !=0:
-        inicio = time.time()
+        player2.inicio = time.time()
     
     #Movimento dos Jogadores
     global width
@@ -944,29 +653,27 @@ def playLoop():
     if player2.HP <= 0:
         player2.acao = "lose"
         if cronometrar == True:
-            inicio = time.time()
+            player2.inicio = time.time()
             cronometrar = False
-        if time.time()-inicio>1:
+        if time.time()-player2.inicio>1:
             screen.blit(player1Win, (300,150))
     if player1.HP <= 0:
         player1.acao = "lose"
         if cronometrar == True:
-            inicio = time.time()
+            player2.inicio = time.time()
             cronometrar = False
-        if time.time()-inicio>1:
+        if time.time()-player2.inicio>1:
             screen.blit(player2Win, (320,200))
     
     if player2.Defending== True:
-        inicio = time.time()
-    if time.time()-inicio>0.4 and player2.HP>0:
+        player2.inicio = time.time()
+    if time.time()-player2.inicio>0.4 and player2.HP>0:
         player2.acao = "down"
-        inicio = time.time()+1000
+        player2.inicio = time.time()+1000
     
     power1.update(player1.pos,screen)
     power2.update(player2.pos,screen)
     pygame.display.update()
-    #print 'HP1 '+str(player1.HP)+' HP2 '+str(player2.HP)
-    #print 'XP1 '+str(player1.XP)+' XP2 '+str(player2.XP)
 
 show_splashscreen()
 loadMusic(song[0])
