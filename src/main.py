@@ -17,8 +17,8 @@ menu_image = "../resources/imagens/Openning/goku-vs-vegeta-2.jpg"
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-#screen = pygame.display.set_mode(resolution)
+#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 #background_openning = pygame.transform.flip(background_openning, 1,0)
@@ -559,118 +559,30 @@ def playLoop():
                 global previousGameState
                 gameState = 1
                 previousGameState = 2
-    #Virar automaticamente
-    if player1.x > player2.x:
-        player1.facingRight = False
-        player2.facingRight = True
-    if player1.x < player2.x:
-        player1.facingRight = True
-        player2.facingRight = False
-
-    if player2.movex or player2.movey !=0:
-        player2.inicio = time.time()
-    
-    #Movimento dos Jogadores
+    global cronometrar
     global width
     global height
-    if player1.facingRight == True:
-        if player1.movex == -1 and player1.x>0:
-            player1.x += player1.movex * delta
-        if player1.movex == 1 and player1.x<width-50:
-            player1.x += player1.movex * delta
-    if player1.facingRight == False:
-        if player1.movex == -1 and player1.x>0:
-            player1.x += player1.movex * delta
-        if player1.movex == 1 and player1.x<width-50:
-            player1.x += player1.movex * delta
-    if player2.facingRight == False:
-        if player2.movex == -1 and player2.x>0:
-            player2.x += player2.movex * delta
-        if player2.movex == 1 and player2.x<width-50:
-            player2.x += player2.movex * delta
-    if player2.facingRight == True:
-        if player2.movex == -1 and player2.x>0:
-            player2.x += player2.movex * delta
-        if player2.movex == 1 and player2.x<width-50:
-            player2.x += player2.movex * delta
-    if player1.movey == 1 and player1.y<height-70:
-        player1.y += player1.movey * delta
-    if player1.movey == -1 and player1.y>0:
-        player1.y += player1.movey * delta
-    if player2.movey == 1 and player2.y<height-70:
-        player2.y += player2.movey * delta
-    if player2.movey == -1 and player2.y>0:
-        player2.y += player2.movey * delta
-    
-    #Adaptacao do Retangulo do player 1 para quando ele vai para frente
-    if player1.acao != "right":
-        player1.Rect = Rect(player1.x, player1.y, 35, 70)
-    elif player1.acao == "right" and player1.facingRight == True:
-        player1.Rect = Rect(player1.x+30, player1.y, 35, 70)
-    elif player1.acao == "right" and player1.facingRight == False:
-        player1.Rect = Rect(player1.x, player1.y, 35, 70)
-    player2.Rect = Rect(player2.x, player2.y, 35, 70)
-
-    #Posicionamento dos Poderes
-    if (player1.facingRight == True):
-        power1.x = player1.x+45
-        power1.y = player1.y+25
-    else:
-        power1.x = player1.x-930
-        power1.y = player1.y+20
-    
-    if (player2.facingRight == False):
-        power2.x = player2.x-910
-        power2.y = player2.y+5
-    elif (player2.facingRight == True):
-        power2.x = player2.x+50
-        power2.y = player2.y+5
-
-    #Barras de Hp e XP
-    player1HPRect = Rect(80 , 20, player1.HP*2, 20)
-    player1.XPRect = Rect(80 , 60, player1.XP*2, 20)
-    player2HPRect = Rect(screenWidth-80, 20, -player2.HP*2, 20)
-    player2.XPRect = Rect(screenWidth-80, 60, -player2.XP*2, 20)
-    global player2Profile
+    global player1Win
     global player1Profile
+    global player2Profile
+    player1.TurnAround1(player2)
+    player1.movementInsideScreen1(width,height,delta)
+    player2.movementInsideScreen2(width,height,delta)
+    player1.powerPlacing1(power1)
+    player2.powerPlacing2(power2)
+    player1.rect1()
+    player2.rect2()
+    player1.hPRect1(screen)
+    player2.hPRect2(screen,width)
+    
+    #Animacao de derrota
+    player2.standUpPosition2()
+    player2.defeated2(screen,cronometrar,player1Win)
     screen.blit(player2Profile, (screenWidth-70,20))
     screen.blit(player1Profile, (0,20))
-    if player1.HP >=0:
-        pygame.draw.rect(screen, (255,0,0), player1HPRect)
-    if player2.HP >=0:
-        pygame.draw.rect(screen, (255,0,0), player2HPRect)
-    pygame.draw.rect(screen, (0,0,255), player1.XPRect)
-    pygame.draw.rect(screen, (0,0,255), player2.XPRect)
-    
     clock.tick(60)
     player2.update(player2.pos,screen)
     player1.update(player1.pos,screen)
-    #pygame.draw.rect(screen, (255,255,255), player1.Rect)
-    #pygame.draw.rect(screen, (255,255,255), player2.Rect)
-
-    #Animacao de derrota
-    global cronometrar
-    if player2.HP <= 0:
-        player2.acao = "lose"
-        if cronometrar == True:
-            player2.inicio = time.time()
-            cronometrar = False
-        if time.time()-player2.inicio>1:
-            screen.blit(player1Win, (300,150))
-    if player1.HP <= 0:
-        player1.acao = "lose"
-        if cronometrar == True:
-            player2.inicio = time.time()
-            cronometrar = False
-        if time.time()-player2.inicio>1:
-            screen.blit(player2Win, (320,200))
-    
-    if player2.Defending== True:
-        player2.inicio = time.time()
-    if time.time()-player2.inicio>0.4 and player2.HP>0:
-        player2.acao = "down"
-        player2.inicio = time.time()+1000
-    
     power1.update(player1.pos,screen)
     power2.update(player2.pos,screen)
     pygame.display.update()

@@ -169,6 +169,112 @@ class Player(SpriteAnimation):
                     self.pos = 0
                     self.movex=0
     
+    def TurnAround1(self,player2):
+        """
+        Virar automaticamente
+        """
+        if self.x > player2.x:
+            self.facingRight = False
+            player2.facingRight = True
+        if self.x < player2.x:
+            self.facingRight = True
+            player2.facingRight = False
+
+    def movementInsideScreen1(self,width,height,delta):
+        if self.facingRight == True:
+            if self.movex == -1 and self.x>0:
+                self.x += self.movex * delta
+            if self.movex == 1 and self.x<width-50:
+                self.x += self.movex * delta
+        if self.facingRight == False:
+            if self.movex == -1 and self.x>0:
+                self.x += self.movex * delta
+            if self.movex == 1 and self.x<width-50:
+                self.x += self.movex * delta
+        if self.movey == 1 and self.y<height-70:
+            self.y += self.movey * delta
+        if self.movey == -1 and self.y>0:
+            self.y += self.movey * delta
+
+    def movementInsideScreen2(self,width,height,delta):
+        if self.facingRight == False:
+            if self.movex == -1 and self.x>0:
+                self.x += self.movex * delta
+            if self.movex == 1 and self.x<width-50:
+                self.x += self.movex * delta
+        if self.facingRight == True:
+            if self.movex == -1 and self.x>0:
+                self.x += self.movex * delta
+            if self.movex == 1 and self.x<width-50:
+                self.x += self.movex * delta
+        if self.movey == 1 and self.y<height-70:
+            self.y += self.movey * delta
+        if self.movey == -1 and self.y>0:
+            self.y += self.movey * delta
+
+    def powerPlacing1(self,power1):
+        #Posicionamento dos Poderes
+        if (self.facingRight == True):
+            power1.x = self.x+45
+            power1.y = self.y+25
+        else:
+            power1.x = self.x-930
+            power1.y = self.y+20
+    def powerPlacing2(self,power2):
+        if (self.facingRight == False):
+            power2.x = self.x-910
+            power2.y = self.y+5
+        elif (self.facingRight == True):
+            power2.x = self.x+50
+            power2.y = self.y+5
+
+    def rect1(self):
+        if self.acao != "right":
+            self.Rect = Rect(self.x, self.y, 35, 70)
+        elif self.acao == "right" and self.facingRight == True:
+            self.Rect = Rect(self.x+30, self.y, 35, 70)
+        elif self.acao == "right" and self.facingRight == False:
+            self.Rect = Rect(self.x, self.y, 35, 70)
+
+    def rect2(self):
+        self.Rect = Rect(self.x, self.y, 35, 70)
+
+    def hPRect1(self,screen):
+        player1HPRect = Rect(80 , 20, self.HP*2, 20)
+        player1XPRect = Rect(80 , 60, self.XP*2, 20)
+        if self.HP >=0:
+            pygame.draw.rect(screen, (255,0,0), player1HPRect)
+        pygame.draw.rect(screen, (0,0,255), player1XPRect)
+    
+    def hPRect2(self,screen,width):
+        """
+        Barras de Hp e XP
+        """
+        player2HPRect = Rect(width-80, 20, -self.HP*2, 20)
+        player2XPRect = Rect(width-80, 60, -self.XP*2, 20)
+        if self.HP >=0:
+            pygame.draw.rect(screen, (255,0,0), player2HPRect)
+        pygame.draw.rect(screen, (0,0,255), player2XPRect)
+
+    def standUpPosition2(self):
+        if self.movex or self.movey !=0:
+            self.inicio = time.time()
+        if self.Defending== True:
+            self.inicio = time.time()
+        if time.time()-self.inicio>0.4 and self.HP>0:
+            self.acao = "down"
+            self.inicio = time.time()+1000
+
+    def defeated2(self,screen,cronometrar,player1Win):
+        if self.HP <= 0:
+            #import pdb; pdb.set_trace()
+            self.acao = "lose"
+            if cronometrar == True:
+                self.inicio = time.time()
+                cronometrar = False
+            if time.time()-self.inicio>1:
+                screen.blit(player1Win, (300,150))
+
     def playPlayer2(self,eventArg,player1,power2):
         if self.HP>0:
             event = eventArg
