@@ -17,15 +17,11 @@ menu_image = "../resources/imagens/Openning/goku-vs-vegeta-2.jpg"
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-screen = pygame.display.set_mode(resolution)
+screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+#screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 #background_openning = pygame.transform.flip(background_openning, 1,0)
-player1Win = pygame.image.load("../resources/imagens/player/goku/ss4/gokuWin.png")
-player2Win = pygame.image.load("../resources/imagens/player/vegeta/vegetaWin.jpeg")
-player2Profile = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
-player1Profile = pygame.image.load("../resources/imagens/player/goku/ss4/gokuPhoto.png")
 scene1 = pygame.transform.scale(scenery[0], (500,300))
 clock = pygame.time.Clock()
 pygame.mouse.set_visible(0)
@@ -41,173 +37,29 @@ sc = 0
 sg = 0
 volume = 0.9
 vsPC = False
-cronometrar = True
-inicio = 0
 song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
 song3 = '../resources/sounds/cha-la.mp3'
 song = [song1,song2,song3]
 
-#Goku
 player1 = Player(acaoInicial="down")
-player1.loadSprites("../resources/imagens/player/goku/ss4/goku-ss4.png")
-player1.createAnimation(0,0,48,70,4,"down")
-player1.createAnimation(6,200,51,70,4,"up")
-player1.erasePositions("up", [0,2])
-player1.repeatPosition("up",1, [1])
-player1.createAnimation(0,72,65,70,4,"right")   
-player1.createAnimation(164,2272,56,70,4,"defend") 
-player1.erasePositions("defend",[0,1,3])
-player1.createAnimation(164,1500,57,80,10,"kameham-1",hold=True, speed = 1) 
-player1.erasePositions("kameham-1",[6,7,8,9])
-
-#Goku-Punch
-player1.insertFrame(120,367,58,60)
-player1.insertFrame(180,367,58,60)
-#player1.insertFrame(211,1674,65,60)
-player1.insertFrame(211,1674,65,60)
-player1.insertFrame(249,367,65,60)
-#hold to maintain last frame
-player1.buildAnimation("punch",hold=True, speed = 5)
-
-#Goku-Kick
-player1.insertFrame(113,443,57,60)
-player1.insertFrame(166,443,60,60)
-player1.insertFrame(235,443,66,60)
-player1.insertFrame(303,443,66,60)
-player1.insertFrame(375,443,68,60)
-player1.insertFrame(448,443,68,60)
-player1.insertFrame(375,443,58,60)
-player1.buildAnimation("kick",hold=True, speed = 5)
-#Goku-Lose
-player1.insertFrame(855,3354,40,60)
-player1.buildAnimation("lose",hold=False, speed = 10)
-#Goku-Loading
-player1.insertFrame(115,1400,83,90)
-player1.insertFrame(195,1400,83,90)
-#player1.insertFrame(60,1419,60,65)
-player1.buildAnimation("load",hold=True, speed = 15)
-
-#Goku been hit
-player1.insertFrame(65,900,52,90)
-player1.insertFrame(170,900,80,90)
-player1.buildAnimation("hited",hold=True, speed = 5)
-
-#Goku-Power-kameham
+player1.loadCharacter('goku')
 power1 = SpriteAnimation(acaoInicial="void")
-power1.loadSprites("../resources/imagens/player/goku/ss4/power-1.png")
-power1.createAnimation(1300,1604,146,40,1,"void")
-#power1.insertFrame(1300,1604,146,40) #void
-#power1.insertFrame(1300,1604,146,40) #void
-#power1.insertFrame(644,1197,700,40) 
-power1.insertFrame(0,132,1100,50) #Full Power
-power1.insertFrame(0,132,1100,50) #Full Power
-power1.insertFrame(0,132,1100,50) #Full Power
-#power1.insertFrame(1176,1604,70,40)
-power1.insertFrame(1300,1604,146,40) #void
-power1.buildAnimation("kame",hold=True, speed = 10)
-
-#Vegeta-Power-kameham
-power2 = SpriteAnimation(acaoInicial="void")
-power2.loadSprites("../resources/imagens/player/goku/ss4/power-1.png")
-power2.createAnimation(1300,1604,146,40,1,"void")
-#power2.insertFrame(1300,1604,146,40) #void
-#power2.insertFrame(1300,1604,146,40) #void
-#power1.insertFrame(644,1197,700,40) 
-power2.insertFrame(0,132,1100,50) #Full Power
-power2.insertFrame(0,132,1100,50) #Full Power
-power2.insertFrame(0,132,1100,50) #Full Power
-#power1.insertFrame(1176,1604,70,40)
-power2.insertFrame(1300,1604,146,40) #void
-power2.buildAnimation("kame",hold=True, speed = 10)
-#Vegeta
-
-#Vegeta-Front
+player1.loadPower1(power1)
 player2 = Player(acaoInicial="down")
-player2.loadSprites("../resources/imagens/player/vegeta/vegeta-ss4-2.png")
-player2.insertFrame(381,68,40,80)
-player2.insertFrame(419,68,36,80)
-player2.insertFrame(453,68,40,80)
-player2.insertFrame(491,68,40,80)
-player2.buildAnimation("down",hold=False, speed = 10)
-
-#Vegeta-Lose
-player2.insertFrame(840,1407,40,80)
-player2.buildAnimation("lose",hold=False, speed = 10)
-#Vegeta-Back
-player2.insertFrame(49,982,48,80)
-player2.buildAnimation("up",hold=False, speed = 10)
-#Vegeta-Left
-player2.insertFrame(0,161,55,55)
-player2.buildAnimation("right",hold=False, speed = 10)
-#Vegeta-Right
-player2.insertFrame(634,84,46,55)
-player2.buildAnimation("defend",hold=False, speed = 10)
-#Vegeta-Punch
-player2.insertFrame(57,417,55,55)
-player2.insertFrame(110,417,70,55)
-player2.insertFrame(175,417,65,55)
-player2.buildAnimation("punch",hold=True, speed = 5)
-#Vegeta-Kick
-#player2.insertFrame(1,594,55,75)
-player2.insertFrame(56,594,41,75)
-player2.insertFrame(96,594,55,75)
-player2.insertFrame(155,594,65,75)
-player2.buildAnimation("kick",hold=True, speed = 4)
-
-#Vegeta-Kameham
-player2.insertFrame(225,2007,55,75)
-player2.insertFrame(274,2007,55,75)
-player2.insertFrame(325,2007,70,75)
-player2.buildAnimation("kameham",hold=True, speed = 5)
-
-#Vegeta-Loading
-player2.insertFrame(112,1274,95,85)
-player2.insertFrame(200,1274,95,85)
-player2.buildAnimation("load",hold=True, speed = 5)
-
-#Vegeta-Hited
-player2.insertFrame(0,1400,48,75)
-player2.insertFrame(48,1400,43,75)
-player2.buildAnimation("hited",hold=True, speed = 5)
+player2.loadCharacter('vegeta')
+power2 = SpriteAnimation(acaoInicial="void")
+player2.loadPower2(power2)
 
 delta = 13 #Velocidade do movimento, quanto maior mais rapido
-player1.pos = 1
-player1.pos2 = 1
-player1.movex, player1.movey = 0,0
-player2.movex, player2.movey = 0,0
 player2.facingRight = False
-player1.x = 250
-player1.y = 350
 player2.x = 850
 player2.y = 350
-screenWidth = screen.get_width()
-punchDamage = 2
-kickDamage = 2
-hitDefended = 0.4
-powerDamage = 10
-powerDamageDefended = 2
-player1.punchDamage = punchDamage
-player2.punchDamage = punchDamage
-player1.kickDamage = kickDamage
-player2.kickDamage = kickDamage
-player1.hitDefended = hitDefended
-player2.hitDefended = hitDefended
-player1.powerDamage = powerDamage
-player2.powerDamage = powerDamage
-player1.powerDamageDefended = powerDamageDefended
-player2.powerDamageDefended = powerDamageDefended
-HP = 140
-XP = 30
-player1.HP = HP
-player2.HP = HP
-player1.XP = XP
-player2.XP = XP
 
 def restart():
-    """Restar the game"""
-    global HP
-    global XP
+    """
+    Restar the game
+    """
     player2.acao = "down"
     player1.acao = "down"
     player1.pos = 1
@@ -220,12 +72,10 @@ def restart():
     player1.y = 350
     player2.x = 850
     player2.y = 350
-    player1.HP = HP
-    player2.HP = HP
-    player1.XP = XP
-    player2.XP = XP
-    global cronometrar
-    cronometrar = True
+    player1.HP = 140
+    player2.HP = 140
+    player1.XP = 30
+    player2.XP = 30
 
 def show_splashscreen():
     """
@@ -256,6 +106,9 @@ def show_splashscreen():
     gameState = 0
 
 def openMenu():
+    """
+    Main Menu
+    """
     global gameState
     global previousGameState
     global vsPC
@@ -326,6 +179,9 @@ def openMenu():
                     if is0 == 1:
                         is0 -=1
 def Options():
+    """
+    Option Menu
+    """
     global gameState
     global delta
     global previousGameState
@@ -404,6 +260,9 @@ def Options():
                     sg -=1
                     loadMusic(song[sg])
 def chooseScenery():
+    """
+    Choose Scenery Screen
+    """
     global gameState
     global previousGameState
     global sc
@@ -446,6 +305,9 @@ def chooseScenery():
     pygame.display.update()
 
 def loadMenu():
+    """
+    Menu during the playing game
+    """
     global gameState
     global previousGameState
     black = 0,0,0
@@ -506,6 +368,7 @@ def loadMenu():
                 if s1Option[is1] > s1Option[0]:
                     is1 -= 1
 def loadMusic (music):
+    """Load the musics of a list"""
     #pygame.mixer.music.load('resources/sounds/sparking.mp3')
     pygame.mixer.music.load(music)
     #pygame.mixer.music.play(-1,9)
@@ -540,6 +403,9 @@ def playPC():
         player2.XP+= 5 
 
 def playLoop():
+    """
+    Game Loop
+    """
     global vsPC
     screen.blit(background, (0,0))
     for event in pygame.event.get():
@@ -559,12 +425,8 @@ def playLoop():
                 global previousGameState
                 gameState = 1
                 previousGameState = 2
-    global cronometrar
     global width
     global height
-    global player1Win
-    global player1Profile
-    global player2Profile
     player1.TurnAround1(player2)
     player1.movementInsideScreen1(width,height,delta)
     player2.movementInsideScreen2(width,height,delta)
@@ -572,14 +434,10 @@ def playLoop():
     player2.powerPlacing2(power2)
     player1.rect1()
     player2.rect2()
-    player1.hPRect1(screen)
-    player2.hPRect2(screen,width)
-    
-    #Animacao de derrota
+    player1.statusBar1(screen)
+    player2.statusBar2(screen,width)
     player2.standUpPosition2()
-    player2.defeated2(screen,cronometrar,player1Win)
-    screen.blit(player2Profile, (screenWidth-70,20))
-    screen.blit(player1Profile, (0,20))
+    player2.defeated2(screen)
     clock.tick(60)
     player2.update(player2.pos,screen)
     player1.update(player1.pos,screen)
