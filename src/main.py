@@ -47,8 +47,8 @@ player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
 power1 = SpriteAnimation(acaoInicial="void")
 power2 = SpriteAnimation(acaoInicial="void")
-player1.loadCharacter(characters[0])
-player2.loadCharacter(characters[1])
+player1.loadCharacter(characters[1])
+player2.loadCharacter(characters[0])
 player1.loadPower(power1)
 player2.loadPower(power2)
 
@@ -373,34 +373,6 @@ def loadMusic (music):
     pygame.mixer.music.load(music)
     #pygame.mixer.music.play(-1,9)
     pygame.mixer.music.play(-1)
-
-def playPC():
-    if player2.XP > 20:
-        player2.acao = "kameham"
-        power2.acao = "kame"
-        player2.pressed = True
-        power2.pressed = True
-        player2.pos = 1
-        player2.Attacking = True
-        player2.Defending = False
-        if player2.facingRight == False:
-            player2AttackRect = Rect(player2.x-950, player2.y+10, 1000, 60)
-            #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-        elif player2.facingRight == True:
-            player2AttackRect = Rect(player2.x+45, player2.y+10, 1000, 60)
-            #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-        if player2AttackRect.colliderect(player1.Rect) == True:
-            if player1.Defending == False:
-                player1.HP -= 10
-            if player1.Defending == True and player1.Attacking == False:
-                player1.HP -= 2
-        player2.acao = "down"
-        player2.XP-=10
-    if player2.XP <0 or player2.XP < 30:
-        player2.acao = "load"
-        player2.pressed = True
-        player2.pos = 1
-        player2.XP+= 5 
 
 def playLoop():
     """

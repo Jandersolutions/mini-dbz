@@ -305,7 +305,7 @@ class Player(SpriteAnimation):
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
             self.Win = pygame.image.load("../resources/imagens/player/goku/ss4/gokuWin.png")
             self.loadSprites("../resources/imagens/player/goku/ss4/goku-ss4.png")
-            self.createAnimation(0,0,48,70,4,"down")
+            self.createAnimation(0,0,48,70,4,"down",hold = False)
             self.createAnimation(6,200,51,70,4,"up")
             self.erasePositions("up", [0,2])
             self.repeatPosition("up",1, [1])
@@ -339,7 +339,6 @@ class Player(SpriteAnimation):
             self.insertFrame(195,1400,83,90)
             #self.insertFrame(60,1419,60,65)
             self.buildAnimation("load",hold=True, speed = 15)
-
             #Goku been hit
             self.insertFrame(65,900,52,90)
             self.insertFrame(170,900,80,90)
@@ -354,7 +353,6 @@ class Player(SpriteAnimation):
             self.insertFrame(453,68,40,80)
             self.insertFrame(491,68,40,80)
             self.buildAnimation("down",hold=False, speed = 10)
-
             #Vegeta-Lose
             self.insertFrame(840,1407,40,80)
             self.buildAnimation("lose",hold=False, speed = 10)
@@ -378,33 +376,64 @@ class Player(SpriteAnimation):
             self.insertFrame(96,594,55,75)
             self.insertFrame(155,594,65,75)
             self.buildAnimation("kick",hold=True, speed = 4)
-
             #Vegeta-Kameham
             self.insertFrame(225,2007,55,75)
             self.insertFrame(274,2007,55,75)
             self.insertFrame(325,2007,70,75)
             self.buildAnimation("kameham",hold=True, speed = 5)
-
             #Vegeta-Loading
             self.insertFrame(112,1274,95,85)
             self.insertFrame(200,1274,95,85)
             self.buildAnimation("load",hold=True, speed = 5)
-
             #Vegeta-Hited
             self.insertFrame(0,1400,48,75)
             self.insertFrame(48,1400,43,75)
             self.buildAnimation("hited",hold=True, speed = 5)
 
     def loadPower(self,power):
-            power.loadSprites("../resources/imagens/player/goku/ss4/power-1.png")
-            power.createAnimation(1300,1604,146,40,1,"void")
-            #power1.insertFrame(1300,1604,146,40) #void
-            #power1.insertFrame(1300,1604,146,40) #void
-            #power1.insertFrame(644,1197,700,40) 
-            power.insertFrame(0,132,1100,50) #Full Power
-            power.insertFrame(0,132,1100,50) #Full Power
-            power.insertFrame(0,132,1100,50) #Full Power
-            #power1.insertFrame(1176,1604,70,40)
-            power.insertFrame(1300,1604,146,40) #void
-            power.buildAnimation("kame",hold=True, speed = 10)
+        """
+        Load power images
+        """
+        power.loadSprites("../resources/imagens/player/goku/ss4/power-1.png")
+        power.createAnimation(1300,1604,146,40,1,"void")
+        #power1.insertFrame(1300,1604,146,40) #void
+        #power1.insertFrame(1300,1604,146,40) #void
+        #power1.insertFrame(644,1197,700,40) 
+        power.insertFrame(0,132,1100,50) #Full Power
+        power.insertFrame(0,132,1100,50) #Full Power
+        power.insertFrame(0,132,1100,50) #Full Power
+        #power1.insertFrame(1176,1604,70,40)
+        power.insertFrame(1300,1604,146,40) #void
+        power.buildAnimation("kame",hold=True, speed = 10)
     
+    def playPC(self, player1, power2):
+        """
+        Pc player
+        """
+        if self.XP > 20:
+            self.acao = "kameham"
+            power2.acao = "kame"
+            self.pressed = True
+            power2.pressed = True
+            self.pos = 1
+            self.Attacking = True
+            self.Defending = False
+            if self.facingRight == False:
+                player2AttackRect = Rect(self.x-950, self.y+10, 1000, 60)
+                #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
+            elif self.facingRight == True:
+                player2AttackRect = Rect(self.x+45, self.y+10, 1000, 60)
+                #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
+            if player2AttackRect.colliderect(player1.Rect) == True:
+                if player1.Defending == False:
+                    player1.HP -= 10
+                if player1.Defending == True and player1.Attacking == False:
+                    player1.HP -= 2
+            self.acao = "down"
+            self.XP-=10
+        if self.XP <0 or self.XP < 30:
+            self.acao = "load"
+            self.pressed = True
+            self.pos = 1
+            self.XP+= 5 
+
