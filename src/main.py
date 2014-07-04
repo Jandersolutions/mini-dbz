@@ -125,7 +125,6 @@ def openMenu():
     options = myfont.render("Options", 1, (255,255,255))
     quit = myfont.render("Quit", 1, (255,255,255))
 
-
     global is0
     if s0Option[is0] == 0:
         playerVsPlayer = boldFont.render("Player Vs Player", 1, (255,255,255))
@@ -437,8 +436,10 @@ def playLoop():
     player2.physicalRect()
     player1.statusBar(screen,width)
     player2.statusBar(screen,width)
-    player2.standUpPosition2()
-    player2.defeated2(screen,player1)
+    player1.standUpPosition()
+    player2.standUpPosition()
+    player1.defeated(screen,player2)
+    player2.defeated(screen,player1)
     clock.tick(60)
     player2.update(player2.pos,screen)
     player1.update(player1.pos,screen)

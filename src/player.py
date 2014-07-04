@@ -116,6 +116,7 @@ class Player(SpriteAnimation):
                             if player2.Defending == True and player2.Attacking == False:
                                 player2.HP -= player2.powerDamageDefended
                         self.XP-=10
+                        self.inicio = time.time()
                 if event.key == self.k_punch:
                     self.acao = "punch"
                     self.pressed = True
@@ -135,6 +136,7 @@ class Player(SpriteAnimation):
                             player2.inicio = time.time()
                         if player2.Defending == True and player2.Attacking == False:
                             player2.HP -= player2.hitDefended
+                    self.inicio = time.time()
                 if event.key == self.k_kick:
                     self.acao = "kick"
                     self.pressed = True
@@ -154,11 +156,13 @@ class Player(SpriteAnimation):
                             player2.inicio = time.time()
                         if player2.Defending == True and player2.Attacking == False:
                             player2.HP -= player2.hitDefended
+                    self.inicio = time.time()
                 if event.key == self.k_load:
                     self.acao = "load"
                     self.pressed = True
                     self.pos = 1
                     self.XP+= 5 
+                    self.inicio = time.time()
                     
             if event.type == KEYUP:
                 if event.key == self.k_down:
@@ -267,7 +271,7 @@ class Player(SpriteAnimation):
             pygame.draw.rect(screen, (255,0,0), playerHPRect)
         pygame.draw.rect(screen, (0,0,255), playerXPRect)
 
-    def standUpPosition2(self):
+    def standUpPosition(self):
         """
         Standard position of player2
         """
@@ -279,7 +283,7 @@ class Player(SpriteAnimation):
             self.acao = "down"
             self.inicio = time.time()+1000
 
-    def defeated2(self,screen,otherPlayer):
+    def defeated(self,screen,otherPlayer):
         """
         Show the won frame of player1
         """
