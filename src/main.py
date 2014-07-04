@@ -42,14 +42,15 @@ song2 = '../resources/sounds/temos-a-forca-1.wav'
 song3 = '../resources/sounds/cha-la.mp3'
 song = [song1,song2,song3]
 
-player1 = Player(acaoInicial="down")
-player1.loadCharacter('goku')
+characters = ['goku','vegeta']
+player1 = Player(acaoInicial="down",playerId=1)
+player2 = Player(acaoInicial="down",playerId=2)
 power1 = SpriteAnimation(acaoInicial="void")
-player1.loadPower1(power1)
-player2 = Player(acaoInicial="down")
-player2.loadCharacter('vegeta')
 power2 = SpriteAnimation(acaoInicial="void")
-player2.loadPower2(power2)
+player1.loadCharacter(characters[0])
+player2.loadCharacter(characters[1])
+player1.loadPower(power1)
+player2.loadPower(power2)
 
 delta = 13 #Velocidade do movimento, quanto maior mais rapido
 player2.facingRight = False
@@ -413,8 +414,8 @@ def playLoop():
             pygame.quit()
             sys.exit()
         if vsPC == False:
-            player1.playPlayer1(event,player2,power1)
-            player2.playPlayer2(event,player1,power2)
+            player1.playPlayer(event,player2,power1)
+            player2.playPlayer(event,player1,power2)
         #playPlayer2(event)
         elif vsPC == True:
             player1.playPlayer1(event,player2,power1)
@@ -428,16 +429,16 @@ def playLoop():
     global width
     global height
     player1.TurnAround1(player2)
-    player1.movementInsideScreen1(width,height,delta)
-    player2.movementInsideScreen2(width,height,delta)
-    player1.powerPlacing1(power1)
-    player2.powerPlacing2(power2)
-    player1.rect1()
-    player2.rect2()
-    player1.statusBar1(screen)
-    player2.statusBar2(screen,width)
+    player1.lockInsideScreen(width,height,delta)
+    player2.lockInsideScreen(width,height,delta)
+    player1.powerPlacing(power1)
+    player2.powerPlacing(power2,dx2=910,dy2=0)
+    player1.physicalRect()
+    player2.physicalRect()
+    player1.statusBar(screen,width)
+    player2.statusBar(screen,width)
     player2.standUpPosition2()
-    player2.defeated2(screen)
+    player2.defeated2(screen,player1)
     clock.tick(60)
     player2.update(player2.pos,screen)
     player1.update(player1.pos,screen)

@@ -5,7 +5,7 @@ from spriteanimation import SpriteAnimation
 import time
 
 class Player(SpriteAnimation):
-    def __init__(self, acaoInicial, speed = 15):
+    def __init__(self, acaoInicial, playerId, speed = 15):
         """Iniciation of the player states"""
         SpriteAnimation.__init__(self,acaoInicial, speed = 15)
         self.pos = 1
@@ -33,53 +33,69 @@ class Player(SpriteAnimation):
         self.powerDamageDefended = 2
         self.HP = 140
         self.XP = 30
-        self.player1Win = pygame.image.load("../resources/imagens/player/goku/ss4/gokuWin.png")
-        self.player2Win = pygame.image.load("../resources/imagens/player/vegeta/vegetaWin.jpeg")
-        self.player2Profile = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
-        self.player1Profile = pygame.image.load("../resources/imagens/player/goku/ss4/gokuPhoto.png")
-
-    def playPlayer1(self,eventArg, player2, power1):
+        self.playerId = playerId
+        if self.playerId == 1:
+            self.k_down = K_s
+            self.k_up = K_w
+            self.k_defend = K_p
+            self.k_kameham = K_u
+            self.k_punch = K_i
+            self.k_kick = K_o
+            self.k_load = K_j
+            self.k_rightArrow = K_d
+            self.k_leftArrow = K_a
+        elif self.playerId == 2:
+            self.k_down = K_DOWN
+            self.k_up = K_UP
+            self.k_defend = K_KP5
+            self.k_kameham = K_KP7
+            self.k_punch = K_KP8
+            self.k_kick = K_KP9
+            self.k_load = K_KP4
+            self.k_rightArrow = K_RIGHT
+            self.k_leftArrow = K_LEFT
+    
+    def playPlayer(self,eventArg, player2, power1):
         """
-        Activate player1 movements and skills
+        Activate player movements and skills
         """
         if self.HP>0:
             event = eventArg
             if event.type == KEYDOWN:
                 #Goku
-                if event.key == K_s:
+                if event.key == self.k_down:
                     self.acao = "down"
                     self.pos = 1
                     self.movey+=1
-                if event.key == K_w:
+                if event.key == self.k_up:
                     self.acao = "up"
                     self.pos = 1
                     self.movey-=1
-                
-                if event.key == K_p:
+                if event.key == self.k_defend:
                     self.acao = "defend"
                     self.pos = 1
                     self.Defending = True
                 if self.facingRight == True:
-                    if event.key == K_d:
+                    if event.key == self.k_rightArrow:
                         self.acao = "right"
                         self.pos = 1
                         self.movex+=1
-                    if event.key == K_a:
+                    if event.key == self.k_leftArrow:
                         self.acao = "up"
                         self.pos = 1
                         self.movex-=1
                 if self.facingRight == False:
-                    if event.key == K_d:
+                    if event.key == self.k_rightArrow:
                         self.acao = "up"
                         self.pos = 1
                         self.movex+=1
-                    if event.key == K_a:
+                    if event.key == self.k_leftArrow:
                         self.acao = "right"
                         self.pos = 1
                         self.movex-=1
-                if event.key == K_u:
+                if event.key == self.k_kameham:
                     if self.XP > 0:
-                        self.acao = "kameham-1"
+                        self.acao = "kameham"
                         power1.acao = "kame"
                         self.pressed = True
                         power1.pressed = True
@@ -100,7 +116,7 @@ class Player(SpriteAnimation):
                             if player2.Defending == True and player2.Attacking == False:
                                 player2.HP -= player2.powerDamageDefended
                         self.XP-=10
-                if event.key == K_i:
+                if event.key == self.k_punch:
                     self.acao = "punch"
                     self.pressed = True
                     self.pos = 1
@@ -119,7 +135,7 @@ class Player(SpriteAnimation):
                             player2.inicio = time.time()
                         if player2.Defending == True and player2.Attacking == False:
                             player2.HP -= player2.hitDefended
-                if event.key == K_o:
+                if event.key == self.k_kick:
                     self.acao = "kick"
                     self.pressed = True
                     self.pos = 1
@@ -138,49 +154,47 @@ class Player(SpriteAnimation):
                             player2.inicio = time.time()
                         if player2.Defending == True and player2.Attacking == False:
                             player2.HP -= player2.hitDefended
-
-                if event.key == K_j:
+                if event.key == self.k_load:
                     self.acao = "load"
                     self.pressed = True
                     self.pos = 1
                     self.XP+= 5 
                     
             if event.type == KEYUP:
-                if event.key == K_s:
+                if event.key == self.k_down:
                     self.acao = "down"
                     self.pos = 0
                     self.movey=0
-                if event.key == K_w:
+                if event.key == self.k_up:
                     self.acao = "up"
                     self.pos = 0
                     self.movey=0
-                if event.key == K_p:
+                if event.key == self.k_defend:
                     self.acao = "defend"
                     self.pos = 0
                     self.Defending = False
-                if event.key == K_i:
+                if event.key == self.k_punch:
                     self.Attacking = False
                 if self.facingRight  == True:
-                    if event.key == K_d:
+                    if event.key == self.k_rightArrow:
                         self.acao = "right"
                         self.pos = 0
                         self.movex=0
-                    if event.key == K_a:
+                    if event.key == self.k_leftArrow:
                         self.acao = "up"
                         self.pos = 0
                         self.movex=0
                 if self.facingRight  == False:
-                    if event.key == K_a:
+                    if event.key == self.k_leftArrow:
                         self.acao = "right"
                         self.pos = 0
                         self.movex=0
-                    if event.key == K_d:
+                    if event.key == self.k_rightArrow:
                         self.acao = "up"
                         self.pos = 0
                         self.movex=0
-
-                if event.key == K_u:
-                    self.acao = "kameham-1"
+                if event.key == self.k_kameham:
+                    self.acao = "kameham"
                     power1.acao = "void"
                     self.pos = 0
                     self.movex=0
@@ -196,9 +210,9 @@ class Player(SpriteAnimation):
             self.facingRight = True
             player2.facingRight = False
 
-    def movementInsideScreen1(self,width,height,delta):
+    def lockInsideScreen(self,width,height,delta):
         """
-        Lock the player1 to the visible screen
+        Lock the player to the visible screen
         """
         if self.facingRight == True:
             if self.movex == -1 and self.x>0:
@@ -215,48 +229,18 @@ class Player(SpriteAnimation):
         if self.movey == -1 and self.y>0:
             self.y += self.movey * delta
 
-    def movementInsideScreen2(self,width,height,delta):
-        """
-        Lock the player2 to the visible screen
-        """
-        if self.facingRight == False:
-            if self.movex == -1 and self.x>0:
-                self.x += self.movex * delta
-            if self.movex == 1 and self.x<width-50:
-                self.x += self.movex * delta
-        if self.facingRight == True:
-            if self.movex == -1 and self.x>0:
-                self.x += self.movex * delta
-            if self.movex == 1 and self.x<width-50:
-                self.x += self.movex * delta
-        if self.movey == 1 and self.y<height-70:
-            self.y += self.movey * delta
-        if self.movey == -1 and self.y>0:
-            self.y += self.movey * delta
-
-    def powerPlacing1(self,power1):
+    def powerPlacing(self,power,dx1=45,dy1=25,dx2=930,dy2=20):
         """
         Adjusting the power position of player1
         """
-        #Posicionamento dos Poderes
         if (self.facingRight == True):
-            power1.x = self.x+45
-            power1.y = self.y+25
+            power.x = self.x+dx1
+            power.y = self.y+dy1
         else:
-            power1.x = self.x-930
-            power1.y = self.y+20
-    def powerPlacing2(self,power2):
-        """
-        Adjusting the power position of player2
-        """
-        if (self.facingRight == False):
-            power2.x = self.x-910
-            power2.y = self.y+5
-        elif (self.facingRight == True):
-            power2.x = self.x+50
-            power2.y = self.y+5
+            power.x = self.x-dx2
+            power.y = self.y+dy2
 
-    def rect1(self):
+    def physicalRect(self):
         """
         Physical Rectangle of player1
         """
@@ -267,33 +251,21 @@ class Player(SpriteAnimation):
         elif self.acao == "right" and self.facingRight == False:
             self.Rect = Rect(self.x, self.y, 35, 70)
 
-    def rect2(self):
-        """
-        Physical Rectangle of player2
-        """
-        self.Rect = Rect(self.x, self.y, 35, 70)
-
-    def statusBar1(self,screen):
+    def statusBar(self,screen,width):
         """
         Hp and XP bars of player1
         """
-        player1HPRect = Rect(80 , 20, self.HP*2, 20)
-        player1XPRect = Rect(80 , 60, self.XP*2, 20)
+        if self.playerId == 1:
+            playerHPRect = Rect(80 , 20, self.HP*2, 20)
+            playerXPRect = Rect(80 , 60, self.XP*2, 20)
+            screen.blit(self.photo3x4, (0,20))
+        if self.playerId == 2:
+            playerHPRect = Rect(width-80, 20, -self.HP*2, 20)
+            playerXPRect = Rect(width-80, 60, -self.XP*2, 20)
+            screen.blit(self.photo3x4Fliped, (width-70,20))
         if self.HP >=0:
-            pygame.draw.rect(screen, (255,0,0), player1HPRect)
-        pygame.draw.rect(screen, (0,0,255), player1XPRect)
-        screen.blit(self.player1Profile, (0,20))
-    
-    def statusBar2(self,screen,width):
-        """
-        Hp and XP bars of player2
-        """
-        player2HPRect = Rect(width-80, 20, -self.HP*2, 20)
-        player2XPRect = Rect(width-80, 60, -self.XP*2, 20)
-        if self.HP >=0:
-            pygame.draw.rect(screen, (255,0,0), player2HPRect)
-        pygame.draw.rect(screen, (0,0,255), player2XPRect)
-        screen.blit(self.player2Profile, (width-70,20))
+            pygame.draw.rect(screen, (255,0,0), playerHPRect)
+        pygame.draw.rect(screen, (0,0,255), playerXPRect)
 
     def standUpPosition2(self):
         """
@@ -307,7 +279,7 @@ class Player(SpriteAnimation):
             self.acao = "down"
             self.inicio = time.time()+1000
 
-    def defeated2(self,screen):
+    def defeated2(self,screen,otherPlayer):
         """
         Show the won frame of player1
         """
@@ -318,148 +290,16 @@ class Player(SpriteAnimation):
                 self.inicioDead = time.time()
                 self.cronometrar2 = False
             if time.time()-self.inicioDead>1:
-                screen.blit(self.player1Win, (300,200))
+                screen.blit(otherPlayer.Win, (300,200))
 
-    def playPlayer2(self,eventArg,player1,power2):
-        """
-        Activate player2 movements and skills
-        """
-        if self.HP>0:
-            event = eventArg
-            #Vegeta
-            if event.type == KEYDOWN:
-                if event.key == K_DOWN:
-                    self.acao = "down"
-                    self.pos = 1
-                    self.movey+=1
-                if event.key == K_UP:
-                    self.acao = "up"
-                    self.pos = 1
-                    self.movey-=1
-                if self.facingRight == False:
-                    if event.key == K_LEFT:
-                        self.acao = "right"
-                        self.pos = 1
-                        self.movex-=1
-                    if event.key == K_RIGHT:
-                        self.acao = "up"
-                        self.pos = 1
-                        self.movex+=1
-                if self.facingRight == True:
-                    if event.key == K_LEFT:
-                        self.acao = "up"
-                        self.pos = 1
-                        self.movex-=1
-                    if event.key == K_RIGHT:
-                        self.inicio = time.time()
-                        self.acao = "right"
-                        self.pos = 1
-                        self.movex+=1
-                if event.key == K_KP5:
-                    self.acao = "defend"
-                    self.pos = 1
-                    self.Defending = True
-                if event.key == K_KP8 or event.key == K_8:
-                    self.inicio = time.time()
-                    self.acao = "punch"
-                    self.pos = 1
-                    self.pressed = True
-                    self.Attacking = True
-                    self.Defending = False
-                    if self.facingRight == False:
-                        player2AttackRect = Rect(self.x-15, self.y, 35, 70)
-                        #pygame.draw.rect(screen, (0,0,255), player2AttackRect)
-                    elif self.facingRight == True:
-                        player2AttackRect = Rect(self.x+30, self.y, 35, 70)
-                        #pygame.draw.rect(screen, (0,0,255), player2AttackRect)
-                    if player2AttackRect.colliderect(player1.Rect) == True:
-                        if player1.Defending == False:
-                            player1.HP -= self.punchDamage
-                            player1.acao = "hited"
-                        if player1.Defending == True and player1.Attacking == False:
-                            player1.HP -= player1.hitDefended
-                if event.key == K_KP9:
-                    self.inicio = time.time()
-                    self.acao = "kick"
-                    self.pos = 1
-                    self.pressed = True
-                    self.Attacking = True
-                    self.Defending = False
-                    if self.facingRight == False:
-                        player2AttackRect = Rect(self.x-5, self.y, 35, 70)
-                        #pygame.draw.rect(screen, (0,0,255), player2AttackRect)
-                    if self.facingRight == True:
-                        player2AttackRect = Rect(self.x+30, self.y, 35, 70)
-                        #pygame.draw.rect(screen, (0,0,255), player2AttackRect)
-                    if player2AttackRect.colliderect(player1.Rect) == True:
-                        if player1.Defending == False:
-                            player1.HP -= self.kickDamage
-                            player1.acao = "hited"
-                        if player1.Defending == True and player1.Attacking == False:
-                            player1.HP -= player1.hitDefended
-                if event.key == K_KP7 or event.key == K_9:
-                    if self.XP > 0:
-                        self.inicio = time.time()
-                        self.acao = "kameham"
-                        power2.acao = "kame"
-                        self.pressed = True
-                        power2.pressed = True
-                        self.pos = 1
-                        self.Attacking = True
-                        self.Defending = False
-                        if self.facingRight == False:
-                            player2AttackRect = Rect(self.x-950, self.y+10, 1000, 60)
-                            #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-                        elif self.facingRight == True:
-                            player2AttackRect = Rect(self.x+45, self.y+10, 1000, 60)
-                            #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-                        if player2AttackRect.colliderect(player1.Rect) == True:
-                            if player1.Defending == False:
-                                player1.HP -= self.powerDamage
-                                player1.acao = "hited"
-                            if player1.Defending == True and player1.Attacking == False:
-                                player1.HP -= player1.powerDamageDefended
-                        self.XP-=10
-                if event.key == K_KP4:
-                    self.acao = "load"
-                    self.pressed = True
-                    self.pos = 1
-                    self.XP+= 5 
-                    self.inicio = time.time()
-
-            if event.type == KEYUP:
-                if event.key == K_DOWN:
-                    self.acao = "down"
-                    self.pos = 0
-                    self.movey=0
-                if event.key == K_UP:
-                    self.acao = "up"
-                    self.pos = 0
-                    self.movey=0
-                if event.key == K_KP5:
-                    self.acao = "defend"
-                    self.pos = 0
-                    self.Defending = False
-                if self.facingRight == False:
-                    if event.key == K_LEFT:
-                        self.acao = "right"
-                        self.pos = 0
-                        self.movex=0
-                    if event.key == K_RIGHT:
-                        self.acao = "up"
-                        self.pos = 0
-                        self.movex=0
-                if self.facingRight == True:
-                    if event.key == K_LEFT:
-                        self.acao = "up"
-                        self.pos = 0
-                        self.movex=0
-                    if event.key == K_RIGHT:
-                        self.acao = "right"
-                        self.pos = 0
-                        self.movex=0
     def loadCharacter(self, character):
+        """
+        Load all images of the Player
+        """
         if character == 'goku':
+            self.photo3x4 = pygame.image.load("../resources/imagens/player/goku/ss4/gokuPhoto.png")
+            self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
+            self.Win = pygame.image.load("../resources/imagens/player/goku/ss4/gokuWin.png")
             self.loadSprites("../resources/imagens/player/goku/ss4/goku-ss4.png")
             self.createAnimation(0,0,48,70,4,"down")
             self.createAnimation(6,200,51,70,4,"up")
@@ -468,8 +308,8 @@ class Player(SpriteAnimation):
             self.createAnimation(0,72,65,70,4,"right")   
             self.createAnimation(164,2272,56,70,4,"defend") 
             self.erasePositions("defend",[0,1,3])
-            self.createAnimation(164,1500,57,80,10,"kameham-1",hold=True, speed = 1) 
-            self.erasePositions("kameham-1",[6,7,8,9])
+            self.createAnimation(164,1500,57,80,10,"kameham",hold=True, speed = 1) 
+            self.erasePositions("kameham",[6,7,8,9])
             #Goku-Punch
             self.insertFrame(120,367,58,60)
             self.insertFrame(180,367,58,60)
@@ -501,6 +341,9 @@ class Player(SpriteAnimation):
             self.insertFrame(170,900,80,90)
             self.buildAnimation("hited",hold=True, speed = 5)
         if character == 'vegeta':
+            self.photo3x4 = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
+            self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
+            self.Win = pygame.image.load("../resources/imagens/player/vegeta/vegetaWin.jpeg")
             self.loadSprites("../resources/imagens/player/vegeta/vegeta-ss4-2.png")
             self.insertFrame(381,68,40,80)
             self.insertFrame(419,68,36,80)
@@ -548,29 +391,16 @@ class Player(SpriteAnimation):
             self.insertFrame(48,1400,43,75)
             self.buildAnimation("hited",hold=True, speed = 5)
 
-    def loadPower1(self,power1):
-            power1.loadSprites("../resources/imagens/player/goku/ss4/power-1.png")
-            power1.createAnimation(1300,1604,146,40,1,"void")
+    def loadPower(self,power):
+            power.loadSprites("../resources/imagens/player/goku/ss4/power-1.png")
+            power.createAnimation(1300,1604,146,40,1,"void")
             #power1.insertFrame(1300,1604,146,40) #void
             #power1.insertFrame(1300,1604,146,40) #void
             #power1.insertFrame(644,1197,700,40) 
-            power1.insertFrame(0,132,1100,50) #Full Power
-            power1.insertFrame(0,132,1100,50) #Full Power
-            power1.insertFrame(0,132,1100,50) #Full Power
+            power.insertFrame(0,132,1100,50) #Full Power
+            power.insertFrame(0,132,1100,50) #Full Power
+            power.insertFrame(0,132,1100,50) #Full Power
             #power1.insertFrame(1176,1604,70,40)
-            power1.insertFrame(1300,1604,146,40) #void
-            power1.buildAnimation("kame",hold=True, speed = 10)
-    def loadPower2(self,power2):
-        power2.loadSprites("../resources/imagens/player/goku/ss4/power-1.png")
-        power2.createAnimation(1300,1604,146,40,1,"void")
-        #power2.insertFrame(1300,1604,146,40) #void
-        #power2.insertFrame(1300,1604,146,40) #void
-        #power1.insertFrame(644,1197,700,40) 
-        power2.insertFrame(0,132,1100,50) #Full Power
-        power2.insertFrame(0,132,1100,50) #Full Power
-        power2.insertFrame(0,132,1100,50) #Full Power
-        #power1.insertFrame(1176,1604,70,40)
-        power2.insertFrame(1300,1604,146,40) #void
-        power2.buildAnimation("kame",hold=True, speed = 10)
-
-
+            power.insertFrame(1300,1604,146,40) #void
+            power.buildAnimation("kame",hold=True, speed = 10)
+    
