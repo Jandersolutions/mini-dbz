@@ -42,13 +42,13 @@ song2 = '../resources/sounds/temos-a-forca-1.wav'
 song3 = '../resources/sounds/cha-la.mp3'
 song = [song1,song2,song3]
 
-characters = ['goku','vegeta']
+characters = ['goku','vegeta','trunks']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
 power1 = SpriteAnimation(acaoInicial="void")
 power2 = SpriteAnimation(acaoInicial="void")
-player1.loadCharacter(characters[1])
-player2.loadCharacter(characters[0])
+player1.loadCharacter(characters[2])
+player2.loadCharacter(characters[1])
 player1.loadPower(power1)
 player2.loadPower(power2)
 
@@ -403,7 +403,7 @@ def playLoop():
     player1.lockInsideScreen(width,height,delta)
     player2.lockInsideScreen(width,height,delta)
     player1.powerPlacing(power1)
-    player2.powerPlacing(power2,dx2=910,dy2=0)
+    player2.powerPlacing(power2,dx2=920,dy2=0)
     player1.physicalRect()
     player2.physicalRect()
     player1.statusBar(screen,width)
