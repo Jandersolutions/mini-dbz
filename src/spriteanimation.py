@@ -10,7 +10,7 @@ class SpriteAnimation:
         self.ani_speed_init= speed
         self.ani_speed = self.ani_speed_init
         self.ani_pos = 0
-        self.spriteSheet = [] 
+        self.spriteSheet = None 
         self.animation = []
         self.dicOfRects = {}
         self.animationSpeed = {}
@@ -68,7 +68,7 @@ class SpriteAnimation:
 
     def loadSprites(self, imagem):
         """Load the image containing the sprites"""
-        self.spriteSheet.append(pygame.image.load(imagem).convert_alpha())
+        self.spriteSheet = (pygame.image.load(imagem).convert_alpha())
 
     def createAnimation(self, xo,yo,lx,ly,n, acao, hold=False, speed = 15):
         """Create the self-generated list animation and give the animation a label"""
@@ -111,10 +111,10 @@ class SpriteAnimation:
                     self.pressed = False
         #screen.blit(self.spriteSheet[0], (self.x,self.y), rectList[self.ani_pos])
         if self.facingRight == True:
-            cropped = self.spriteSheet[0].subsurface(rectList[self.ani_pos]).copy()
+            cropped = self.spriteSheet.subsurface(rectList[self.ani_pos]).copy()
             screen.blit(cropped, (self.x,self.y))
         
         if self.facingRight == False:
-            cropped = self.spriteSheet[0].subsurface(rectList[self.ani_pos]).copy()
+            cropped = self.spriteSheet.subsurface(rectList[self.ani_pos]).copy()
             new_image = pygame.transform.flip(cropped, True, False)
             screen.blit(new_image, (self.x,self.y))

@@ -14,6 +14,12 @@ scenery3 = "../resources/imagens/scenarios/trunks-future-2.png"
 scenery4 = "../resources/imagens/scenarios/arena-2-2.gif"
 scenery = [pygame.image.load(scenery1),pygame.image.load(scenery2),pygame.image.load(scenery3),pygame.image.load(scenery4)]
 menu_image = "../resources/imagens/Openning/goku-vs-vegeta-2.jpg"
+goku3x4 = "../resources/imagens/player/goku/ss4/goku100x100.png"
+vegeta3x4 = "../resources/imagens/player/vegeta/vegeta100x100.png"
+trunks3x4 = "../resources/imagens/player/trunks/trunks100x100.png"
+photos3x4 = [pygame.image.load(goku3x4),pygame.image.load(vegeta3x4),pygame.image.load(trunks3x4)]
+ch = pygame.transform.scale(photos3x4[0], (500,300))
+ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
@@ -34,6 +40,8 @@ is1 = 0
 s3Option = range(4)
 is3 = 0
 sc = 0
+sc1 = 0
+sc2 = 1
 sg = 0
 volume = 0.9
 vsPC = False
@@ -41,14 +49,21 @@ song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
 song3 = '../resources/sounds/cha-la.mp3'
 song = [song1,song2,song3]
+xp1 = 400
+yp1 = 400
+xp1d = xp1
+yp1d = yp1
+xp2 = 550
+yp2 = 400
+xp2d = xp2
+yp2d = yp2
 
 characters = ['goku','vegeta','trunks']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
 power1 = SpriteAnimation(acaoInicial="void")
 power2 = SpriteAnimation(acaoInicial="void")
-player1.loadCharacter(characters[2])
-player2.loadCharacter(characters[1])
+player1.loadCharacter(characters[1])
 player1.loadPower(power1)
 player2.loadPower(power2)
 
@@ -153,7 +168,7 @@ def openMenu():
                 if s0Option[is0] == 0:
                     #gameState = 2
                     #vsPC = False
-                    gameState = 4
+                    gameState = 5
                     restart()
                 if s0Option[is0] == 1:
                     previousGameState = 0
@@ -259,6 +274,92 @@ def Options():
                         sg =len(song)
                     sg -=1
                     loadMusic(song[sg])
+def chooseCharacter():
+    """
+    Choose Scenery Screen
+    """
+    global gameState
+    global previousGameState
+    global sc1
+    global sc2
+    global background
+    global photo3x4
+    global characters
+    global ch
+    global xp1
+    global yp1
+    global xp1d
+    global yp1d
+    global xp2
+    global yp2
+    global xp2d
+    global yp2d
+    black = 0,0,0
+    screen.fill(black)
+    screen.blit(background_openning, (-70,0))
+    myfont = pygame.font.SysFont("monospace", 45)
+    boldFont = pygame.font.SysFont("monospace", 65,bold =True)
+
+    playerVsPlayer = boldFont.render("P1", 1, (255,0,0))
+    playerVsPlayer2 = boldFont.render("P2", 1, (0,0,255))
+    
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type==KEYDOWN:
+            if event.key==K_ESCAPE:
+                gameState = previousGameState
+            if event.key==K_RETURN:
+                    gameState = 4
+                    vsPC = False
+                    player1.loadCharacter(characters[sc1])
+                    player2.loadCharacter(characters[sc2])
+            if event.key==K_d:
+                if sc1 >= len(photos3x4)-1:
+                    sc1 = 0
+                    xp1 = xp1d
+                elif sc1>=0 and sc1 <len(photos3x4):
+                    xp1 +=150
+                    sc1 +=1
+            if event.key== K_RIGHT:
+                if sc2 >= len(photos3x4)-1:
+                    sc2 = 0
+                    xp2 = xp1d
+                elif sc2>=0 and sc2 <len(photos3x4):
+                    xp2 +=150
+                    sc2 +=1
+
+            if event.key==K_a:
+                if sc1 <= 0:
+                    sc1 = len(photos3x4)-1
+                    xp1 = xp1d+300
+                elif sc1>=0 and sc1 <len(photos3x4):
+                    xp1 -=150
+                    sc1 -=1
+
+            if event.key==K_LEFT:
+                if sc2 <= 0:
+                    sc2 = len(photos3x4)-1
+                    xp2 = xp1d+300
+                elif sc2>=0 and sc2 <len(photos3x4):
+                    xp2 -=150
+                    sc2 -=1
+
+    x=350
+    y=350
+    dx=0
+    for picture in photos3x4:
+        ch = pygame.transform.scale(picture, (150,150))
+        screen.blit(ch, (x+dx,y))
+        dx+=150
+    screen.blit(playerVsPlayer, (xp1,yp1))
+    screen.blit(playerVsPlayer2, (xp2,yp2))
+    #sc2String = str(sc2)
+    #debug = boldFont.render(sc2String, 1, (0,0,255))
+    #screen.blit(debug, (0,0))
+    pygame.display.update()
+
 def chooseScenery():
     """
     Choose Scenery Screen
@@ -277,6 +378,7 @@ def chooseScenery():
 
     playerVsPlayer = boldFont.render(">", 1, (255,255,255))
     playerVsPlayer2 = boldFont.render("<", 1, (255,255,255))
+    debug = boldFont.render("<", 1, (255,255,255))
     screen.blit(playerVsPlayer, (865,420))
     screen.blit(playerVsPlayer2, (300,420))
     
@@ -432,4 +534,6 @@ while 1:
         Options()
     elif gameState == 4:
         chooseScenery()
+    elif gameState == 5:
+        chooseCharacter()
 

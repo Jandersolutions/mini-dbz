@@ -124,10 +124,10 @@ class Player(SpriteAnimation):
                     self.Attacking = True
                     self.Defending = False
                     if self.facingRight == True:
-                        selfAttackRect = Rect(self.x+30, self.y, 35, 70)
+                        selfAttackRect = Rect(self.x+30, self.y, 50, 70)
                         #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
                     if self.facingRight == False:
-                        selfAttackRect = Rect(self.x-5, self.y, 35, 70)
+                        selfAttackRect = Rect(self.x-5, self.y, 50, 70)
                         #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
                     if selfAttackRect.colliderect(player2.Rect) == True:
                         if player2.Defending == False:
