@@ -32,7 +32,7 @@ class Player(SpriteAnimation):
         self.powerDamage = 10
         self.powerDamageDefended = 2
         self.HP = 140
-        self.XP = 30
+        self.XP = 100
         self.playerId = playerId
         if self.playerId == 1:
             self.k_down = K_s
@@ -54,6 +54,7 @@ class Player(SpriteAnimation):
             self.k_load = K_KP4
             self.k_rightArrow = K_RIGHT
             self.k_leftArrow = K_LEFT
+        self.inicio1Pc = time.time()
     
     def playPlayer(self,eventArg, player2, power1):
         """
@@ -263,7 +264,7 @@ class Player(SpriteAnimation):
             playerHPRect = Rect(80 , 20, self.HP*2, 20)
             playerXPRect = Rect(80 , 60, self.XP*2, 20)
             screen.blit(self.photo3x4, (0,20))
-        if self.playerId == 2:
+        if self.playerId == 2 or self.playerId ==0:
             playerHPRect = Rect(width-80, 20, -self.HP*2, 20)
             playerXPRect = Rect(width-80, 60, -self.XP*2, 20)
             screen.blit(self.photo3x4Fliped, (width-70,20))
@@ -449,30 +450,27 @@ class Player(SpriteAnimation):
         """
         Pc player
         """
-        if self.XP > 20:
-            self.acao = "kameham"
-            power2.acao = "kame"
-            self.pressed = True
-            power2.pressed = True
-            self.pos = 1
-            self.Attacking = True
-            self.Defending = False
-            if self.facingRight == False:
-                player2AttackRect = Rect(self.x-950, self.y+10, 1000, 60)
-                #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-            elif self.facingRight == True:
-                player2AttackRect = Rect(self.x+45, self.y+10, 1000, 60)
-                #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-            if player2AttackRect.colliderect(player1.Rect) == True:
-                if player1.Defending == False:
-                    player1.HP -= 10
-                if player1.Defending == True and player1.Attacking == False:
-                    player1.HP -= 2
-            self.acao = "down"
-            self.XP-=10
-        if self.XP <0 or self.XP < 30:
-            self.acao = "load"
-            self.pressed = True
-            self.pos = 1
-            self.XP+= 5 
+        if time.time()-self.inicio1Pc>4:
+            if self.XP > 20:
+                self.acao = "kameham"
+                power2.acao = "kame"
+                self.pressed = True
+                power2.pressed = True
+                self.pos = 1
+                self.Attacking = True
+                self.Defending = False
+                if self.facingRight == False:
+                    player2AttackRect = Rect(self.x-950, self.y+10, 1000, 60)
+                    #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
+                elif self.facingRight == True:
+                    player2AttackRect = Rect(self.x+45, self.y+10, 1000, 60)
+                    #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
+                if player2AttackRect.colliderect(player1.Rect) == True:
+                    if player1.Defending == False:
+                        player1.HP -= 10
+                    if player1.Defending == True and player1.Attacking == False:
+                        player1.HP -= 2
+                self.XP-=10
+                self.inicio = time.time()
+                self.inicio1Pc = time.time()
 

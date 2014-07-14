@@ -61,16 +61,19 @@ yp2d = yp2
 characters = ['goku','vegeta','trunks']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
+playerPC = Player(acaoInicial="down",playerId=0)
 power1 = SpriteAnimation(acaoInicial="void")
 power2 = SpriteAnimation(acaoInicial="void")
-player1.loadCharacter(characters[1])
 player1.loadPower(power1)
 player2.loadPower(power2)
+playerPC.loadPower(power2)
 
 delta = 13 #Velocidade do movimento, quanto maior mais rapido
 player2.facingRight = False
 player2.x = 850
 player2.y = 350
+playerPC.x = 850
+playerPC.y = 350
 
 def restart():
     """
@@ -172,8 +175,8 @@ def openMenu():
                     restart()
                 if s0Option[is0] == 1:
                     previousGameState = 0
-                    #gameState = 2
-                    #vsPC = True
+                    gameState = 5
+                    vsPC = True
                 if s0Option[is0] == 2:
                     previousGameState = 0
                     gameState = 3
@@ -185,14 +188,14 @@ def openMenu():
                 if s0Option[is0] < s0Option[-1]:
                     is0 += 1
                     # to jump player vs PC
-                    if is0 == 1:
-                        is0 +=1
+                    #if is0 == 1:
+                        #is0 +=1
             if event.key==K_UP:
                 if s0Option[is0] > s0Option[0]:
                     is0 -= 1
                     # to jump player vs PC
-                    if is0 == 1:
-                        is0 -=1
+                    #if is0 == 1:
+                        #is0 -=1
 def Options():
     """
     Option Menu
@@ -301,7 +304,11 @@ def chooseCharacter():
     boldFont = pygame.font.SysFont("monospace", 65,bold =True)
 
     playerVsPlayer = boldFont.render("P1", 1, (255,0,0))
-    playerVsPlayer2 = boldFont.render("P2", 1, (0,0,255))
+    if vsPC == True: 
+        playerVsPlayer2 = boldFont.render("PC", 1, (0,0,255))
+    else:
+        playerVsPlayer2 = boldFont.render("P2", 1, (0,0,255))
+
     
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -312,9 +319,12 @@ def chooseCharacter():
                 gameState = previousGameState
             if event.key==K_RETURN:
                     gameState = 4
-                    vsPC = False
-                    player1.loadCharacter(characters[sc1])
-                    player2.loadCharacter(characters[sc2])
+                    if vsPC == True:
+                        player1.loadCharacter(characters[sc1])
+                        playerPC.loadCharacter(characters[sc2])
+                    else:
+                        player1.loadCharacter(characters[sc1])
+                        player2.loadCharacter(characters[sc2])
             if event.key==K_d:
                 if sc1 >= len(photos3x4)-1:
                     sc1 = 0
@@ -489,36 +499,51 @@ def playLoop():
         if vsPC == False:
             player1.playPlayer(event,player2,power1)
             player2.playPlayer(event,player1,power2)
-        #playPlayer2(event)
         elif vsPC == True:
-            player1.playPlayer1(event,player2,power1)
-            #playPC() 
+            player1.playPlayer(event,playerPC,power1)
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 global gameState
                 global previousGameState
                 gameState = 1
                 previousGameState = 2
+
     global width
     global height
-    player1.TurnAround1(player2)
     player1.lockInsideScreen(width,height,delta)
-    player2.lockInsideScreen(width,height,delta)
-    player1.powerPlacing(power1)
-    player2.powerPlacing(power2,dx2=920,dy2=0)
     player1.physicalRect()
-    player2.physicalRect()
+    player1.powerPlacing(power1)
     player1.statusBar(screen,width)
-    player2.statusBar(screen,width)
     player1.standUpPosition()
-    player2.standUpPosition()
-    player1.defeated(screen,player2)
-    player2.defeated(screen,player1)
-    clock.tick(60)
-    player2.update(player2.pos,screen)
     player1.update(player1.pos,screen)
     power1.update(player1.pos,screen)
-    power2.update(player2.pos,screen)
+    
+    if vsPC == True:
+        player1.defeated(screen,playerPC)
+        player1.TurnAround1(playerPC)
+        
+        playerPC.playPC(player1,power2)
+        playerPC.lockInsideScreen(width,height,delta)
+        playerPC.physicalRect()
+        playerPC.powerPlacing(power2)
+        playerPC.statusBar(screen,width)
+        playerPC.standUpPosition()
+        playerPC.defeated(screen,player1)
+        playerPC.update(playerPC.pos,screen)
+        power2.update(playerPC.pos,screen)
+    else:
+        player1.defeated(screen,player2)
+        player1.TurnAround1(player2)
+        player2.lockInsideScreen(width,height,delta)
+        player2.powerPlacing(power2,dx2=920,dy2=0)
+        player2.physicalRect()
+        player2.statusBar(screen,width)
+        player2.standUpPosition()
+        player2.defeated(screen,player1)
+        player2.update(player2.pos,screen)
+        power2.update(player2.pos,screen)
+
+    clock.tick(60)
     pygame.display.update()
 
 show_splashscreen()
