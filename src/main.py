@@ -23,8 +23,8 @@ ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-#screen = pygame.display.set_mode(resolution)
+#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 #background_openning = pygame.transform.flip(background_openning, 1,0)
@@ -95,8 +95,8 @@ def restart():
         playerPC.y = 350
         player1.HP = 140
         playerPC.HP = 140
-        player1.XP = 30
-        playerPC.XP = 300
+        player1.XP = 50
+        playerPC.XP = 50
         playerPC.inicio1Pc = time.time()
     else:
         player2.acao = "down"
@@ -113,8 +113,8 @@ def restart():
         player2.y = 350
         player1.HP = 140
         player2.HP = 140
-        player1.XP = 30
-        player2.XP = 30
+        player1.XP = 50
+        player2.XP = 50
 
 def show_splashscreen():
     """
@@ -541,7 +541,7 @@ def playLoop():
         player1.defeated(screen,playerPC)
         player1.TurnAround1(playerPC)
         
-        playerPC.playPC(player1,power2)
+        playerPC.playPC(player1,power2,screen)
         playerPC.lockInsideScreen(width,height,delta)
         playerPC.physicalRect()
         playerPC.powerPlacing(power2)

@@ -3,6 +3,8 @@ import pygame, sys, glob
 from pygame import *
 from spriteanimation import SpriteAnimation
 import time
+import random
+import datetime
 
 class Player(SpriteAnimation):
     def __init__(self, acaoInicial, playerId, speed = 15):
@@ -32,8 +34,9 @@ class Player(SpriteAnimation):
         self.powerDamage = 10
         self.powerDamageDefended = 2
         self.HP = 140
-        self.XP = 100
+        self.XP = 50
         self.playerId = playerId
+        self.loading = False
         if self.playerId == 1:
             self.k_down = K_s
             self.k_up = K_w
@@ -54,7 +57,12 @@ class Player(SpriteAnimation):
             self.k_load = K_KP4
             self.k_rightArrow = K_RIGHT
             self.k_leftArrow = K_LEFT
-        self.inicio1Pc = time.time()
+        self.inicio1Pc = time.time()*1000
+        self.inicio2Pc = time.time()*1000
+        self.inicio3Pc = time.time()*1000
+        self.inicio4Pc = time.time()*1000
+        self.inicio5Pc = time.time()*1000
+        self.inicio6Pc = time.time()*1000
     
     def playPlayer(self,eventArg, player2, power1):
         """
@@ -218,6 +226,24 @@ class Player(SpriteAnimation):
     def lockInsideScreen(self,width,height,delta):
         """
         Lock the player to the visible screen
+        """
+        if self.facingRight == True:
+            if self.movex == -1 and self.x>0:
+                self.x += self.movex * delta
+            if self.movex == 1 and self.x<width-50:
+                self.x += self.movex * delta
+        if self.facingRight == False:
+            if self.movex == -1 and self.x>0:
+                self.x += self.movex * delta
+            if self.movex == 1 and self.x<width-50:
+                self.x += self.movex * delta
+        if self.movey == 1 and self.y<height-70:
+            self.y += self.movey * delta
+        if self.movey == -1 and self.y>0:
+            self.y += self.movey * delta
+    def lockInsideScreenPC(self,width,height,delta,player1):
+        """
+        Lock the PC to the visible screen
         """
         if self.facingRight == True:
             if self.movex == -1 and self.x>0:
@@ -446,33 +472,80 @@ class Player(SpriteAnimation):
         power.insertFrame(1300,1604,146,40) #void
         power.buildAnimation("kame",hold=True, speed = 10)
     
-    def playPC(self, player1, power2):
+    def playPC(self, player1, power2,screen):
         """
         Pc player
         """
-        if time.time()-self.inicio1Pc>1:
-            if self.XP > 20:
-                self.acao = "kameham"
-                power2.acao = "kame"
+        if self.HP > 0:
+            if time.time()*1000-self.inicio1Pc>160 and abs(self.y-player1.y)< 50 and self.loading == False and abs(self.x-player1.x)>65:
+                if self.XP >= 10:
+                    self.acao = "kameham"
+                    power2.acao = "kame"
+                    self.pressed = True
+                    power2.pressed = True
+                    self.pos = 1
+                    self.Attacking = True
+                    self.Defending = False
+                    if self.facingRight == False:
+                        player2AttackRect = Rect(self.x-950, self.y+10, 1000, 60)
+                        #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
+                    elif self.facingRight == True:
+                        player2AttackRect = Rect(self.x+45, self.y+10, 1000, 60)
+                        #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
+                    if player2AttackRect.colliderect(player1.Rect) == True:
+                        if player1.Defending == False:
+                            player1.HP -= 10
+                            player1.acao = 'hited'
+                            player1.inicio = time.time()
+                        if player1.Defending == True and player1.Attacking == False:
+                            player1.HP -= 2
+                    self.XP-=10
+                    self.inicio = time.time()
+                    self.inicio1Pc = time.time()*1000
+            if abs(self.x-player1.x)<65 and abs(self.y-player1.y)< 30 and abs(time.time()*1000-self.inicio2Pc) > 80:
+                if random.randint(0,11) > 5:
+                    self.acao = "punch"
+                else:
+                    self.acao = "kick"
                 self.pressed = True
-                power2.pressed = True
                 self.pos = 1
                 self.Attacking = True
                 self.Defending = False
+                if self.facingRight == True:
+                    selfAttackRect = Rect(self.x+15, self.y, 70, 70)
+                    #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
                 if self.facingRight == False:
-                    player2AttackRect = Rect(self.x-950, self.y+10, 1000, 60)
-                    #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-                elif self.facingRight == True:
-                    player2AttackRect = Rect(self.x+45, self.y+10, 1000, 60)
-                    #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-                if player2AttackRect.colliderect(player1.Rect) == True:
+                    selfAttackRect = Rect(self.x-15, self.y, 70, 70)
+                    #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
+                if selfAttackRect.colliderect(player1.Rect) == True:
                     if player1.Defending == False:
-                        player1.HP -= 10
+                        player1.HP -= self.punchDamage
+                        player1.acao = "hited"
+                        player1.inicio = time.time()
                     if player1.Defending == True and player1.Attacking == False:
-                        player1.HP -= 2
-                self.XP-=10
+                        player1.HP -= player1.hitDefended
                 self.inicio = time.time()
-                player1.acao = 'hited'
-                player1.inicio = time.time()
-                self.inicio1Pc = time.time()
+                self.inicio2Pc = time.time()*1000
+            if abs(time.time()*1000-self.inicio3Pc) > 2000 and abs(self.x-player1.x)>100:
+                self.acao = "load"
+                self.pressed = True
+                self.pos = 1
+                self.XP+= 2 
+                self.inicio = time.time()
+                self.loading = True
+                if abs(time.time()*1000-self.inicio4Pc) >3000:
+                    self.inicio3Pc = time.time()*1000
+                    self.inicio4Pc = time.time()*1000
+                    self.loading = False
+            if player1.y-self.y <0 and abs(time.time()*1000-self.inicio5Pc) >4000:
+                self.acao = "up"
+                self.pos = 1
+                self.movey=-1
+                if abs(time.time()*1000-self.inicio5Pc) >4150:
+                    self.inicio5Pc = time.time()*1000
+                    self.movey=0
+
+
+
+
 
