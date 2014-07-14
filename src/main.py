@@ -79,22 +79,42 @@ def restart():
     """
     Restar the game
     """
-    player2.acao = "down"
-    player1.acao = "down"
-    player1.pos = 1
-    player2.pos = 1
-    player1.movex, player1.movey = 0,0
-    player2.movex, player2.movey = 0,0
-    player1.facingRight = True
-    player2.facingRight = False
-    player1.x = 250
-    player1.y = 350
-    player2.x = 850
-    player2.y = 350
-    player1.HP = 140
-    player2.HP = 140
-    player1.XP = 30
-    player2.XP = 30
+    global vsPC
+    if vsPC == True:
+        playerPC.acao = "down"
+        player1.acao = "down"
+        player1.pos = 1
+        playerPC.pos = 1
+        player1.movex, player1.movey = 0,0
+        playerPC.movex, playerPC.movey = 0,0
+        player1.facingRight = True
+        playerPC.facingRight = False
+        player1.x = 250
+        player1.y = 350
+        playerPC.x = 850
+        playerPC.y = 350
+        player1.HP = 140
+        playerPC.HP = 140
+        player1.XP = 30
+        playerPC.XP = 300
+        playerPC.inicio1Pc = time.time()
+    else:
+        player2.acao = "down"
+        player1.acao = "down"
+        player1.pos = 1
+        player2.pos = 1
+        player1.movex, player1.movey = 0,0
+        player2.movex, player2.movey = 0,0
+        player1.facingRight = True
+        player2.facingRight = False
+        player1.x = 250
+        player1.y = 350
+        player2.x = 850
+        player2.y = 350
+        player1.HP = 140
+        player2.HP = 140
+        player1.XP = 30
+        player2.XP = 30
 
 def show_splashscreen():
     """
@@ -169,10 +189,9 @@ def openMenu():
                 gameState = previousGameState
             if event.key==K_RETURN:
                 if s0Option[is0] == 0:
-                    #gameState = 2
-                    #vsPC = False
                     gameState = 5
                     restart()
+                    vsPC = False
                 if s0Option[is0] == 1:
                     previousGameState = 0
                     gameState = 5

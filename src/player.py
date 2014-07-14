@@ -450,7 +450,7 @@ class Player(SpriteAnimation):
         """
         Pc player
         """
-        if time.time()-self.inicio1Pc>4:
+        if time.time()-self.inicio1Pc>1:
             if self.XP > 20:
                 self.acao = "kameham"
                 power2.acao = "kame"
@@ -472,5 +472,7 @@ class Player(SpriteAnimation):
                         player1.HP -= 2
                 self.XP-=10
                 self.inicio = time.time()
+                player1.acao = 'hited'
+                player1.inicio = time.time()
                 self.inicio1Pc = time.time()
 
