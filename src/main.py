@@ -23,8 +23,8 @@ ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-screen = pygame.display.set_mode(resolution)
+screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+#screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 #background_openning = pygame.transform.flip(background_openning, 1,0)
@@ -43,7 +43,7 @@ sc = 0
 sc1 = 0
 sc2 = 1
 sg = 0
-volume = 0.9
+volume = 0.1
 vsPC = False
 song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
@@ -74,6 +74,7 @@ player2.x = 850
 player2.y = 350
 playerPC.x = 850
 playerPC.y = 350
+playerPC.XP = 0
 
 def restart():
     """
@@ -96,7 +97,7 @@ def restart():
         player1.HP = 140
         playerPC.HP = 140
         player1.XP = 50
-        playerPC.XP = 50
+        playerPC.XP = 0
         playerPC.inicio1Pc = time.time()
     else:
         player2.acao = "down"
@@ -121,12 +122,14 @@ def show_splashscreen():
     Show the splash screen.
     This is called once when the game is first started.
     """
+    global volume
     for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
     pygame.mixer.music.load('../resources/splash.ogg')
     pygame.mixer.music.play()
+    pygame.mixer.music.set_volume(volume)
     white = 250, 250, 250
     screen.fill(white) 
     # Slowly fade the splash screen image from white to opaque. 
@@ -540,9 +543,9 @@ def playLoop():
     if vsPC == True:
         player1.defeated(screen,playerPC)
         player1.TurnAround1(playerPC)
-        
         playerPC.playPC(player1,power2,screen)
-        playerPC.lockInsideScreen(width,height,delta)
+        #playerPC.lockInsideScreen(width,height,delta)
+        playerPC.lockInsideScreenPC(width, height, delta, player1)
         playerPC.physicalRect()
         playerPC.powerPlacing(power2)
         playerPC.statusBar(screen,width)

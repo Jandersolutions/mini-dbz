@@ -63,6 +63,8 @@ class Player(SpriteAnimation):
         self.inicio4Pc = time.time()*1000
         self.inicio5Pc = time.time()*1000
         self.inicio6Pc = time.time()*1000
+        self.inicio7Pc = time.time()*1000
+        self.inicio8Pc = time.time()*1000
     
     def playPlayer(self,eventArg, player2, power1):
         """
@@ -255,10 +257,12 @@ class Player(SpriteAnimation):
                 self.x += self.movex * delta
             if self.movex == 1 and self.x<width-50:
                 self.x += self.movex * delta
-        if self.movey == 1 and self.y<height-70:
-            self.y += self.movey * delta
-        if self.movey == -1 and self.y>0:
-            self.y += self.movey * delta
+        if self.y < player1.y:
+            if self.movey == 1 and self.y<height-70:
+                self.y += self.movey * delta
+        if self.y > player1.y:
+            if self.movey == -1 and self.y>0:
+                self.y += self.movey * delta
 
     def powerPlacing(self,power,dx1=45,dy1=25,dx2=930,dy2=20):
         """
@@ -502,7 +506,7 @@ class Player(SpriteAnimation):
                     self.XP-=10
                     self.inicio = time.time()
                     self.inicio1Pc = time.time()*1000
-            if abs(self.x-player1.x)<65 and abs(self.y-player1.y)< 30 and abs(time.time()*1000-self.inicio2Pc) > 80:
+            if abs(self.x-player1.x)<65 and abs(self.y-player1.y)< 30 and abs(time.time()*1000-self.inicio2Pc) > 90:
                 if random.randint(0,11) > 5:
                     self.acao = "punch"
                 else:
@@ -537,15 +541,37 @@ class Player(SpriteAnimation):
                     self.inicio3Pc = time.time()*1000
                     self.inicio4Pc = time.time()*1000
                     self.loading = False
-            if player1.y-self.y <0 and abs(time.time()*1000-self.inicio5Pc) >4000:
+            if player1.y-self.y <0 and abs(time.time()*1000-self.inicio5Pc) >2000:
                 self.acao = "up"
                 self.pos = 1
                 self.movey=-1
-                if abs(time.time()*1000-self.inicio5Pc) >4150:
+                if abs(time.time()*1000-self.inicio5Pc) >2150:
                     self.inicio5Pc = time.time()*1000
                     self.movey=0
+                    self.pos = 0
 
+            if player1.y-self.y >0 and abs(time.time()*1000-self.inicio5Pc) >2000:
+                self.acao = "down"
+                self.pos = 1
+                self.movey=1
+                if abs(time.time()*1000-self.inicio5Pc) >2150:
+                    self.inicio5Pc = time.time()*1000
+                    self.movey=0
+                    self.pos = 0
 
-
-
-
+            if abs(player1.x-self.x) >0 and abs(time.time()*1000-self.inicio6Pc) >2000:
+                if self.facingRight == False:
+                    self.acao = "right"
+                    self.pos = 1
+                    self.movex=-1
+                    if abs(time.time()*1000-self.inicio6Pc) >2150:
+                        self.inicio6Pc = time.time()*1000
+                        self.movex=0
+                        self.pos = 0
+                if self.facingRight == True:
+                    self.acao = "down"
+                    self.pos = 1
+                    self.movex=1
+                    if abs(time.time()*1000-self.inicio6Pc) >2150:
+                        self.inicio6Pc = time.time()*1000
+                        self.movex=0
