@@ -127,7 +127,7 @@ class Player(SpriteAnimation):
                             if player2.Defending == True and player2.Attacking == False:
                                 player2.HP -= player2.powerDamageDefended
                         self.XP-=10
-                        self.inicio = time.time()
+                        #self.inicio = time.time()
                 if event.key == self.k_punch:
                     self.acao = "punch"
                     self.pressed = True
@@ -466,13 +466,9 @@ class Player(SpriteAnimation):
         """
         power.loadSprites("../resources/imagens/player/goku/ss4/power-1.png")
         power.createAnimation(1300,1604,146,40,1,"void")
-        #power1.insertFrame(1300,1604,146,40) #void
-        #power1.insertFrame(1300,1604,146,40) #void
-        #power1.insertFrame(644,1197,700,40) 
         power.insertFrame(0,132,1100,50) #Full Power
         power.insertFrame(0,132,1100,50) #Full Power
         power.insertFrame(0,132,1100,50) #Full Power
-        #power1.insertFrame(1176,1604,70,40)
         power.insertFrame(1300,1604,146,40) #void
         power.buildAnimation("kame",hold=True, speed = 10)
     
@@ -541,30 +537,31 @@ class Player(SpriteAnimation):
                     self.inicio3Pc = time.time()*1000
                     self.inicio4Pc = time.time()*1000
                     self.loading = False
-            if player1.y-self.y <0 and abs(time.time()*1000-self.inicio5Pc) >2000:
-                self.acao = "up"
-                self.pos = 1
-                self.movey=-1
-                if abs(time.time()*1000-self.inicio5Pc) >2150:
-                    self.inicio5Pc = time.time()*1000
-                    self.movey=0
-                    self.pos = 0
 
-            if player1.y-self.y >0 and abs(time.time()*1000-self.inicio5Pc) >2000:
-                self.acao = "down"
-                self.pos = 1
-                self.movey=1
-                if abs(time.time()*1000-self.inicio5Pc) >2150:
-                    self.inicio5Pc = time.time()*1000
-                    self.movey=0
-                    self.pos = 0
-
+            if abs(time.time()*1000-self.inicio5Pc) >2000:
+                if player1.y-self.y <0:
+                    self.acao = "up"
+                    self.pos = 1
+                    self.movey=-1
+                    if abs(time.time()*1000-self.inicio5Pc) >2350:
+                        self.inicio5Pc = time.time()*1000
+                        self.movey=0
+                        self.pos = 0
+                if player1.y-self.y >0:
+                    self.acao = "down"
+                    self.pos = 1
+                    self.movey=1
+                    if abs(time.time()*1000-self.inicio5Pc) >2350:
+                        self.inicio5Pc = time.time()*1000
+                        self.movey=0
+                        self.pos = 0
+              
             if abs(player1.x-self.x) >0 and abs(time.time()*1000-self.inicio6Pc) >2000:
                 if self.facingRight == False:
                     self.acao = "right"
                     self.pos = 1
                     self.movex=-1
-                    if abs(time.time()*1000-self.inicio6Pc) >2150:
+                    if abs(time.time()*1000-self.inicio6Pc) >2350:
                         self.inicio6Pc = time.time()*1000
                         self.movex=0
                         self.pos = 0
@@ -572,6 +569,8 @@ class Player(SpriteAnimation):
                     self.acao = "down"
                     self.pos = 1
                     self.movex=1
-                    if abs(time.time()*1000-self.inicio6Pc) >2150:
+                    if abs(time.time()*1000-self.inicio6Pc) >2350:
                         self.inicio6Pc = time.time()*1000
                         self.movex=0
+                        self.pos = 0
+           
