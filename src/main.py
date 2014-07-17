@@ -35,18 +35,20 @@ s0Option = range(5)
 is0 = 0
 s1Option = range(5)
 is1 = 0
-s3Option = range(4)
+s3Option = range(7)
 is3 = 0
 sc = 0
 sc1 = 0
 sc2 = 1
 sg = 0
-volume = 0.5
+df = 2
+volume = 0.4
 vsPC = False
 song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
 song3 = '../resources/sounds/cha-la.mp3'
 song = [song1,song2,song3]
+level = ['easy','Medium','Hard','Super Sayajin']
 xp1 = 400
 yp1 = 400
 xp1d = xp1
@@ -259,6 +261,8 @@ def Options():
     global volume
     global song
     global sg
+    global df
+    global level
     black = 0,0,0
     screen.fill(black)
     screen.blit(background_openning, (-70,0))
@@ -268,6 +272,10 @@ def Options():
     playerVsPc = myfont.render("Music Volume "+str(volume*100), 1, (255,255,255))
     options = myfont.render("Resume", 1, (255,255,255))
     music = myfont.render("Music", 1, (255,255,255))
+    back = myfont.render("Back", 1, (255,255,255))
+    mode = myfont.render("Mode", 1, (255,255,255))
+    dificult = myfont.render(level[df], 1, (255,255,255))
+    keyboard = myfont.render("Keyboard", 1, (255,255,255))
     title = myfont.render(ntpath.basename(song[sg]), 1, (255,255,255))
 
     global is3
@@ -276,15 +284,26 @@ def Options():
     if s3Option[is3] == 2:
         playerVsPc = boldFont.render("Music Volume "+str(volume*100), 1, (255,255,255))
     if s3Option[is3] == 3:
+        mode = boldFont.render("Mode", 1, (255,255,255))
+        dificult = boldFont.render(level[df], 1, (255,255,255))
+    if s3Option[is3] == 4:
+        keyboard = boldFont.render("Keyboard", 1, (255,255,255))
+    if s3Option[is3] == 5:
         options = boldFont.render("Resume", 1, (255,255,255))
+    if s3Option[is3] == 6:
+        back = boldFont.render("Back", 1, (255,255,255))
     if s3Option[is3] == 1:
         music = boldFont.render("Music", 1, (255,255,255))
         title = boldFont.render(ntpath.basename(song[sg]), 1, (255,255,255))
     screen.blit(playerVsPlayer, (340,250))
     screen.blit(playerVsPc, (340,350))
-    screen.blit(options, (340,395))
-    screen.blit(music, (340,305))
-    screen.blit(title, (540,305))
+    screen.blit(mode, (340,400))
+    screen.blit(dificult, (540,400))
+    screen.blit(music, (340,300))
+    screen.blit(title, (540,300))
+    screen.blit(keyboard, (340,450))
+    screen.blit(options, (340,500))
+    screen.blit(back, (340,550))
     pygame.display.update()
     
     for event in pygame.event.get():
@@ -295,8 +314,12 @@ def Options():
             if event.key==K_ESCAPE:
                 gameState = previousGameState
             if event.key==K_RETURN:
-                if s3Option[is3] == 3:
+                if s3Option[is3] == 5:
                     gameState = 2
+                if s3Option[is3] == 6:
+                    gameState = previousGameState
+                if s3Option[is3] == 4:
+                    gameState = 7
             if event.key==K_DOWN:
                 if s3Option[is3] < s3Option[-1]:
                     is3 += 1
@@ -315,6 +338,9 @@ def Options():
                         sg =-1
                     sg +=1
                     loadMusic(song[sg])
+                if s3Option[is3] == 3:
+                    if df < len(level)-1:
+                        df += 1
             if event.key==K_LEFT:
                 if s3Option[is3] == 0:
                     delta -= 1
@@ -330,7 +356,22 @@ def Options():
                         sg =len(song)
                     sg -=1
                     loadMusic(song[sg])
-
+                if s3Option[is3] == 3:
+                    if df > 0:
+                        df -= 1
+    if df==0:
+        playerPC.kamehamMs = 450
+        playerPC.punchMs = 200
+    if df==1:
+        playerPC.kamehamMs = 200
+        playerPC.punchMs = 110
+    if df==2:
+        playerPC.kamehamMs = 160
+        playerPC.punchMs = 90
+    if df==3:
+        playerPC.kamehamMs = 100
+        playerPC.punchMs = 70
+        
 def Credits():
     """
     Option Menu
@@ -366,6 +407,76 @@ def Credits():
         if event.type==KEYDOWN:
             if event.key==K_ESCAPE:
                 gameState = previousGameState
+
+def keyboard():
+    """
+    Option Menu
+    """
+    global gameState
+    global previousGameState
+    global sg
+    black = 0,0,0
+    screen.fill(black)
+    screen.blit(background_openning, (-70,0))
+    myfont = pygame.font.SysFont("monospace", 45, bold = True)
+    boldFont = pygame.font.SysFont("monospace", 55,bold =True)
+    player1 = boldFont.render("Player 1", 1, (255,255,255))
+    left = myfont.render("a - Left", 1, (255,255,0))
+    right = myfont.render("d - Right", 1, (255,255,0))
+    up = myfont.render("w - Up", 1, (255,255,0))
+    down = myfont.render("s - Down", 1, (255,255,0))
+    kameham = myfont.render("u - kameham", 1, (255,255,0))
+    punch = myfont.render("i - Punch", 1, (255,255,0))
+    kick = myfont.render("o - Kick", 1, (255,255,0))
+    defend = myfont.render("p - Defend", 1, (255,255,0))
+    load = myfont.render("j - Load", 1, (255,255,0))
+
+    player2 = boldFont.render("Player 2", 1, (255,255,255))
+    left2 = myfont.render("left arrow - Left", 1, (255,255,0))
+    right2 = myfont.render("right arrow - Right", 1, (255,255,0))
+    up2 = myfont.render("up arrow - Up", 1, (255,255,0))
+    down2 = myfont.render("down arrow - Down", 1, (255,255,0))
+    kameham2 = myfont.render("7 - kameham", 1, (255,255,0))
+    punch2 = myfont.render("8 - Punch", 1, (255,255,0))
+    kick2 = myfont.render("9 - Kick", 1, (255,255,0))
+    defend2 = myfont.render("6 - Defend", 1, (255,255,0))
+    load2 = myfont.render("5 - Load", 1, (255,255,0))
+    back = boldFont.render("OK", 1, (255,255,255))
+
+    screen.blit(player1, (300,100))
+    screen.blit(left, (300,180))
+    screen.blit(right, (300,230))
+    screen.blit(up, (300,280))
+    screen.blit(down, (300,330))
+    screen.blit(kameham, (300,380))
+    screen.blit(punch, (300,430))
+    screen.blit(kick, (300,480))
+    screen.blit(defend, (300,530))
+    screen.blit(load, (300,580))
+
+    screen.blit(player2, (680,100))
+    screen.blit(left2, (680,180))
+    screen.blit(right2, (680,230))
+    screen.blit(up2, (680,280))
+    screen.blit(down2, (680,330))
+    screen.blit(kameham2, (680,380))
+    screen.blit(punch2, (680,430))
+    screen.blit(kick2, (680,480))
+    screen.blit(defend2, (680,530))
+    screen.blit(load2, (680,580))
+    screen.blit(back, (780,680))
+
+    pygame.display.update()
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type==KEYDOWN:
+            if event.key==K_ESCAPE:
+                gameState = previousGameState
+            if event.key==K_RETURN:
+                gameState = previousGameState
+
 
 def chooseCharacter():
     """
@@ -653,4 +764,6 @@ while 1:
         chooseCharacter()
     elif gameState == 6:
         Credits()
+    elif gameState == 7:
+        keyboard()
 

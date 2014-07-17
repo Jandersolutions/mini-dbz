@@ -65,6 +65,8 @@ class Player(SpriteAnimation):
         self.inicio6Pc = time.time()*1000
         self.inicio7Pc = time.time()*1000
         self.inicio8Pc = time.time()*1000
+        self.kamehamMs = 160
+        self.punchMs = 90
     
     def playPlayer(self,eventArg, player2, power1):
         """
@@ -477,7 +479,7 @@ class Player(SpriteAnimation):
         Pc player
         """
         if self.HP > 0:
-            if time.time()*1000-self.inicio1Pc>160 and abs(self.y-player1.y)< 50 and self.loading == False and abs(self.x-player1.x)>65:
+            if time.time()*1000-self.inicio1Pc>self.kamehamMs and abs(self.y-player1.y)< 50 and self.loading == False and abs(self.x-player1.x)>65:
                 if self.XP >= 10:
                     self.acao = "kameham"
                     power2.acao = "kame"
@@ -502,7 +504,7 @@ class Player(SpriteAnimation):
                     self.XP-=10
                     self.inicio = time.time()
                     self.inicio1Pc = time.time()*1000
-            if abs(self.x-player1.x)<65 and abs(self.y-player1.y)< 30 and abs(time.time()*1000-self.inicio2Pc) > 90:
+            if abs(self.x-player1.x)<65 and abs(self.y-player1.y)< 30 and abs(time.time()*1000-self.inicio2Pc) > self.punchMs:
                 if random.randint(0,11) > 5:
                     self.acao = "punch"
                 else:
