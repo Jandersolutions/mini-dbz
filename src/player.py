@@ -68,7 +68,7 @@ class Player(SpriteAnimation):
         self.kamehamMs = 160
         self.punchMs = 90
     
-    def playPlayer(self,eventArg, player2, power1):
+    def playPlayer(self,eventArg, playerList, power1):
         """
         Activate player movements and skills
         """
@@ -121,13 +121,14 @@ class Player(SpriteAnimation):
                         else:
                             selfAttackRect = Rect(self.x-1000, self.y+20, 1000, 60)
                             #pygame.draw.rect(screen, (0,255,0), selfAttackRect)
-                        if selfAttackRect.colliderect(player2.Rect) == True:
-                            if player2.Defending == False:
-                                player2.HP -= self.powerDamage
-                                player2.acao = "hited"
-                                player2.inicio = time.time()
-                            if player2.Defending == True and player2.Attacking == False:
-                                player2.HP -= player2.powerDamageDefended
+                        for player in playerList:
+                            if selfAttackRect.colliderect(player.Rect) == True:
+                                if player.Defending == False:
+                                    player.HP -= self.powerDamage
+                                    player.acao = "hited"
+                                    player.inicio = time.time()
+                                if player.Defending == True and player.Attacking == False:
+                                    player.HP -= player.powerDamageDefended
                         self.XP-=10
                         #self.inicio = time.time()
                 if event.key == self.k_punch:
@@ -142,13 +143,14 @@ class Player(SpriteAnimation):
                     if self.facingRight == False:
                         selfAttackRect = Rect(self.x-5, self.y, 50, 70)
                         #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
-                    if selfAttackRect.colliderect(player2.Rect) == True:
-                        if player2.Defending == False:
-                            player2.HP -= self.punchDamage
-                            player2.acao = "hited"
-                            player2.inicio = time.time()
-                        if player2.Defending == True and player2.Attacking == False:
-                            player2.HP -= player2.hitDefended
+                    for player in playerList:
+                        if selfAttackRect.colliderect(player.Rect) == True:
+                            if player.Defending == False:
+                                player.HP -= self.punchDamage
+                                player.acao = "hited"
+                                player.inicio = time.time()
+                            if player.Defending == True and player.Attacking == False:
+                                player.HP -= player.hitDefended
                     self.inicio = time.time()
                 if event.key == self.k_kick:
                     self.acao = "kick"
@@ -162,13 +164,14 @@ class Player(SpriteAnimation):
                     if self.facingRight == False:
                         selfAttackRect = Rect(self.x-5, self.y, 35, 70)
                         #pygame.draw.rect(screen, (255,0,0), selfAttackRect)
-                    if selfAttackRect.colliderect(player2.Rect) == True:
-                        if player2.Defending == False:
-                            player2.HP -= self.kickDamage
-                            player2.acao = "hited"
-                            player2.inicio = time.time()
-                        if player2.Defending == True and player2.Attacking == False:
-                            player2.HP -= player2.hitDefended
+                    for player in playerList:
+                        if selfAttackRect.colliderect(player.Rect) == True:
+                            if player.Defending == False:
+                                player.HP -= self.kickDamage
+                                player.acao = "hited"
+                                player.inicio = time.time()
+                            if player.Defending == True and player.Attacking == False:
+                                player.HP -= player.hitDefended
                     self.inicio = time.time()
                 if event.key == self.k_load:
                     self.acao = "load"
@@ -216,16 +219,16 @@ class Player(SpriteAnimation):
                     self.pos = 0
                     self.movex=0
     
-    def TurnAround1(self,player2):
+    def TurnAround(self,otherPlayer):
         """
         Turn around automatically for player1 and player2
         """
-        if self.x > player2.x:
+        if self.x > otherPlayer.x:
             self.facingRight = False
-            player2.facingRight = True
-        if self.x < player2.x:
+            #player2.facingRight = True
+        if self.x < otherPlayer.x:
             self.facingRight = True
-            player2.facingRight = False
+            #player2.facingRight = False
 
     def lockInsideScreen(self,width,height,delta):
         """
@@ -296,10 +299,18 @@ class Player(SpriteAnimation):
             playerHPRect = Rect(80 , 20, self.HP*2, 20)
             playerXPRect = Rect(80 , 60, self.XP*2, 20)
             screen.blit(self.photo3x4, (0,20))
+        if self.playerId == 4:
+            playerHPRect = Rect(80 , 100, self.HP*2, 20)
+            playerXPRect = Rect(80 , 140, self.XP*2, 20)
+            screen.blit(self.photo3x4, (0,120))
         if self.playerId == 2 or self.playerId ==0:
             playerHPRect = Rect(width-80, 20, -self.HP*2, 20)
             playerXPRect = Rect(width-80, 60, -self.XP*2, 20)
             screen.blit(self.photo3x4Fliped, (width-70,20))
+        if self.playerId == 3:
+            playerHPRect = Rect(width-80, 100, -self.HP*2, 20)
+            playerXPRect = Rect(width-80, 140, -self.XP*2, 20)
+            screen.blit(self.photo3x4Fliped, (width-70,100))
         if self.HP >=0:
             pygame.draw.rect(screen, (255,0,0), playerHPRect)
         pygame.draw.rect(screen, (0,0,255), playerXPRect)
@@ -316,6 +327,22 @@ class Player(SpriteAnimation):
             self.acao = "down"
             self.inicio = time.time()+1000
 
+    def teamDefeated(self,screen,otherPlayer,teamList):
+        """
+        Show the won frame of player1
+        """
+        HPTeam = 0
+        for player in teamList:
+            HPTeam += player.HP
+        if HPTeam <= 0:
+            #import pdb; pdb.set_trace()
+            self.acao = "lose"
+            if self.cronometrar2 == True:
+                self.inicioDead = time.time()
+                self.cronometrar2 = False
+            if time.time()-self.inicioDead>1:
+                screen.blit(otherPlayer.Win, (300,200))
+    
     def defeated(self,screen,otherPlayer):
         """
         Show the won frame of player1
@@ -328,6 +355,7 @@ class Player(SpriteAnimation):
                 self.cronometrar2 = False
             if time.time()-self.inicioDead>1:
                 screen.blit(otherPlayer.Win, (300,200))
+
 
     def loadCharacter(self, character):
         """

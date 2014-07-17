@@ -31,12 +31,16 @@ clock = pygame.time.Clock()
 pygame.mouse.set_visible(0)
 gameState = 0 #Menu
 previousGameState = 0
-s0Option = range(5) 
+s0Option = range(4) 
 is0 = 0
 s1Option = range(5)
 is1 = 0
 s3Option = range(7)
 is3 = 0
+s4Option = range(3)
+is4 = 0
+s5Option = range(3)
+is5 = 0
 sc = 0
 sc1 = 0
 sc2 = 1
@@ -57,16 +61,26 @@ xp2 = 550
 yp2 = 400
 xp2d = xp2
 yp2d = yp2
+pcNumber = 1
+multiplayer = False
 
 characters = ['goku','vegeta','trunks']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
 playerPC = Player(acaoInicial="down",playerId=0)
+playerPC2 = Player(acaoInicial="down",playerId=3)
 power1 = SpriteAnimation(acaoInicial="void")
 power2 = SpriteAnimation(acaoInicial="void")
+power3 = SpriteAnimation(acaoInicial="void")
+power4 = SpriteAnimation(acaoInicial="void")
 player1.loadPower(power1)
 player2.loadPower(power2)
-playerPC.loadPower(power2)
+playerPC.loadPower(power3)
+playerPC2.loadPower(power4)
+playerPC2.loadCharacter(characters[2])
+player2.loadCharacter(characters[2])
+PCPlayers = [playerPC,playerPC2]
+humanPlayers = [player1,player2]
 
 delta = 13 #Velocidade do movimento, quanto maior mais rapido
 player2.facingRight = False
@@ -75,6 +89,9 @@ player2.y = 350
 playerPC.x = 850
 playerPC.y = 350
 playerPC.XP = 0
+playerPC2.x = 150
+playerPC2.y = 50
+playerPC2.XP = 0
 
 def restart():
     """
@@ -193,30 +210,26 @@ def openMenu():
     titlefont = pygame.font.SysFont("monospace", 75,bold = True)
     boldFont = pygame.font.SysFont("monospace", 55,bold =True)
     title = titlefont.render("SS4-Battle", 1, (255,255,255))
-    playerVsPlayer = myfont.render("Player Vs Player", 1, (255,255,255))
-    playerVsPc = myfont.render("Player Vs Pc", 1, (255,255,255))
+    playerVsPc = myfont.render("Play", 1, (255,255,255))
     options = myfont.render("Options", 1, (255,255,255))
     credits = myfont.render("Credits", 1, (255,255,255))
     quit = myfont.render("Quit", 1, (255,255,255))
 
     global is0
     if s0Option[is0] == 0:
-        playerVsPlayer = boldFont.render("Player Vs Player", 1, (255,255,255))
+        playerVsPc = boldFont.render("Play", 1, (255,255,255))
     if s0Option[is0] == 1:
-        playerVsPc = boldFont.render("Player Vs Pc", 1, (255,255,255))
-    if s0Option[is0] == 2:
         options = boldFont.render("Options", 1, (255,255,255))
-    if s0Option[is0] == 3:
+    if s0Option[is0] == 2:
         credits = boldFont.render("Credits", 1, (255,255,255))
-    if s0Option[is0] == 4:
+    if s0Option[is0] == 3:
         quit = boldFont.render("Quit", 1, (255,255,255))
 
     #screen.blit(title, (200,105))
-    screen.blit(playerVsPlayer, (300,505))
-    screen.blit(playerVsPc, (300,555))
-    screen.blit(options, (300,605))
-    screen.blit(credits, (300,655))
-    screen.blit(quit, (300,705))
+    screen.blit(playerVsPc, (400,255))
+    screen.blit(options, (400,305))
+    screen.blit(credits, (400,355))
+    screen.blit(quit, (400,405))
     pygame.display.update()
     
     for event in pygame.event.get():
@@ -228,21 +241,25 @@ def openMenu():
                 gameState = previousGameState
             if event.key==K_RETURN:
                 if s0Option[is0] == 0:
-                    gameState = 5
+                    gameState = 8
                     restart()
                     vsPC = False
+                #if s0Option[is0] == 0:
+                    #gameState = 5
+                    #restart()
+                    #vsPC = False
+                #if s0Option[is0] == 1:
+                    #previousGameState = 0
+                    #gameState = 5
+                    #vsPC = True
+                    #restart()
                 if s0Option[is0] == 1:
                     previousGameState = 0
-                    gameState = 5
-                    vsPC = True
-                    restart()
+                    gameState = 3
                 if s0Option[is0] == 2:
                     previousGameState = 0
-                    gameState = 3
-                if s0Option[is0] == 3:
-                    previousGameState = 0
                     gameState = 6
-                if s0Option[is0] == 4:
+                if s0Option[is0] == 3:
                     pygame.quit()
                     sys.exit()
             if event.key==K_DOWN:
@@ -369,7 +386,7 @@ def Options():
         playerPC.kamehamMs = 160
         playerPC.punchMs = 90
     if df==3:
-        playerPC.kamehamMs = 100
+        playerPC.kamehamMs = 70
         playerPC.punchMs = 70
         
 def Credits():
@@ -680,26 +697,155 @@ def loadMenu():
             if event.key==K_UP:
                 if s1Option[is1] > s1Option[0]:
                     is1 -= 1
+
+def playOptions():
+    """
+    Menu during the playing game
+    """
+    global gameState
+    global previousGameState
+    global multiplayer
+    black = 0,0,0
+    screen.fill(black)
+    screen.blit(background_openning, (-70,0))
+    myfont = pygame.font.SysFont("monospace", 45)
+    boldFont = pygame.font.SysFont("monospace", 55,bold =True)
+    initialScreen = myfont.render("Player Vs PC", 1, (255,255,255))
+    playerVsPlayer = myfont.render("Player Vs Player", 1, (255,255,255))
+    playerVsPc = myfont.render("Player 1 & 2 Vs World", 1, (255,255,255))
+
+    global is4
+    if s4Option[is4] == 0:
+        initialScreen = boldFont.render("Player Vs Pc", 1, (255,255,255))
+    if s4Option[is4] == 1:
+        playerVsPlayer = boldFont.render("Player Vs Player", 1, (255,255,255))
+    if s4Option[is4] == 2:
+        playerVsPc = boldFont.render("Player 1 & 2 Vs World", 1, (255,255,255))
+    screen.blit(initialScreen, (340,250))
+    screen.blit(playerVsPlayer, (340,305))
+    screen.blit(playerVsPc, (340,360))
+    pygame.display.update()
+    
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type==KEYDOWN:
+            if event.key==K_ESCAPE:
+                gameState = 0
+            if event.key==K_RETURN:
+                if s4Option[is4] == 0:
+                    gameState = 9
+                    player2.playerId = 2
+                if s4Option[is4] == 1:
+                    gameState = 5
+                    restart()
+                    vsPC = False
+                    player2.playerId = 2
+                if s4Option[is4] == 2:
+                    multiplayer = True
+                    gameState = 9
+                    player2.playerId = 4
+                    player2.x = 250
+                    player2.y = 150
+            if event.key==K_DOWN:
+                if s4Option[is4] < s4Option[-1]:
+                    is4 += 1
+            if event.key==K_UP:
+                if s4Option[is4] > s4Option[0]:
+                    is4 -= 1
+
+def PCOptions():
+    """
+    Menu during the playing game
+    """
+    global gameState
+    global previousGameState
+    global vsPC
+    global pcNumber
+    black = 0,0,0
+    screen.fill(black)
+    screen.blit(background_openning, (-70,0))
+    myfont = pygame.font.SysFont("monospace", 45)
+    boldFont = pygame.font.SysFont("monospace", 55,bold =True)
+    initialScreen = myfont.render("Vs 1 PC", 1, (255,255,255))
+    playerVsPlayer = myfont.render("Vs 2 PC", 1, (255,255,255))
+    playerVsPc = myfont.render("Vs 3 PC", 1, (255,255,255))
+
+    global is5
+    if s5Option[is5] == 0:
+        initialScreen = boldFont.render("Vs 1 PS", 1, (255,255,255))
+    if s5Option[is5] == 1:
+        playerVsPlayer = boldFont.render("Vs 2 PC", 1, (255,255,255))
+    if s5Option[is5] == 2:
+        playerVsPc = boldFont.render("Vs 3 PC", 1, (255,255,255))
+    screen.blit(initialScreen, (340,250))
+    screen.blit(playerVsPlayer, (340,305))
+    screen.blit(playerVsPc, (340,360))
+    pygame.display.update()
+    
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type==KEYDOWN:
+            if event.key==K_ESCAPE:
+                gameState = 0
+            if event.key==K_RETURN:
+                if s5Option[is5] == 0:
+                    gameState = 5
+                    vsPC = True
+                    restart()
+                    pcNumber = 1
+                if s5Option[is5] == 1:
+                    gameState = 5
+                    vsPC = True
+                    restart()
+                    pcNumber = 2
+                if s5Option[is5] == 2:
+                    gameState = 5
+                    vsPC = True
+                    restart()
+                    pcNumber = 3
+            if event.key==K_DOWN:
+                if s5Option[is5] < s5Option[-1]:
+                    is5 += 1
+            if event.key==K_UP:
+                if s5Option[is5] > s5Option[0]:
+                    is5 -= 1
+
 def loadMusic (music):
     """Load the musics of a list"""
     pygame.mixer.music.load(music)
     pygame.mixer.music.play(-1)
+def distance(xo,yo,x,y):
+    dx = x - xo
+    dy = y - yo
+    d = ((dx**2)+(dy**2))**0.5
+    return d
+
 
 def playLoop():
     """
     Game Loop
     """
     global vsPC
+    global pcNumber
     screen.blit(background, (0,0))
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
         if vsPC == False:
-            player1.playPlayer(event,player2,power1)
-            player2.playPlayer(event,player1,power2)
+            p1 = [humanPlayers[0]]
+            p2 = [humanPlayers[1]]
+            player1.playPlayer(event,p2,power1)
+            player2.playPlayer(event,p1,power2)
+        if multiplayer == True:
+            player2.playPlayer(event,PCPlayers,power2)
+            player1.playPlayer(event,PCPlayers,power1)
         elif vsPC == True:
-            player1.playPlayer(event,playerPC,power1)
+            player1.playPlayer(event,PCPlayers,power1)
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 global gameState
@@ -717,18 +863,58 @@ def playLoop():
     
     if vsPC == True:
         player1.defeated(screen,playerPC)
-        player1.TurnAround1(playerPC)
-        playerPC.playPC(player1,power2,screen)
         playerPC.lockInsideScreenPC(width, height, delta, player1)
         playerPC.physicalRect()
-        playerPC.powerPlacing(power2)
+        playerPC.powerPlacing(power3)
         playerPC.statusBar(screen,width)
         playerPC.standUpPosition()
-        playerPC.defeated(screen,player1)
         playerPC.update(playerPC.pos,screen)
-    else:
+        if pcNumber == 1:
+            playerPC.defeated(screen,player1)
+        if pcNumber >= 2:
+            player1.defeated(screen,playerPC2)
+            playerPC2.playPC(player1,power4,screen)
+            playerPC2.lockInsideScreenPC(width, height, delta, player1)
+            playerPC2.physicalRect()
+            playerPC2.powerPlacing(power4)
+            playerPC2.statusBar(screen,width)
+            playerPC2.standUpPosition()
+            #playerPC2.defeated(screen,player1)
+            playerPC2.teamDefeated(screen,player1,PCPlayers)
+            playerPC2.update(playerPC2.pos,screen)
+            playerPC2.TurnAround(player1)
+        if pcNumber == 1:
+            player1.TurnAround(playerPC)
+        if pcNumber == 2:
+            d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
+            d2=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
+            
+            if d1 < d2 and playerPC.HP>0:
+                player1.TurnAround(playerPC)
+            if d1 > d2 and playerPC2.HP>0:
+                player1.TurnAround(playerPC2)
+        if multiplayer == True:
+            d3=distance(player1.x,player1.y,playerPC.x,playerPC.y)
+            d4=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
+            d5=distance(player2.x,player2.y,playerPC.x,playerPC.y)
+            d6=distance(player2.x,player1.y,playerPC2.x,playerPC2.y)
+            if d3<d5 and player1.HP >=0:
+                playerPC.playPC(player1,power3,screen)
+                playerPC.TurnAround(player1)
+            if d3>d5 and player2.HP>=0:
+                playerPC.playPC(player2,power3,screen)
+                playerPC.TurnAround(player2)
+            #if player1.HP <=0:
+                #playerPC.playPC(player2,power3,screen)
+                #playerPC.TurnAround(player2)
+            #if player2.HP <=0:
+                #playerPC.playPC(player1,power3,screen)
+                #playerPC.TurnAround(player1)
+
+    if vsPC == False:
         player1.defeated(screen,player2)
-        player1.TurnAround1(player2)
+        player1.TurnAround(player2)
+        player2.TurnAround(player1)
         player2.lockInsideScreen(width,height,delta)
         player2.powerPlacing(power2,dx2=920,dy2=0)
         player2.physicalRect()
@@ -738,9 +924,19 @@ def playLoop():
         player2.update(player2.pos,screen)
     player1.update(player1.pos,screen)
     power1.update(player1.pos,screen)
+    if multiplayer == True:
+        player2.TurnAround(playerPC)
+        player2.lockInsideScreen(width,height,delta)
+        player2.powerPlacing(power2,dx2=920,dy2=0)
+        player2.physicalRect()
+        player2.statusBar(screen,width)
+        player2.standUpPosition()
+        player2.update(player2.pos,screen)
     if vsPC == True:
-        power2.update(playerPC.pos,screen)
-    else:
+        power3.update(playerPC.pos,screen)
+        if pcNumber >= 2:
+            power4.update(playerPC2.pos,screen)
+    if vsPC == False or multiplayer == True:
         power2.update(player2.pos,screen)
 
     clock.tick(60)
@@ -766,4 +962,7 @@ while 1:
         Credits()
     elif gameState == 7:
         keyboard()
-
+    elif gameState == 8:
+        playOptions()
+    elif gameState == 9:
+        PCOptions()
