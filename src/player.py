@@ -130,7 +130,7 @@ class Player(SpriteAnimation):
                                 if player.Defending == True and player.Attacking == False:
                                     player.HP -= player.powerDamageDefended
                         self.XP-=10
-                        #self.inicio = time.time()
+                        self.inicio = time.time()
                 if event.key == self.k_punch:
                     self.acao = "punch"
                     self.pressed = True
@@ -502,12 +502,12 @@ class Player(SpriteAnimation):
         power.insertFrame(1300,1604,146,40) #void
         power.buildAnimation("kame",hold=True, speed = 10)
     
-    def playPC(self, player1, power2,screen):
+    def playPC(self, enemyPlayer, power2,screen):
         """
         Pc player
         """
         if self.HP > 0:
-            if time.time()*1000-self.inicio1Pc>self.kamehamMs and abs(self.y-player1.y)< 50 and self.loading == False and abs(self.x-player1.x)>65:
+            if time.time()*1000-self.inicio1Pc>self.kamehamMs and abs(self.y-enemyPlayer.y)< 50 and self.loading == False and abs(self.x-enemyPlayer.x)>65:
                 if self.XP >= 10:
                     self.acao = "kameham"
                     power2.acao = "kame"
@@ -522,17 +522,17 @@ class Player(SpriteAnimation):
                     elif self.facingRight == True:
                         player2AttackRect = Rect(self.x+45, self.y+10, 1000, 60)
                         #pygame.draw.rect(screen, (0,255,0), player2AttackRect)
-                    if player2AttackRect.colliderect(player1.Rect) == True:
-                        if player1.Defending == False:
-                            player1.HP -= 10
-                            player1.acao = 'hited'
-                            player1.inicio = time.time()
-                        if player1.Defending == True and player1.Attacking == False:
-                            player1.HP -= 2
+                    if player2AttackRect.colliderect(enemyPlayer.Rect) == True:
+                        if enemyPlayer.Defending == False:
+                            enemyPlayer.HP -= 10
+                            enemyPlayer.acao = 'hited'
+                            enemyPlayer.inicio = time.time()
+                        if enemyPlayer.Defending == True and enemyPlayer.Attacking == False:
+                            enemyPlayer.HP -= 2
                     self.XP-=10
                     self.inicio = time.time()
                     self.inicio1Pc = time.time()*1000
-            if abs(self.x-player1.x)<65 and abs(self.y-player1.y)< 30 and abs(time.time()*1000-self.inicio2Pc) > self.punchMs:
+            if abs(self.x-enemyPlayer.x)<65 and abs(self.y-enemyPlayer.y)< 30 and abs(time.time()*1000-self.inicio2Pc) > self.punchMs:
                 if random.randint(0,11) > 5:
                     self.acao = "punch"
                 else:
@@ -547,16 +547,16 @@ class Player(SpriteAnimation):
                 if self.facingRight == False:
                     selfAttackRect = Rect(self.x-15, self.y, 70, 70)
                     #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
-                if selfAttackRect.colliderect(player1.Rect) == True:
-                    if player1.Defending == False:
-                        player1.HP -= self.punchDamage
-                        player1.acao = "hited"
-                        player1.inicio = time.time()
-                    if player1.Defending == True and player1.Attacking == False:
-                        player1.HP -= player1.hitDefended
+                if selfAttackRect.colliderect(enemyPlayer.Rect) == True:
+                    if enemyPlayer.Defending == False:
+                        enemyPlayer.HP -= self.punchDamage
+                        enemyPlayer.acao = "hited"
+                        enemyPlayer.inicio = time.time()
+                    if enemyPlayer.Defending == True and enemyPlayer.Attacking == False:
+                        enemyPlayer.HP -= enemyPlayer.hitDefended
                 self.inicio = time.time()
                 self.inicio2Pc = time.time()*1000
-            if abs(time.time()*1000-self.inicio3Pc) > 2000 and abs(self.x-player1.x)>100:
+            if abs(time.time()*1000-self.inicio3Pc) > 2000 and abs(self.x-enemyPlayer.x)>100:
                 self.acao = "load"
                 self.pressed = True
                 self.pos = 1
@@ -569,7 +569,7 @@ class Player(SpriteAnimation):
                     self.loading = False
 
             if abs(time.time()*1000-self.inicio5Pc) >2000:
-                if player1.y-self.y <0:
+                if enemyPlayer.y-self.y <0:
                     self.acao = "up"
                     self.pos = 1
                     self.movey=-1
@@ -577,7 +577,7 @@ class Player(SpriteAnimation):
                         self.inicio5Pc = time.time()*1000
                         self.movey=0
                         self.pos = 0
-                if player1.y-self.y >0:
+                if enemyPlayer.y-self.y >0:
                     self.acao = "down"
                     self.pos = 1
                     self.movey=1
@@ -585,8 +585,7 @@ class Player(SpriteAnimation):
                         self.inicio5Pc = time.time()*1000
                         self.movey=0
                         self.pos = 0
-              
-            if abs(player1.x-self.x) >0 and abs(time.time()*1000-self.inicio6Pc) >2000:
+            if abs(enemyPlayer.x-self.x) >0 and abs(time.time()*1000-self.inicio6Pc) >2000:
                 if self.facingRight == False:
                     self.acao = "right"
                     self.pos = 1

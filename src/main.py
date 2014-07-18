@@ -52,7 +52,7 @@ song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
 song3 = '../resources/sounds/cha-la.mp3'
 song = [song1,song2,song3]
-level = ['easy','Medium','Hard','Super Sayajin']
+level = ['easy','Medium','Hard','Super Sayajin','Multiplayer easy']
 xp1 = 400
 yp1 = 400
 xp1d = xp1
@@ -63,23 +63,28 @@ xp2d = xp2
 yp2d = yp2
 pcNumber = 1
 multiplayer = False
+contador = 0
 
 characters = ['goku','vegeta','trunks']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
 playerPC = Player(acaoInicial="down",playerId=0)
 playerPC2 = Player(acaoInicial="down",playerId=3)
+playerPC3 = Player(acaoInicial="down",playerId=4)
 power1 = SpriteAnimation(acaoInicial="void")
 power2 = SpriteAnimation(acaoInicial="void")
 power3 = SpriteAnimation(acaoInicial="void")
 power4 = SpriteAnimation(acaoInicial="void")
+power5 = SpriteAnimation(acaoInicial="void")
 player1.loadPower(power1)
 player2.loadPower(power2)
 playerPC.loadPower(power3)
 playerPC2.loadPower(power4)
+playerPC3.loadPower(power5)
 playerPC2.loadCharacter(characters[2])
+playerPC3.loadCharacter(characters[1])
 player2.loadCharacter(characters[2])
-PCPlayers = [playerPC,playerPC2]
+PCPlayers = [playerPC,playerPC2,playerPC3]
 humanPlayers = [player1,player2]
 
 delta = 13 #Velocidade do movimento, quanto maior mais rapido
@@ -116,6 +121,10 @@ def restart():
         player1.XP = 50
         playerPC.XP = 0
         playerPC.inicio1Pc = time.time()
+        playerPC2.HP = 140
+        playerPC2.XP = 0
+        playerPC3.HP = 140
+        playerPC3.XP = 0
     else:
         player2.acao = "down"
         player1.acao = "down"
@@ -388,6 +397,9 @@ def Options():
     if df==3:
         playerPC.kamehamMs = 70
         playerPC.punchMs = 70
+    if df==4:
+        playerPC.kamehamMs = 700
+        playerPC.punchMs = 500
         
 def Credits():
     """
@@ -737,11 +749,13 @@ def playOptions():
                 if s4Option[is4] == 0:
                     gameState = 9
                     player2.playerId = 2
+                    multiplayer = False
                 if s4Option[is4] == 1:
                     gameState = 5
                     restart()
                     vsPC = False
                     player2.playerId = 2
+                    multiplayer = False
                 if s4Option[is4] == 2:
                     multiplayer = True
                     gameState = 9
@@ -774,7 +788,7 @@ def PCOptions():
 
     global is5
     if s5Option[is5] == 0:
-        initialScreen = boldFont.render("Vs 1 PS", 1, (255,255,255))
+        initialScreen = boldFont.render("Vs 1 PC", 1, (255,255,255))
     if s5Option[is5] == 1:
         playerVsPlayer = boldFont.render("Vs 2 PC", 1, (255,255,255))
     if s5Option[is5] == 2:
@@ -844,7 +858,7 @@ def playLoop():
         if multiplayer == True:
             player2.playPlayer(event,PCPlayers,power2)
             player1.playPlayer(event,PCPlayers,power1)
-        elif vsPC == True:
+        if vsPC == True and multiplayer ==False:
             player1.playPlayer(event,PCPlayers,power1)
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
@@ -852,27 +866,59 @@ def playLoop():
                 global previousGameState
                 gameState = 1
                 previousGameState = 2
-
     global width
     global height
-    player1.lockInsideScreen(width,height,delta)
-    player1.physicalRect()
-    player1.powerPlacing(power1)
-    player1.statusBar(screen,width)
-    player1.standUpPosition()
-    
-    if vsPC == True:
+    #playerVsplayer
+    if vsPC == False and multiplayer == False:
+        player1.lockInsideScreen(width,height,delta)
+        player1.physicalRect()
+        player1.powerPlacing(power1)
+        player1.statusBar(screen,width)
+        player1.standUpPosition()
+        player1.defeated(screen,player2)
+        player1.TurnAround(player2)
+        player2.lockInsideScreen(width,height,delta)
+        player2.physicalRect()
+        player2.powerPlacing(power2,dx2=920,dy2=0)
+        player2.statusBar(screen,width)
+        player2.standUpPosition()
+        player2.defeated(screen,player1)
+        player2.TurnAround(player1)
+        player1.update(player1.pos,screen)
+        player2.update(player2.pos,screen)
+        power1.update(player1.pos,screen)
+        power2.update(player2.pos,screen)
+    if vsPC == True and multiplayer == False:
+        player1.lockInsideScreen(width,height,delta)
+        player1.physicalRect()
+        player1.powerPlacing(power1)
+        player1.statusBar(screen,width)
+        player1.standUpPosition()
         player1.defeated(screen,playerPC)
+        #player1.TurnAround(playerPC)
+        player1.update(player1.pos,screen)
+        #power1.update(player1.pos,screen)
+        
+        #playerPC.playPC(player1,power3,screen)
         playerPC.lockInsideScreenPC(width, height, delta, player1)
         playerPC.physicalRect()
         playerPC.powerPlacing(power3)
         playerPC.statusBar(screen,width)
         playerPC.standUpPosition()
+        playerPC.defeated(screen,player1)
+        #playerPC.TurnAround(player1)
         playerPC.update(playerPC.pos,screen)
+        power3.update(playerPC.pos,screen)
         if pcNumber == 1:
-            playerPC.defeated(screen,player1)
+            player1.TurnAround(playerPC)
+            playerPC.TurnAround(player1)
+            playerPC.playPC(player1,power3,screen)
+            power1.update(player1.pos,screen)
         if pcNumber >= 2:
-            player1.defeated(screen,playerPC2)
+            playerPC.TurnAround(player1)
+            playerPC.playPC(player1,power3,screen)
+            power1.update(player1.pos,screen)
+            
             playerPC2.playPC(player1,power4,screen)
             playerPC2.lockInsideScreenPC(width, height, delta, player1)
             playerPC2.physicalRect()
@@ -880,64 +926,92 @@ def playLoop():
             playerPC2.statusBar(screen,width)
             playerPC2.standUpPosition()
             #playerPC2.defeated(screen,player1)
+            playerPC2.TurnAround(player1)
             playerPC2.teamDefeated(screen,player1,PCPlayers)
             playerPC2.update(playerPC2.pos,screen)
-            playerPC2.TurnAround(player1)
-        if pcNumber == 1:
-            player1.TurnAround(playerPC)
-        if pcNumber == 2:
-            d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
-            d2=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
             
-            if d1 < d2 and playerPC.HP>0:
-                player1.TurnAround(playerPC)
-            if d1 > d2 and playerPC2.HP>0:
-                player1.TurnAround(playerPC2)
-        if multiplayer == True:
-            d3=distance(player1.x,player1.y,playerPC.x,playerPC.y)
-            d4=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
-            d5=distance(player2.x,player2.y,playerPC.x,playerPC.y)
-            d6=distance(player2.x,player1.y,playerPC2.x,playerPC2.y)
-            if d3<d5 and player1.HP >=0:
+            if pcNumber == 2:
+                d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
+                d2=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
+                if d1 < d2 and playerPC.HP>0:
+                    player1.TurnAround(playerPC)
+                if d1 > d2 and playerPC2.HP>0:
+                    player1.TurnAround(playerPC2)
+            power4.update(playerPC2.pos,screen)
+        if pcNumber >= 3:
+            playerPC3.playPC(player1,power5,screen)
+            playerPC3.lockInsideScreenPC(width, height, delta, player1)
+            playerPC3.physicalRect()
+            playerPC3.powerPlacing(power5)
+            playerPC3.statusBar(screen,width)
+            playerPC3.standUpPosition()
+            #playerPC2.defeated(screen,player1)
+            playerPC3.TurnAround(player1)
+            playerPC3.teamDefeated(screen,player1,PCPlayers)
+            playerPC3.update(playerPC3.pos,screen)
+            power5.update(playerPC3.pos,screen)
+            if pcNumber == 3:
+                d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
+                d2=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
+                d3=distance(player1.x,player1.y,playerPC3.x,playerPC3.y)
+                if d1 < d2 and d1<d3 and playerPC.HP>0:
+                    player1.TurnAround(playerPC)
+                if d2 < d1 and d1<d3 and playerPC2.HP>0:
+                    player1.TurnAround(playerPC2)
+                if d3 < d1 and d3<d2 and playerPC2.HP>0:
+                    player1.TurnAround(playerPC3)
+
+    if multiplayer == True:
+        player1.lockInsideScreen(width,height,delta)
+        player1.physicalRect()
+        player1.powerPlacing(power1)
+        player1.statusBar(screen,width)
+        player1.standUpPosition()
+        player1.defeated(screen,playerPC)
+        player1.TurnAround(playerPC)
+        player2.lockInsideScreen(width,height,delta)
+        player2.physicalRect()
+        player2.powerPlacing(power2,dx2=920,dy2=0)
+        player2.statusBar(screen,width)
+        player2.standUpPosition()
+        player2.defeated(screen,playerPC)
+        player2.TurnAround(playerPC)
+        player1.update(player1.pos,screen)
+        player2.update(player2.pos,screen)
+        power1.update(player1.pos,screen)
+        power2.update(player2.pos,screen)
+
+        #playerPC.playPC(player1,power3,screen)
+        playerPC.physicalRect()
+        playerPC.powerPlacing(power3)
+        playerPC.statusBar(screen,width)
+        playerPC.standUpPosition()
+        playerPC.defeated(screen,player1)
+        #playerPC.TurnAround(player1)
+        playerPC.update(playerPC.pos,screen)
+        power3.update(playerPC.pos,screen)
+
+        d3=distance(player1.x,player1.y,playerPC.x,playerPC.y)
+        d5=distance(player2.x,player2.y,playerPC.x,playerPC.y)
+        global contador
+        contador +=1
+        if player1.HP> 0 and player2.HP >0:
+            if d3<d5:
                 playerPC.playPC(player1,power3,screen)
                 playerPC.TurnAround(player1)
-            if d3>d5 and player2.HP>=0:
+                playerPC.lockInsideScreenPC(width, height, delta, player1)
+            if d5<d3:
                 playerPC.playPC(player2,power3,screen)
                 playerPC.TurnAround(player2)
-            #if player1.HP <=0:
-                #playerPC.playPC(player2,power3,screen)
-                #playerPC.TurnAround(player2)
-            #if player2.HP <=0:
-                #playerPC.playPC(player1,power3,screen)
-                #playerPC.TurnAround(player1)
-
-    if vsPC == False:
-        player1.defeated(screen,player2)
-        player1.TurnAround(player2)
-        player2.TurnAround(player1)
-        player2.lockInsideScreen(width,height,delta)
-        player2.powerPlacing(power2,dx2=920,dy2=0)
-        player2.physicalRect()
-        player2.statusBar(screen,width)
-        player2.standUpPosition()
-        player2.defeated(screen,player1)
-        player2.update(player2.pos,screen)
-    player1.update(player1.pos,screen)
-    power1.update(player1.pos,screen)
-    if multiplayer == True:
-        player2.TurnAround(playerPC)
-        player2.lockInsideScreen(width,height,delta)
-        player2.powerPlacing(power2,dx2=920,dy2=0)
-        player2.physicalRect()
-        player2.statusBar(screen,width)
-        player2.standUpPosition()
-        player2.update(player2.pos,screen)
-    if vsPC == True:
-        power3.update(playerPC.pos,screen)
-        if pcNumber >= 2:
-            power4.update(playerPC2.pos,screen)
-    if vsPC == False or multiplayer == True:
-        power2.update(player2.pos,screen)
+                playerPC.lockInsideScreenPC(width, height, delta, player2)
+        if player1.HP <=0:
+            playerPC.playPC(player2,power3,screen)
+            playerPC.TurnAround(player2)
+            playerPC.lockInsideScreenPC(width, height, delta, player2)
+        if player2.HP <=0:
+            playerPC.playPC(player1,power3,screen)
+            playerPC.TurnAround(player1)
+            playerPC.lockInsideScreenPC(width, height, delta, player1)
 
     clock.tick(60)
     pygame.display.update()
