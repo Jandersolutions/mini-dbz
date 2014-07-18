@@ -52,7 +52,7 @@ song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
 song3 = '../resources/sounds/cha-la.mp3'
 song = [song1,song2,song3]
-level = ['easy','Medium','Hard','Super Sayajin','Multiplayer easy']
+level = ['easy','Medium','Hard','Super Sayajin','Multiplayer vs 2','Multiplayer vs 3']
 xp1 = 400
 yp1 = 400
 xp1d = xp1
@@ -253,15 +253,6 @@ def openMenu():
                     gameState = 8
                     restart()
                     vsPC = False
-                #if s0Option[is0] == 0:
-                    #gameState = 5
-                    #restart()
-                    #vsPC = False
-                #if s0Option[is0] == 1:
-                    #previousGameState = 0
-                    #gameState = 5
-                    #vsPC = True
-                    #restart()
                 if s0Option[is0] == 1:
                     previousGameState = 0
                     gameState = 3
@@ -398,8 +389,17 @@ def Options():
         playerPC.kamehamMs = 70
         playerPC.punchMs = 70
     if df==4:
-        playerPC.kamehamMs = 700
-        playerPC.punchMs = 500
+        playerPC.kamehamMs = 300
+        playerPC.punchMs = 150
+        playerPC2.kamehamMs = 300
+        playerPC2.punchMs = 150
+    if df==5:
+        playerPC.kamehamMs = 3000
+        playerPC.punchMs = 350
+        playerPC2.kamehamMs = 3000
+        playerPC2.punchMs = 350
+        playerPC3.kamehamMs = 3000
+        playerPC3.punchMs = 350
         
 def Credits():
     """
@@ -777,6 +777,7 @@ def PCOptions():
     global previousGameState
     global vsPC
     global pcNumber
+    global df
     black = 0,0,0
     screen.fill(black)
     screen.blit(background_openning, (-70,0))
@@ -816,11 +817,23 @@ def PCOptions():
                     vsPC = True
                     restart()
                     pcNumber = 2
+                    df = 4
+                    playerPC.kamehamMs = 300
+                    playerPC.punchMs = 150
+                    playerPC2.kamehamMs = 300
+                    playerPC2.punchMs = 150
                 if s5Option[is5] == 2:
                     gameState = 5
                     vsPC = True
                     restart()
                     pcNumber = 3
+                    df = 5
+                    playerPC.kamehamMs = 3000
+                    playerPC.punchMs = 350
+                    playerPC2.kamehamMs = 3000
+                    playerPC2.punchMs = 350
+                    playerPC3.kamehamMs = 3000
+                    playerPC3.punchMs = 350
             if event.key==K_DOWN:
                 if s5Option[is5] < s5Option[-1]:
                     is5 += 1
