@@ -47,6 +47,7 @@ class Player(SpriteAnimation):
             self.k_load = K_j
             self.k_rightArrow = K_d
             self.k_leftArrow = K_a
+            self.k_combo = K_c
         elif self.playerId == 2:
             self.k_down = K_DOWN
             self.k_up = K_UP
@@ -57,6 +58,7 @@ class Player(SpriteAnimation):
             self.k_load = K_KP4
             self.k_rightArrow = K_RIGHT
             self.k_leftArrow = K_LEFT
+            self.k_combo = K_n
         self.inicio1Pc = time.time()*1000
         self.inicio2Pc = time.time()*1000
         self.inicio3Pc = time.time()*1000
@@ -152,6 +154,29 @@ class Player(SpriteAnimation):
                             if player.Defending == True and player.Attacking == False:
                                 player.HP -= player.hitDefended
                     self.inicio = time.time()
+
+                if event.key == self.k_combo:
+                    self.acao = "punch"
+                    self.pressed = True
+                    self.pos = 1
+                    self.Attacking = True
+                    self.Defending = False
+                    if self.facingRight == True:
+                        selfAttackRect = Rect(self.x+30, self.y, 50, 70)
+                        #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
+                    if self.facingRight == False:
+                        selfAttackRect = Rect(self.x-5, self.y, 50, 70)
+                        #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
+                    for player in playerList:
+                        if selfAttackRect.colliderect(player.Rect) == True:
+                            if player.Defending == False:
+                                player.HP -= self.punchDamage
+                                player.acao = "hited"
+                                player.inicio = time.time()
+                            if player.Defending == True and player.Attacking == False:
+                                player.HP -= player.hitDefended
+                    self.inicio = time.time()
+
                 if event.key == self.k_kick:
                     self.acao = "kick"
                     self.pressed = True
@@ -329,12 +354,15 @@ class Player(SpriteAnimation):
 
     def teamDefeated(self,screen,otherPlayer,teamList):
         """
-        Show the won frame of player1
+        Show the won frame of otherPlayer
         """
-        HPTeam = 0
+        mortos = 0
+        totalOfPlayer=len(teamList)
         for player in teamList:
-            HPTeam += player.HP
-        if HPTeam <= 0:
+            if player.HP <= 0:
+                mortos+=1
+                
+        if mortos == totalOfPlayer:
             #import pdb; pdb.set_trace()
             self.acao = "lose"
             if self.cronometrar2 == True:
@@ -404,6 +432,10 @@ class Player(SpriteAnimation):
             self.insertFrame(65,900,52,90)
             self.insertFrame(170,900,80,90)
             self.buildAnimation("hited",hold=True, speed = 5)
+            #Goku-Combo
+            self.insertFrame(65,900,52,90)
+            self.insertFrame(170,900,80,90)
+            self.buildAnimation("combo",hold=True, speed = 5)
         if character == 'vegeta':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)

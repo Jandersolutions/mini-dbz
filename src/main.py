@@ -22,8 +22,8 @@ ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-#screen = pygame.display.set_mode(resolution)
+#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 scene1 = pygame.transform.scale(scenery[0], (500,300))
@@ -46,7 +46,7 @@ sc1 = 0
 sc2 = 1
 sg = 0
 df = 2
-volume = 0.4
+volume = 0.1
 vsPC = False
 song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
@@ -117,6 +117,8 @@ def restart():
         playerPC.x = 850
         playerPC.y = 350
         player1.HP = 140
+        player2.HP = 140
+        player2.XP = 50
         playerPC.HP = 140
         player1.XP = 50
         playerPC.XP = 0
@@ -215,9 +217,9 @@ def openMenu():
     black = 0,0,0
     screen.fill(black)
     screen.blit(background_openning, (-70,0))
-    myfont = pygame.font.SysFont("monospace", 45)
+    myfont = pygame.font.SysFont("monospace", 65)
     titlefont = pygame.font.SysFont("monospace", 75,bold = True)
-    boldFont = pygame.font.SysFont("monospace", 55,bold =True)
+    boldFont = pygame.font.SysFont("monospace", 75,bold =True)
     title = titlefont.render("SS4-Battle", 1, (255,255,255))
     playerVsPc = myfont.render("Play", 1, (255,255,255))
     options = myfont.render("Options", 1, (255,255,255))
@@ -235,10 +237,10 @@ def openMenu():
         quit = boldFont.render("Quit", 1, (255,255,255))
 
     #screen.blit(title, (200,105))
-    screen.blit(playerVsPc, (400,255))
-    screen.blit(options, (400,305))
-    screen.blit(credits, (400,355))
-    screen.blit(quit, (400,405))
+    screen.blit(playerVsPc, (380,250))
+    screen.blit(options, (380,320))
+    screen.blit(credits, (380,390))
+    screen.blit(quit, (380,460))
     pygame.display.update()
     
     for event in pygame.event.get():
@@ -778,6 +780,7 @@ def PCOptions():
     global vsPC
     global pcNumber
     global df
+    global PCPlayers
     black = 0,0,0
     screen.fill(black)
     screen.blit(background_openning, (-70,0))
@@ -818,10 +821,11 @@ def PCOptions():
                     restart()
                     pcNumber = 2
                     df = 4
-                    playerPC.kamehamMs = 300
-                    playerPC.punchMs = 150
-                    playerPC2.kamehamMs = 300
-                    playerPC2.punchMs = 150
+                    playerPC.kamehamMs = 3000
+                    playerPC.punchMs = 1500
+                    playerPC2.kamehamMs = 3000
+                    playerPC2.punchMs = 1500
+                    PCPlayers = [playerPC,playerPC2]
                 if s5Option[is5] == 2:
                     gameState = 5
                     vsPC = True
@@ -834,6 +838,7 @@ def PCOptions():
                     playerPC2.punchMs = 350
                     playerPC3.kamehamMs = 3000
                     playerPC3.punchMs = 350
+                    PCPlayers = [playerPC,playerPC2,playerPC3]
             if event.key==K_DOWN:
                 if s5Option[is5] < s5Option[-1]:
                     is5 += 1
@@ -858,6 +863,7 @@ def playLoop():
     """
     global vsPC
     global pcNumber
+    global contador
     screen.blit(background, (0,0))
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -918,7 +924,6 @@ def playLoop():
         playerPC.powerPlacing(power3)
         playerPC.statusBar(screen,width)
         playerPC.standUpPosition()
-        playerPC.defeated(screen,player1)
         #playerPC.TurnAround(player1)
         playerPC.update(playerPC.pos,screen)
         power3.update(playerPC.pos,screen)
@@ -926,6 +931,7 @@ def playLoop():
             player1.TurnAround(playerPC)
             playerPC.TurnAround(player1)
             playerPC.playPC(player1,power3,screen)
+            playerPC.defeated(screen,player1)
             power1.update(player1.pos,screen)
         if pcNumber >= 2:
             playerPC.TurnAround(player1)
@@ -946,11 +952,17 @@ def playLoop():
             if pcNumber == 2:
                 d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
                 d2=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
-                if d1 < d2 and playerPC.HP>0:
+                if playerPC.HP >0 and playerPC2.HP >0:
+                    if d1 < d2:
+                        player1.TurnAround(playerPC)
+                    if d1 > d2:
+                        player1.TurnAround(playerPC2)
+                if playerPC.HP >0 and playerPC2.HP<=0:
                     player1.TurnAround(playerPC)
-                if d1 > d2 and playerPC2.HP>0:
+                if playerPC2.HP>0 and playerPC.HP<=0:
                     player1.TurnAround(playerPC2)
             power4.update(playerPC2.pos,screen)
+        contador +=1
         if pcNumber >= 3:
             playerPC3.playPC(player1,power5,screen)
             playerPC3.lockInsideScreenPC(width, height, delta, player1)
@@ -967,11 +979,33 @@ def playLoop():
                 d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
                 d2=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
                 d3=distance(player1.x,player1.y,playerPC3.x,playerPC3.y)
-                if d1 < d2 and d1<d3 and playerPC.HP>0:
+                if playerPC.HP >0 and playerPC2.HP >0 and playerPC3.HP>0:
+                    if d1 < d2 and d1<d3:
+                        player1.TurnAround(playerPC)
+                    if d2 < d1 and d1<d3:
+                        player1.TurnAround(playerPC2)
+                    if d3 < d1 and d3<d2:
+                        player1.TurnAround(playerPC3)
+                if playerPC.HP >0 and playerPC2.HP >0 and playerPC3.HP<=0:
+                    if d1 < d2:
+                        player1.TurnAround(playerPC)
+                    if d2 < d1:
+                        player1.TurnAround(playerPC2)
+                if playerPC.HP >0 and playerPC3.HP >0 and playerPC2.HP<=0:
+                    if d1 < d3:
+                        player1.TurnAround(playerPC)
+                    if d3 < d1:
+                        player1.TurnAround(playerPC3)
+                if playerPC2.HP >0 and playerPC3.HP >0 and playerPC<=0:
+                    if d2 <d3:
+                        player1.TurnAround(playerPC2)
+                    if d3 < d2:
+                        player1.TurnAround(playerPC3)
+                if playerPC.HP >0 and playerPC2.HP<=0 and playerPC3.HP<=0:
                     player1.TurnAround(playerPC)
-                if d2 < d1 and d1<d3 and playerPC2.HP>0:
+                if playerPC.HP <=0 and playerPC2.HP>0 and playerPC3.HP<=0:
                     player1.TurnAround(playerPC2)
-                if d3 < d1 and d3<d2 and playerPC2.HP>0:
+                if playerPC.HP <=0 and playerPC2.HP<=0 and playerPC3.HP>0:
                     player1.TurnAround(playerPC3)
 
     if multiplayer == True:
@@ -980,14 +1014,15 @@ def playLoop():
         player1.powerPlacing(power1)
         player1.statusBar(screen,width)
         player1.standUpPosition()
-        player1.defeated(screen,playerPC)
+        #player1.defeated(screen,playerPC)
+        player1.teamDefeated(screen,playerPC,humanPlayers)
         player1.TurnAround(playerPC)
         player2.lockInsideScreen(width,height,delta)
         player2.physicalRect()
         player2.powerPlacing(power2,dx2=920,dy2=0)
         player2.statusBar(screen,width)
         player2.standUpPosition()
-        player2.defeated(screen,playerPC)
+        #player2.defeated(screen,playerPC)
         player2.TurnAround(playerPC)
         player1.update(player1.pos,screen)
         player2.update(player2.pos,screen)
@@ -1006,8 +1041,6 @@ def playLoop():
 
         d3=distance(player1.x,player1.y,playerPC.x,playerPC.y)
         d5=distance(player2.x,player2.y,playerPC.x,playerPC.y)
-        global contador
-        contador +=1
         if player1.HP> 0 and player2.HP >0:
             if d3<d5:
                 playerPC.playPC(player1,power3,screen)
