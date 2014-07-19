@@ -33,10 +33,12 @@ class Player(SpriteAnimation):
         self.hitDefended = 0.4
         self.powerDamage = 10
         self.powerDamageDefended = 2
+        self.comboDamage = 10
         self.HP = 140
         self.XP = 50
         self.playerId = playerId
         self.loading = False
+        self.powerDisputa = True
         if self.playerId == 1:
             self.k_down = K_s
             self.k_up = K_w
@@ -48,6 +50,8 @@ class Player(SpriteAnimation):
             self.k_rightArrow = K_d
             self.k_leftArrow = K_a
             self.k_combo = K_c
+            self.k_teleport = K_k
+            self.k_dis = K_x
         elif self.playerId == 2:
             self.k_down = K_DOWN
             self.k_up = K_UP
@@ -59,6 +63,8 @@ class Player(SpriteAnimation):
             self.k_rightArrow = K_RIGHT
             self.k_leftArrow = K_LEFT
             self.k_combo = K_n
+            self.k_teleport = K_KP6
+            self.k_dis = K_KP3
         self.inicio1Pc = time.time()*1000
         self.inicio2Pc = time.time()*1000
         self.inicio3Pc = time.time()*1000
@@ -156,8 +162,8 @@ class Player(SpriteAnimation):
                     self.inicio = time.time()
 
                 if event.key == self.k_combo:
-                    self.acao = "punch"
-                    self.pressed = True
+                    self.acao = "combo"
+                    #self.pressed = True
                     self.pos = 1
                     self.Attacking = True
                     self.Defending = False
@@ -170,12 +176,12 @@ class Player(SpriteAnimation):
                     for player in playerList:
                         if selfAttackRect.colliderect(player.Rect) == True:
                             if player.Defending == False:
-                                player.HP -= self.punchDamage
+                                player.HP -= self.comboDamage
                                 player.acao = "hited"
                                 player.inicio = time.time()
                             if player.Defending == True and player.Attacking == False:
                                 player.HP -= player.hitDefended
-                    self.inicio = time.time()
+                    #self.inicio = time.time()
 
                 if event.key == self.k_kick:
                     self.acao = "kick"
@@ -204,6 +210,20 @@ class Player(SpriteAnimation):
                     self.pos = 1
                     self.XP+= 5 
                     self.inicio = time.time()
+                if event.key == self.k_teleport:
+                    self.acao = "teleport"
+                    self.pressed = True
+                    self.pos = 1
+                    self.x = random.randint(0,1170)
+                    self.y = random.randint(0,738)
+                    self.inicio = time.time()
+                if event.key == self.k_dis:
+                    if self.powerDisputa == True:
+                        power1.acao = "disputa"
+                    self.acao = "disputa"
+                    #self.pressed = True
+                    self.pos = 1
+                    #self.inicio = time.time()
                     
             if event.type == KEYUP:
                 if event.key == self.k_down:
@@ -433,9 +453,38 @@ class Player(SpriteAnimation):
             self.insertFrame(170,900,80,90)
             self.buildAnimation("hited",hold=True, speed = 5)
             #Goku-Combo
-            self.insertFrame(65,900,52,90)
-            self.insertFrame(170,900,80,90)
+            self.insertFrame(119,1653,50,80)
+            self.insertFrame(167,1653,47,80)
+            self.insertFrame(114,1728,50,80)
+            self.insertFrame(168,1730,50,80)
+            self.insertFrame(217,1730,70,80)
+            self.insertFrame(284,1730,70,80)
+            self.insertFrame(349,1730,50,80)
+            self.insertFrame(402,1730,50,80)
+            #puch-combo
+            self.insertFrame(120,367,58,60)
+            self.insertFrame(180,367,58,60)
+            #player1.insertFrame(211,1674,65,60)
+            self.insertFrame(211,1674,65,60)
+            self.insertFrame(249,367,65,60)
+            #kick-combo
+            self.insertFrame(113,443,57,60)
+            self.insertFrame(166,443,60,60)
+            self.insertFrame(235,443,66,60)
+            self.insertFrame(303,443,66,60)
+            self.insertFrame(375,443,68,60)
+            self.insertFrame(448,443,68,60)
+            self.insertFrame(375,443,58,60)
+            self.insertFrame(454,1730,50,80)
             self.buildAnimation("combo",hold=True, speed = 5)
+            #Goku-Teleport
+            self.insertFrame(119,1653,50,80)
+            self.insertFrame(167,1653,47,80)
+            self.buildAnimation("teleport",hold=True, speed = 5)
+            #Goku-Disputa
+            self.insertFrame(498,1815,55,60)
+            self.insertFrame(560,1815,55,60)
+            self.buildAnimation("disputa",hold=False, speed = 5)
         if character == 'vegeta':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
@@ -482,6 +531,13 @@ class Player(SpriteAnimation):
             self.insertFrame(0,1400,48,75)
             self.insertFrame(48,1400,43,75)
             self.buildAnimation("hited",hold=True, speed = 5)
+            #Vegeta-Teleport
+            self.insertFrame(642,289,50,80)
+            self.buildAnimation("teleport",hold=True, speed = 5)
+            #Vegeta-Disputa
+            self.insertFrame(333,2012,55,60)
+            self.insertFrame(390,2012,55,60)
+            self.buildAnimation("disputa",hold=False, speed = 5)
         if character == 'trunks':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/trunks/trunks3x4.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
@@ -533,6 +589,11 @@ class Player(SpriteAnimation):
         power.insertFrame(0,132,1100,50) #Full Power
         power.insertFrame(1300,1604,146,40) #void
         power.buildAnimation("kame",hold=True, speed = 10)
+        power.insertFrame(10,370,1200,50) #void
+        power.insertFrame(10,480,1200,50) #void
+        power.insertFrame(10,370,1200,50) #void
+        power.insertFrame(10,540,1200,50) #void
+        power.buildAnimation("disputa",hold=False, speed = 10)
     
     def playPC(self, enemyPlayer, power2,screen):
         """

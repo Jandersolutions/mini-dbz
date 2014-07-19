@@ -22,8 +22,8 @@ ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-screen = pygame.display.set_mode(resolution)
+screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+#screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 scene1 = pygame.transform.scale(scenery[0], (500,300))
@@ -86,6 +86,7 @@ playerPC3.loadCharacter(characters[1])
 player2.loadCharacter(characters[2])
 PCPlayers = [playerPC,playerPC2,playerPC3]
 humanPlayers = [player1,player2]
+player2.powerDisputa = False
 
 delta = 13 #Velocidade do movimento, quanto maior mais rapido
 player2.facingRight = False
