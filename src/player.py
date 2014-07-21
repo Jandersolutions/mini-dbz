@@ -28,6 +28,7 @@ class Player(SpriteAnimation):
         self.powerDamageDefended = 0
         self.inicio = 0
         self.cronometrar2 = True
+        self.cronometrarDisputa = False
         self.punchDamage = 2
         self.kickDamage = 2
         self.hitDefended = 0.4
@@ -51,7 +52,8 @@ class Player(SpriteAnimation):
             self.k_leftArrow = K_a
             self.k_combo = K_c
             self.k_teleport = K_k
-            self.k_dis = K_x
+            self.k_dispute = K_x
+            self.k_cont = K_b
         elif self.playerId == 2:
             self.k_down = K_DOWN
             self.k_up = K_UP
@@ -64,7 +66,8 @@ class Player(SpriteAnimation):
             self.k_leftArrow = K_LEFT
             self.k_combo = K_n
             self.k_teleport = K_KP6
-            self.k_dis = K_KP3
+            self.k_dispute = K_KP3
+            self.k_cont = K_KP1
         self.inicio1Pc = time.time()*1000
         self.inicio2Pc = time.time()*1000
         self.inicio3Pc = time.time()*1000
@@ -73,8 +76,12 @@ class Player(SpriteAnimation):
         self.inicio6Pc = time.time()*1000
         self.inicio7Pc = time.time()*1000
         self.inicio8Pc = time.time()*1000
+        self.inicio2 = 0
         self.kamehamMs = 160
         self.punchMs = 90
+        self.releasePower = True
+        self.kameCont = 0
+        self.staticy = 0
     
     def playPlayer(self,eventArg, playerList, power1):
         """
@@ -217,13 +224,14 @@ class Player(SpriteAnimation):
                     self.x = random.randint(0,1170)
                     self.y = random.randint(0,738)
                     self.inicio = time.time()
-                if event.key == self.k_dis:
-                    if self.powerDisputa == True:
-                        power1.acao = "disputa"
-                    self.acao = "disputa"
-                    #self.pressed = True
-                    self.pos = 1
-                    #self.inicio = time.time()
+                if event.key == self.k_dispute:
+                    self.cronometrarDisputa = True
+                    self.releasePower = True
+                    self.kameCont =0
+                    for player in playerList:
+                        player.kameCont = 0
+                if event.key == self.k_cont:
+                    self.kameCont +=1
                     
             if event.type == KEYUP:
                 if event.key == self.k_down:
@@ -264,6 +272,40 @@ class Player(SpriteAnimation):
                     self.pos = 0
                     self.movex=0
     
+    def kameham(self,power1,otherPlayer):
+        #print 'cronometra disputa '+str(self.cronometrarDisputa)
+        #print 'self.inicio2 '+str(self.inicio2)
+        #print 'time.time-self.inicio2'+str(time.time()*1000-self.inicio2)
+        print 'player 1 cont = '+str(self.kameCont)
+        print 'player 2 cont = '+str(otherPlayer.kameCont)
+        if self.cronometrarDisputa == True:
+            self.inicio2 = time.time()*1000
+            self.cronometrarDisputa = False
+            print 'captou self.inicio2'
+            self.staticy = self.y
+        if time.time()*1000-self.inicio2 < 3000:
+            print 'Disputa'
+            #powerDisputa responsabilidade de um player pela Disputa
+            if self.powerDisputa == True:
+                power1.acao = "disputa"
+            self.acao = "disputa"
+            self.pos = 1
+            self.pressed = True
+            power1.pressed = True
+            self.inicio = time.time()
+            self.x = 40
+            self.y = self.staticy
+            otherPlayer.y = self.y+20
+            otherPlayer.x = self.x+1080
+            otherPlayer.acao = 'disputa'
+            otherPlayer.inicio = time.time()
+        if time.time()*1000 -self.inicio2 > 3000 and self.releasePower == True:
+            power1.acao = "void"
+            self.releasePower = False
+            if self.kameCont > otherPlayer.kameCont:
+                otherPlayer.HP -= 50
+            if self.kameCont < otherPlayer.kameCont:
+                self.HP -= 50
     def TurnAround(self,otherPlayer):
         """
         Turn around automatically for player1 and player2
@@ -484,7 +526,7 @@ class Player(SpriteAnimation):
             #Goku-Disputa
             self.insertFrame(498,1815,55,60)
             self.insertFrame(560,1815,55,60)
-            self.buildAnimation("disputa",hold=False, speed = 5)
+            self.buildAnimation("disputa",hold=True, speed = 5)
         if character == 'vegeta':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)

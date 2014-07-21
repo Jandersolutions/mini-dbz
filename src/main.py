@@ -22,8 +22,8 @@ ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-#screen = pygame.display.set_mode(resolution)
+#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 scene1 = pygame.transform.scale(scenery[0], (500,300))
@@ -46,7 +46,7 @@ sc1 = 0
 sc2 = 1
 sg = 0
 df = 2
-volume = 0.1
+volume = 0.7
 vsPC = False
 song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
@@ -128,6 +128,7 @@ def restart():
         playerPC2.XP = 0
         playerPC3.HP = 140
         playerPC3.XP = 0
+        player1.cronometrarDisputa = False
     else:
         player2.acao = "down"
         player1.acao = "down"
@@ -418,19 +419,20 @@ def Credits():
     boldFont = pygame.font.SysFont("monospace", 55,bold =True)
     gameDeveloper = boldFont.render("Game Developer", 1, (255,255,255))
     estevao = myfont.render("Estevao Fonseca", 1, (255,255,255))
-    supporters = boldFont.render("Supporters", 1, (255,255,255))
+    supporters = boldFont.render("Game Designers", 1, (255,255,255))
     bru = myfont.render("Bruno Fonseca", 1, (255,255,255))
     hel = myfont.render("Helena A. Lisboa", 1, (255,255,255))
     artWork = boldFont.render("Art Work", 1, (255,255,255))
     akira = myfont.render("Akira Torayama", 1, (255,255,255))
 
-    screen.blit(gameDeveloper, (340,250))
-    screen.blit(estevao, (340,310))
-    screen.blit(supporters, (340,370))
-    screen.blit(bru, (340,430))
-    screen.blit(hel, (340,490))
-    screen.blit(artWork, (340,550))
-    screen.blit(akira, (340,610))
+    screen.blit(gameDeveloper, (340,150))
+    screen.blit(estevao, (340,210))
+    screen.blit(supporters, (340,270))
+    screen.blit(estevao, (340,330))
+    screen.blit(bru, (340,390))
+    screen.blit(hel, (340,450))
+    screen.blit(artWork, (340,510))
+    screen.blit(akira, (340,570))
     pygame.display.update()
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -892,6 +894,7 @@ def playLoop():
     if vsPC == False and multiplayer == False:
         player1.lockInsideScreen(width,height,delta)
         player1.physicalRect()
+        player1.kameham(power1,player2)
         player1.powerPlacing(power1)
         player1.statusBar(screen,width)
         player1.standUpPosition()
