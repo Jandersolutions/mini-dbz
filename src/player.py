@@ -80,6 +80,7 @@ class Player(SpriteAnimation):
         self.kamehamMs = 160
         self.punchMs = 90
         self.releasePower = True
+        self.voidPower = True
         self.kameCont = 0
         self.staticy = 0
     
@@ -227,6 +228,7 @@ class Player(SpriteAnimation):
                 if event.key == self.k_dispute:
                     self.cronometrarDisputa = True
                     self.releasePower = True
+                    self.voidPower = True
                     self.kameCont =0
                     for player in playerList:
                         player.kameCont = 0
@@ -272,7 +274,7 @@ class Player(SpriteAnimation):
                     self.pos = 0
                     self.movex=0
     
-    def kameham(self,power1,otherPlayer):
+    def kameham(self,power1,otherPlayer,power2):
         #print 'cronometra disputa '+str(self.cronometrarDisputa)
         #print 'self.inicio2 '+str(self.inicio2)
         #print 'time.time-self.inicio2'+str(time.time()*1000-self.inicio2)
@@ -300,12 +302,18 @@ class Player(SpriteAnimation):
             otherPlayer.acao = 'disputa'
             otherPlayer.inicio = time.time()
         if time.time()*1000 -self.inicio2 > 3000 and self.releasePower == True:
-            power1.acao = "void"
             self.releasePower = False
             if self.kameCont > otherPlayer.kameCont:
                 otherPlayer.HP -= 50
+                power1.acao = 'from-right'
             if self.kameCont < otherPlayer.kameCont:
                 self.HP -= 50
+                power1.acao = 'from-left'
+            if self.kameCont == otherPlayer.kameCont:
+                power1.acao = "void"
+        if time.time()*1000 -self.inicio2 > 4000 and self.voidPower == True:
+            self.voidPower = False
+            power1.acao = "void"
     def TurnAround(self,otherPlayer):
         """
         Turn around automatically for player1 and player2
@@ -631,11 +639,17 @@ class Player(SpriteAnimation):
         power.insertFrame(0,132,1100,50) #Full Power
         power.insertFrame(1300,1604,146,40) #void
         power.buildAnimation("kame",hold=True, speed = 10)
-        power.insertFrame(10,370,1200,50) #void
-        power.insertFrame(10,480,1200,50) #void
-        power.insertFrame(10,370,1200,50) #void
-        power.insertFrame(10,540,1200,50) #void
+        power.insertFrame(10,370,1200,50) 
+        power.insertFrame(10,480,1200,50) 
+        power.insertFrame(10,370,1200,50) 
+        power.insertFrame(10,540,1200,50) 
         power.buildAnimation("disputa",hold=False, speed = 10)
+        power.insertFrame(10,600,1200,50) #void
+        power.insertFrame(10,660,1200,50) #void
+        #power.insertFrame(1300,1604,146,40) #void
+        power.buildAnimation("from-right",hold=True, speed = 10)
+        power.insertFrame(3,720,1200,50) #void
+        power.buildAnimation("from-left",hold=True, speed = 10)
     
     def playPC(self, enemyPlayer, power2,screen):
         """

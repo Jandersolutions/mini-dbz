@@ -894,7 +894,7 @@ def playLoop():
     if vsPC == False and multiplayer == False:
         player1.lockInsideScreen(width,height,delta)
         player1.physicalRect()
-        player1.kameham(power1,player2)
+        player1.kameham(power1,player2,power2)
         player1.powerPlacing(power1)
         player1.statusBar(screen,width)
         player1.standUpPosition()
