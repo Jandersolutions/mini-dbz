@@ -289,8 +289,7 @@ class Player(SpriteAnimation):
                     self.pos = 0
                     self.movex=0
     
-    def kameham(self,power1,playerList,powers):
-        print self.singleKameham
+    def kameham(self,localPower,playerList,powers):
         if self.cronometrarDisputa == True:
             self.inicio2 = time.time()*1000
             self.cronometrarDisputa = False
@@ -298,22 +297,34 @@ class Player(SpriteAnimation):
         if time.time()*1000-self.inicio2 < 3000:
             #powerDisputa responsabilidade de um player pela Disputa
             if self.powerDisputa == True:
-                power1.acao = "disputa"
+                localPower.acao = "disputa"
+            if self.facingRight == True:
+                localPower.x = self.x+52
+                localPower.y = self.y+10
+                self.x = 40
+                self.y = self.staticy
+            if self.facingRight == False:
+                self.x = 1120 
+                self.y = self.staticy
             self.acao = "disputa"
             self.pos = 1
             self.pressed = True
-            power1.pressed = True
+            localPower.pressed = True
             self.inicio = time.time()
-            self.x = 40
-            self.y = self.staticy
             self.singleKameham = False
             powers2 = powers[:]
-            powers2.remove(power1)
+            #powers2.remove(power1)
             for power in powers2:
                 power.acao = 'void'
             for otherPlayer in playerList:
-                otherPlayer.y = self.y+20
-                otherPlayer.x = self.x+1080
+                if self.facingRight == True:
+                    otherPlayer.y = self.y+10
+                    otherPlayer.x = self.x+1080
+                if self.facingRight == False:
+                    otherPlayer.x = 40
+                    otherPlayer.y = self.staticy
+                    localPower.x = otherPlayer.x+42
+                    localPower.y = otherPlayer.y+5
                 otherPlayer.acao = 'disputa'
                 otherPlayer.inicio = time.time()
                 otherPlayer.singleKameham = False
@@ -323,16 +334,22 @@ class Player(SpriteAnimation):
                 self.enemykameCont = otherPlayer.kameCont
                 if self.kameCont > otherPlayer.kameCont:
                     otherPlayer.HP -= 50
-                    power1.acao = 'from-right'
+                    if self.facingRight == True:
+                        localPower.acao = 'from-right'
+                    if self.facingRight == False:
+                        localPower.acao = 'from-left'
                 if self.kameCont < otherPlayer.kameCont:
-                    power1.acao = 'from-left'
+                    if self.facingRight == True:
+                        localPower.acao = 'from-left'
+                    if self.facingRight == False:
+                        localPower.acao = 'from-right'
                 if self.kameCont == otherPlayer.kameCont:
-                    power1.acao = "void"
+                    localPower.acao = "void"
             if self.kameCont < self.enemykameCont:
                 self.HP -= 50
         if time.time()*1000 -self.inicio2 > 3500 and self.voidPower == True:
             self.voidPower = False
-            power1.acao = "void"
+            localPower.acao = "void"
             self.singleKameham = True
             for otherPlayer in playerList:
                 otherPlayer.singleKameham = True
