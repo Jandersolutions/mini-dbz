@@ -22,8 +22,8 @@ ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-screen = pygame.display.set_mode(resolution)
+screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+#screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 scene1 = pygame.transform.scale(scenery[0], (500,300))
@@ -86,7 +86,11 @@ playerPC3.loadCharacter(characters[1])
 player2.loadCharacter(characters[2])
 PCPlayers = [playerPC,playerPC2,playerPC3]
 humanPlayers = [player1,player2]
-player2.powerDisputa = False
+#player2.powerDisputa = False
+player2.powerDisputa = True
+playerPC.isPC = True
+playerPC2.isPC = True
+playerPC3.isPC = True
 
 delta = 13 #Velocidade do movimento, quanto maior mais rapido
 player2.facingRight = False
@@ -868,13 +872,13 @@ def playLoop():
     global pcNumber
     global contador
     screen.blit(background, (0,0))
+    p1 = [humanPlayers[0]]
+    p2 = [humanPlayers[1]]
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
         if vsPC == False:
-            p1 = [humanPlayers[0]]
-            p2 = [humanPlayers[1]]
             player1.playPlayer(event,p2,power1)
             player2.playPlayer(event,p1,power2)
         if multiplayer == True:
@@ -894,7 +898,7 @@ def playLoop():
     if vsPC == False and multiplayer == False:
         player1.lockInsideScreen(width,height,delta)
         player1.physicalRect()
-        player1.kameham(power1,player2,power2)
+        player1.kameham(power1,p2)
         player1.powerPlacing(power1)
         player1.statusBar(screen,width)
         player1.standUpPosition()
@@ -920,6 +924,7 @@ def playLoop():
         player1.defeated(screen,playerPC)
         #player1.TurnAround(playerPC)
         player1.update(player1.pos,screen)
+        player1.kameham(power1,PCPlayers)
         #power1.update(player1.pos,screen)
         
         #playerPC.playPC(player1,power3,screen)
@@ -1021,6 +1026,8 @@ def playLoop():
         #player1.defeated(screen,playerPC)
         player1.teamDefeated(screen,playerPC,humanPlayers)
         player1.TurnAround(playerPC)
+        player1.kameham(power1,PCPlayers)
+        player2.kameham(power2,PCPlayers)
         player2.lockInsideScreen(width,height,delta)
         player2.physicalRect()
         player2.powerPlacing(power2,dx2=920,dy2=0)

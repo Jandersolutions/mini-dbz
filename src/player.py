@@ -81,8 +81,11 @@ class Player(SpriteAnimation):
         self.punchMs = 90
         self.releasePower = True
         self.voidPower = True
-        self.kameCont = 0
+        self.kameCont = 15
         self.staticy = 0
+        self.inicioKame = time.time()*1000
+        self.isPC = False
+        self.singleKameham = False
     
     def playPlayer(self,eventArg, playerList, power1):
         """
@@ -123,7 +126,16 @@ class Player(SpriteAnimation):
                         self.pos = 1
                         self.movex-=1
                 if event.key == self.k_kameham:
+                    self.inicioKame = time.time()*1000
                     if self.XP > 0:
+                        for player in playerList:
+                            if abs(self.y - player.y) <50 and abs(player.inicioKame-self.inicioKame)<400:
+                                self.cronometrarDisputa = True
+                                self.releasePower = True
+                                self.voidPower = True
+                                self.kameCont =0
+                                if player.isPC == False:
+                                    player.kameCont = 0
                         self.acao = "kameham"
                         power1.acao = "kame"
                         self.pressed = True
@@ -148,6 +160,7 @@ class Player(SpriteAnimation):
                         self.XP-=10
                         self.inicio = time.time()
                 if event.key == self.k_punch:
+                    self.kameCont +=1
                     self.acao = "punch"
                     self.pressed = True
                     self.pos = 1
@@ -274,19 +287,15 @@ class Player(SpriteAnimation):
                     self.pos = 0
                     self.movex=0
     
-    def kameham(self,power1,otherPlayer,power2):
-        #print 'cronometra disputa '+str(self.cronometrarDisputa)
-        #print 'self.inicio2 '+str(self.inicio2)
-        #print 'time.time-self.inicio2'+str(time.time()*1000-self.inicio2)
-        print 'player 1 cont = '+str(self.kameCont)
-        print 'player 2 cont = '+str(otherPlayer.kameCont)
+    def kameham(self,power1,playerList):
+       # print 'player 1 cont = '+str(self.kameCont)
+        #for otherPlayer in playerList:
+            #print 'player 2 cont = '+str(otherPlayer.kameCont)
         if self.cronometrarDisputa == True:
             self.inicio2 = time.time()*1000
             self.cronometrarDisputa = False
-            print 'captou self.inicio2'
             self.staticy = self.y
         if time.time()*1000-self.inicio2 < 3000:
-            print 'Disputa'
             #powerDisputa responsabilidade de um player pela Disputa
             if self.powerDisputa == True:
                 power1.acao = "disputa"
@@ -297,20 +306,22 @@ class Player(SpriteAnimation):
             self.inicio = time.time()
             self.x = 40
             self.y = self.staticy
-            otherPlayer.y = self.y+20
-            otherPlayer.x = self.x+1080
-            otherPlayer.acao = 'disputa'
-            otherPlayer.inicio = time.time()
+            for otherPlayer in playerList:
+                otherPlayer.y = self.y+20
+                otherPlayer.x = self.x+1080
+                otherPlayer.acao = 'disputa'
+                otherPlayer.inicio = time.time()
         if time.time()*1000 -self.inicio2 > 3000 and self.releasePower == True:
-            self.releasePower = False
-            if self.kameCont > otherPlayer.kameCont:
-                otherPlayer.HP -= 50
-                power1.acao = 'from-right'
-            if self.kameCont < otherPlayer.kameCont:
-                self.HP -= 50
-                power1.acao = 'from-left'
-            if self.kameCont == otherPlayer.kameCont:
-                power1.acao = "void"
+            for otherPlayer in playerList:
+                self.releasePower = False
+                if self.kameCont > otherPlayer.kameCont:
+                    otherPlayer.HP -= 50
+                    power1.acao = 'from-right'
+                if self.kameCont < otherPlayer.kameCont:
+                    self.HP -= 50
+                    power1.acao = 'from-left'
+                if self.kameCont == otherPlayer.kameCont:
+                    power1.acao = "void"
         if time.time()*1000 -self.inicio2 > 4000 and self.voidPower == True:
             self.voidPower = False
             power1.acao = "void"
@@ -587,7 +598,7 @@ class Player(SpriteAnimation):
             #Vegeta-Disputa
             self.insertFrame(333,2012,55,60)
             self.insertFrame(390,2012,55,60)
-            self.buildAnimation("disputa",hold=False, speed = 5)
+            self.buildAnimation("disputa",hold=True, speed = 5)
         if character == 'trunks':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/trunks/trunks3x4.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
@@ -608,6 +619,9 @@ class Player(SpriteAnimation):
             self.insertFrame(272,1630,50,85)
             self.insertFrame(318,1630,50,85)
             self.buildAnimation("kameham",hold=True, speed = 5)
+            self.insertFrame(272,1630,50,85)
+            self.insertFrame(318,1630,50,85)
+            self.buildAnimation("disputa",hold=False, speed = 5)
             self.insertFrame(239,2524,50,85)
             self.buildAnimation("hited",hold=True, speed = 5)
             self.insertFrame(814,2772,130,135)
@@ -658,6 +672,7 @@ class Player(SpriteAnimation):
         if self.HP > 0:
             if time.time()*1000-self.inicio1Pc>self.kamehamMs and abs(self.y-enemyPlayer.y)< 50 and self.loading == False and abs(self.x-enemyPlayer.x)>65:
                 if self.XP >= 10:
+                    self.inicioKame = time.time()*1000
                     self.acao = "kameham"
                     power2.acao = "kame"
                     self.pressed = True
