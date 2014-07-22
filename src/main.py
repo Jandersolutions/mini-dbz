@@ -65,7 +65,7 @@ pcNumber = 1
 multiplayer = False
 contador = 0
 
-characters = ['goku','vegeta','trunks']
+characters = ['goku','vegeta','trunks','frieza']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
 playerPC = Player(acaoInicial="down",playerId=0)
@@ -85,8 +85,9 @@ player2.loadPower(power2)
 playerPC.loadPower(power3)
 playerPC2.loadPower(power4)
 playerPC3.loadPower(power5)
+playerPC.loadCharacter(characters[1])
 playerPC2.loadCharacter(characters[2])
-playerPC3.loadCharacter(characters[1])
+playerPC3.loadCharacter(characters[3])
 player2.loadCharacter(characters[2])
 PCPlayers = [playerPC,playerPC2,playerPC3]
 humanPlayers = [player1,player2]
@@ -96,7 +97,6 @@ playerPC.isPC = True
 playerPC2.isPC = True
 playerPC3.isPC = True
 powers = [power1,power2,power3,power4,power5]
-
 delta = 13 #Velocidade do movimento, quanto maior mais rapido
 player2.facingRight = False
 player2.x = 850
