@@ -47,7 +47,7 @@ sc1 = 0
 sc2 = 1
 sg = 0
 df = 2
-volume = 0.7
+volume = 0.0
 vsPC = False
 song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
@@ -66,8 +66,8 @@ pcNumber = 1
 multiplayer = False
 contador = 0
 
-characters = ['goku','vegeta','trunks','frieza']
-#characters = ['goku','vegeta','frieza','trunks']
+characters = ['goku','vegeta','gohan','frieza']
+#characters = ['goku','vegeta','trunks','frieza']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
 playerPC = Player(acaoInicial="down",playerId=0)
@@ -733,6 +733,7 @@ def playOptions():
     global gameState
     global previousGameState
     global multiplayer
+    global vsPC
     black = 0,0,0
     screen.fill(black)
     screen.blit(background_openning, (-70,0))
@@ -773,8 +774,11 @@ def playOptions():
                     player2.playerId = 2
                     multiplayer = False
                 if s4Option[is4] == 2:
+                    vsPC = True
                     multiplayer = True
-                    gameState = 9
+                    gameState = 5
+                    restart()
+                    pcNumber = 1
                     player2.playerId = 4
                     player2.x = 250
                     player2.y = 150
@@ -798,8 +802,8 @@ def PCOptions():
     black = 0,0,0
     screen.fill(black)
     screen.blit(background_openning, (-70,0))
-    myfont = pygame.font.SysFont("monospace", 45)
-    boldFont = pygame.font.SysFont("monospace", 55,bold =True)
+    myfont = pygame.font.SysFont("monospace", 65)
+    boldFont = pygame.font.SysFont("monospace", 75,bold =True)
     initialScreen = myfont.render("Vs 1 PC", 1, (255,255,255))
     playerVsPlayer = myfont.render("Vs 2 PC", 1, (255,255,255))
     playerVsPc = myfont.render("Vs 3 PC", 1, (255,255,255))
@@ -811,9 +815,9 @@ def PCOptions():
         playerVsPlayer = boldFont.render("Vs 2 PC", 1, (255,255,255))
     if s5Option[is5] == 2:
         playerVsPc = boldFont.render("Vs 3 PC", 1, (255,255,255))
-    screen.blit(initialScreen, (340,250))
-    screen.blit(playerVsPlayer, (340,305))
-    screen.blit(playerVsPc, (340,360))
+    screen.blit(initialScreen, (380,250))
+    screen.blit(playerVsPlayer, (380,320))
+    screen.blit(playerVsPc, (380,390))
     pygame.display.update()
     
     for event in pygame.event.get():

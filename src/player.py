@@ -436,7 +436,7 @@ class Player(SpriteAnimation):
         if self.playerId == 4:
             playerHPRect = Rect(80 , 100, self.HP*2, 20)
             playerXPRect = Rect(80 , 140, self.XP*2, 20)
-            screen.blit(self.photo3x4, (0,120))
+            screen.blit(self.photo3x4, (0,100))
         if self.playerId == 2 or self.playerId ==0:
             playerHPRect = Rect(width-80, 20, -self.HP*2, 20)
             playerXPRect = Rect(width-80, 60, -self.XP*2, 20)
@@ -723,6 +723,30 @@ class Player(SpriteAnimation):
             self.insertFrame(443,2080,90,75)
             self.insertFrame(544,2080,80,85)
             self.buildAnimation("disputa",hold=True, speed = 5)
+        if character == 'gohan':
+            self.photo3x4 = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
+            self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
+            self.Win = pygame.image.load("../resources/imagens/player/vegeta/vegetaWin.jpeg")
+            self.loadSprites("../resources/imagens/player/gohan/gohan.png")
+            self.insertFrame(10,53,50,80)
+            self.insertFrame(57,53,50,80)
+            self.buildAnimation("down",hold=False, speed = 10)
+            self.insertFrame(167,330,50,85)
+            self.insertFrame(65,330,50,85)
+            self.buildAnimation("up",hold=False, speed = 10)
+            self.insertFrame(12,150,70,85)
+            self.insertFrame(83,150,70,85)
+            self.buildAnimation("right",hold=False, speed = 10)
+            self.insertFrame(83,947,57,85)
+            self.insertFrame(190,947,57,85)
+            self.buildAnimation("hited",hold=False, speed = 10)
+            self.insertFrame(28,1105,90,105)
+            self.insertFrame(118,1105,90,105)
+            self.buildAnimation("load",hold=False, speed = 10)
+            self.insertFrame(74,442,57,80)
+            self.buildAnimation("defend",hold=False, speed = 10)
+            self.insertFrame(15,1412,57,80)
+            self.buildAnimation("teleport",hold=True, speed = 10)
 
     def loadPower(self,power):
         """
