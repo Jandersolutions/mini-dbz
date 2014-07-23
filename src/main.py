@@ -88,9 +88,9 @@ playerPC.loadPower(power3)
 playerPC2.loadPower(power4)
 playerPC3.loadPower(power5)
 playerPC.loadCharacter(characters[1])
-playerPC2.loadCharacter(characters[2])
-playerPC3.loadCharacter(characters[3])
-player2.loadCharacter(characters[2])
+playerPC2.loadCharacter(characters[1])
+playerPC3.loadCharacter(characters[2])
+player2.loadCharacter(characters[1])
 PCPlayers = [playerPC,playerPC2,playerPC3]
 humanPlayers = [player1,player2]
 #player2.powerDisputa = False
@@ -740,7 +740,7 @@ def playOptions():
     boldFont = pygame.font.SysFont("monospace", 55,bold =True)
     initialScreen = myfont.render("Player Vs PC", 1, (255,255,255))
     playerVsPlayer = myfont.render("Player Vs Player", 1, (255,255,255))
-    playerVsPc = myfont.render("Player 1 & 2 Vs World", 1, (255,255,255))
+    playerVsPc = myfont.render("Player 1 & 2 Vs PC", 1, (255,255,255))
 
     global is4
     if s4Option[is4] == 0:
@@ -748,7 +748,7 @@ def playOptions():
     if s4Option[is4] == 1:
         playerVsPlayer = boldFont.render("Player Vs Player", 1, (255,255,255))
     if s4Option[is4] == 2:
-        playerVsPc = boldFont.render("Player 1 & 2 Vs World", 1, (255,255,255))
+        playerVsPc = boldFont.render("Player 1 & 2 Vs PC", 1, (255,255,255))
     screen.blit(initialScreen, (340,250))
     screen.blit(playerVsPlayer, (340,305))
     screen.blit(playerVsPc, (340,360))

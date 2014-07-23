@@ -540,7 +540,7 @@ class Player(SpriteAnimation):
             #Goku been hit
             self.insertFrame(65,900,52,90)
             self.insertFrame(170,900,80,90)
-            self.buildAnimation("hited",hold=True, speed = 5)
+            self.buildAnimation("hited",hold=False, speed = 15)
             #Goku-Combo
             self.insertFrame(119,1653,50,80)
             self.insertFrame(167,1653,47,80)
@@ -619,7 +619,7 @@ class Player(SpriteAnimation):
             #Vegeta-Hited
             self.insertFrame(0,1400,48,75)
             self.insertFrame(48,1400,43,75)
-            self.buildAnimation("hited",hold=True, speed = 5)
+            self.buildAnimation("hited",hold=False, speed = 15)
             #Vegeta-Teleport
             self.insertFrame(642,289,50,80)
             self.buildAnimation("teleport",hold=True, speed = 5)
@@ -669,6 +669,8 @@ class Player(SpriteAnimation):
             #self.insertFrame(370,682,50,85)
             #self.insertFrame(428, 681,70,85)
             self.buildAnimation("kick",hold=True, speed = 5)
+            self.insertFrame(597,1115,70,90)
+            self.buildAnimation("teleport",hold=True, speed = 5)
         if character == 'frieza':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/frieza/frieza3x4.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
