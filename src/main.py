@@ -16,7 +16,8 @@ menu_image = "../resources/imagens/openning/background/goku-vs-vegeta-2.jpg"
 goku3x4 = "../resources/imagens/player/goku/ss4/goku100x100.png"
 vegeta3x4 = "../resources/imagens/player/vegeta/vegeta100x100.png"
 trunks3x4 = "../resources/imagens/player/trunks/trunks100x100.png"
-photos3x4 = [pygame.image.load(goku3x4),pygame.image.load(vegeta3x4),pygame.image.load(trunks3x4)]
+frieza3x4 = "../resources/imagens/player/frieza/frieza100x100.png"
+photos3x4 = [pygame.image.load(goku3x4),pygame.image.load(vegeta3x4),pygame.image.load(trunks3x4),pygame.image.load(frieza3x4)]
 ch = pygame.transform.scale(photos3x4[0], (500,300))
 ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
@@ -66,6 +67,7 @@ multiplayer = False
 contador = 0
 
 characters = ['goku','vegeta','trunks','frieza']
+#characters = ['goku','vegeta','frieza','trunks']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
 playerPC = Player(acaoInicial="down",playerId=0)

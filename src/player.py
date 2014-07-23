@@ -670,9 +670,9 @@ class Player(SpriteAnimation):
             #self.insertFrame(428, 681,70,85)
             self.buildAnimation("kick",hold=True, speed = 5)
         if character == 'frieza':
-            self.photo3x4 = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
+            self.photo3x4 = pygame.image.load("../resources/imagens/player/frieza/frieza3x4.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
-            self.Win = pygame.image.load("../resources/imagens/player/vegeta/vegetaWin.jpeg")
+            self.Win = pygame.image.load("../resources/imagens/player/frieza/win.png")
             self.loadSprites("../resources/imagens/player/frieza/frieza-3.png")
             self.insertFrame(29,98,40,65)
             self.insertFrame(73,98,40,65)
