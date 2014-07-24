@@ -626,7 +626,7 @@ class Player(SpriteAnimation):
             #Vegeta-Disputa
             self.insertFrame(333,2012,55,60)
             self.insertFrame(390,2012,55,60)
-            self.buildAnimation("disputa",hold=True, speed = 5)
+            self.buildAnimation("disputa",hold=False, speed = 10)
         if character == 'trunks':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/trunks/trunks3x4.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
@@ -724,9 +724,9 @@ class Player(SpriteAnimation):
             self.insertFrame(544,2080,80,85)
             self.buildAnimation("disputa",hold=True, speed = 5)
         if character == 'gohan':
-            self.photo3x4 = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
+            self.photo3x4 = pygame.image.load("../resources/imagens/player/gohan/gohan3x4.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
-            self.Win = pygame.image.load("../resources/imagens/player/vegeta/vegetaWin.jpeg")
+            self.Win = pygame.image.load("../resources/imagens/player/gohan/win.png")
             self.loadSprites("../resources/imagens/player/gohan/gohan.png")
             self.insertFrame(10,53,50,80)
             self.insertFrame(57,53,50,80)
@@ -747,6 +747,27 @@ class Player(SpriteAnimation):
             self.buildAnimation("defend",hold=False, speed = 10)
             self.insertFrame(15,1412,57,80)
             self.buildAnimation("teleport",hold=True, speed = 10)
+            self.insertFrame(70,564,60,80)
+            self.insertFrame(127,564,60,80)
+            self.insertFrame(182,564,75,80)
+            self.insertFrame(182,564,75,80)
+            self.buildAnimation("punch",hold=True, speed = 5)
+            self.insertFrame(122,656,60,80)
+            self.insertFrame(180,656,64,80)
+            self.insertFrame(255,656,64,80)
+            self.insertFrame(326,656,69,80)
+            self.insertFrame(406,656,69,80)
+            self.insertFrame(479,656,69,80)
+            self.buildAnimation("kick",hold=True, speed = 5)
+            self.insertFrame(495,1740,69,80)
+            self.insertFrame(160,1740,69,80)
+            self.insertFrame(292,1740,69,80)
+            self.buildAnimation("kameham",hold=False, speed = 5)
+            self.insertFrame(216,1420,72,80)
+            self.insertFrame(346,1420,72,80)
+            self.buildAnimation("disputa",hold=False, speed = 10)
+            self.insertFrame(460,1065,80,80)
+            self.buildAnimation("lose",hold=False, speed = 10)
 
     def loadPower(self,power):
         """
