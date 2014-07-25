@@ -751,7 +751,7 @@ class Player(SpriteAnimation):
             self.insertFrame(127,564,60,80)
             self.insertFrame(182,564,75,80)
             self.insertFrame(182,564,75,80)
-            self.buildAnimation("punch",hold=True, speed = 5)
+            self.buildAnimation("punch",hold=True, speed = 2)
             self.insertFrame(122,656,60,80)
             self.insertFrame(180,656,64,80)
             self.insertFrame(255,656,64,80)
