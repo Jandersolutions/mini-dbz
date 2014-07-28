@@ -7,8 +7,7 @@ class SpriteAnimation:
         self.acao = acaoInicial 
         self.x = 200
         self.y = 0
-        self.ani_speed_init= speed
-        self.ani_speed = self.ani_speed_init
+        self.ani_speed = speed
         self.ani_pos = 0
         self.spriteSheet = None 
         self.animation = []
@@ -28,11 +27,9 @@ class SpriteAnimation:
         lx,ly comprimentos das sprites
         numeros de sprites
         """
-
         rect = []
         for i in range (n):
             rect.append(pygame.Rect(xo+lx*i, yo, lx,ly))
-        
         rect.sort()
         return rect
 
@@ -52,8 +49,8 @@ class SpriteAnimation:
         indices.sort()
         indices.reverse()
         lista = self.dicOfRects[acao]
-        for i in range(len(indices)):
-            lista.pop(indices[i])
+        for item in indices:
+            lista.pop(item)
         self.dicOfRects[acao] = lista
 
     def repeatPosition(self, acao, nvezes, indices):
@@ -62,8 +59,8 @@ class SpriteAnimation:
         lista = self.dicOfRects[acao]
         #adiciona no final n vezes
         while nvezes != 0:
-            for i in range(len(indices)):
-                lista.append(lista[indices[i]])
+            for item in indices:
+                lista.append(lista[item])
             nvezes = nvezes -1
 
     def loadSprites(self, imagem):
@@ -77,7 +74,7 @@ class SpriteAnimation:
         self.dicOfRects[acao] = self.rectList(xo,yo,lx,ly,n) 
         self.holdState[acao] = hold
 
-    def update(self, pos,screen):
+    def update(self,screen):
         """Run and update the animation"""
         #import pdb; pdb.set_trace()
         
@@ -85,35 +82,29 @@ class SpriteAnimation:
         if self.acaoLocal != self.acao:
             self.ani_pos = 0
         self.acaoLocal = self.acao
-        
         rectList = self.dicOfRects[self.acao]
-        self.ani_max = len(rectList) - 1
-
-        if pos !=0:
-            self.ani_speed-=1
- 
-            if self.ani_speed == 0:
-
-                self.ani_speed = self.animationSpeed[self.acao]
-                #Caso a animacao tenha atingido o ultimo indice e eh continua
-                if self.ani_pos == self.ani_max and self.holdState[self.acao] == False:
-                    self.ani_pos = 0
-                #Caso seja apertada a tecla novamente numa animacao desconitnua
-                elif self.ani_pos == self.ani_max and self.holdState[self.acao] == True and self.pressed==True:
-                    self.ani_pos = 0
-                    self.pressed = False
-                #Caso a animacao nao tenha atingido o ultimo indice e eh continua
-                elif self.holdState[self.acao] == False:
-                    self.ani_pos+=1
-                #Caso a animacao nao tenha atingido o ultimo indice e eh descontinua
-                elif self.holdState[self.acao] == True and self.ani_pos < self.ani_max:
-                    self.ani_pos+=1
-                    self.pressed = False
+        self.ani_max = len(rectList)-1
+        self.ani_speed-=1
+        if self.ani_speed == 0:
+            self.ani_speed = self.animationSpeed[self.acao]
+            #Caso a animacao tenha atingido o ultimo indice e eh continua
+            if self.ani_pos == self.ani_max and self.holdState[self.acao] == False:
+                self.ani_pos = 0
+            #Caso seja apertada a tecla novamente numa animacao desconitnua
+            elif self.ani_pos == self.ani_max and self.holdState[self.acao] == True and self.pressed==True:
+                self.ani_pos = 0
+                self.pressed = False
+            #Caso a animacao nao tenha atingido o ultimo indice e eh continua
+            elif self.holdState[self.acao] == False:
+                self.ani_pos+=1
+            #Caso a animacao nao tenha atingido o ultimo indice e eh descontinua
+            elif self.holdState[self.acao] == True and self.ani_pos < self.ani_max:
+                self.ani_pos+=1
+                self.pressed = False
         #screen.blit(self.spriteSheet[0], (self.x,self.y), rectList[self.ani_pos])
         if self.facingRight == True:
             cropped = self.spriteSheet.subsurface(rectList[self.ani_pos]).copy()
             screen.blit(cropped, (self.x,self.y))
-        
         if self.facingRight == False:
             cropped = self.spriteSheet.subsurface(rectList[self.ani_pos]).copy()
             new_image = pygame.transform.flip(cropped, True, False)

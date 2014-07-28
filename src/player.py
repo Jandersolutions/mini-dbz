@@ -52,8 +52,6 @@ class Player(SpriteAnimation):
             self.k_leftArrow = K_a
             self.k_combo = K_c
             self.k_teleport = K_k
-            self.k_dispute = K_x
-            self.k_cont = K_b
         elif self.playerId == 2:
             self.k_down = K_DOWN
             self.k_up = K_UP
@@ -66,8 +64,6 @@ class Player(SpriteAnimation):
             self.k_leftArrow = K_LEFT
             self.k_combo = K_n
             self.k_teleport = K_KP6
-            self.k_dispute = K_KP3
-            self.k_cont = K_KP1
         self.inicio1Pc = time.time()*1000
         self.inicio2Pc = time.time()*1000
         self.inicio3Pc = time.time()*1000
@@ -98,33 +94,26 @@ class Player(SpriteAnimation):
                 #Goku
                 if event.key == self.k_down:
                     self.acao = "down"
-                    self.pos = 1
                     self.movey+=1
                 if event.key == self.k_up:
                     self.acao = "up"
-                    self.pos = 1
                     self.movey-=1
                 if event.key == self.k_defend:
                     self.acao = "defend"
-                    self.pos = 1
                     self.Defending = True
                 if self.facingRight == True:
                     if event.key == self.k_rightArrow:
                         self.acao = "right"
-                        self.pos = 1
                         self.movex+=1
                     if event.key == self.k_leftArrow:
                         self.acao = "up"
-                        self.pos = 1
                         self.movex-=1
                 if self.facingRight == False:
                     if event.key == self.k_rightArrow:
                         self.acao = "up"
-                        self.pos = 1
                         self.movex+=1
                     if event.key == self.k_leftArrow:
                         self.acao = "right"
-                        self.pos = 1
                         self.movex-=1
                 if event.key == self.k_kameham:
                     self.inicioKame = time.time()*1000
@@ -142,7 +131,6 @@ class Player(SpriteAnimation):
                             power1.acao = "kame"
                             self.pressed = True
                             power1.pressed = True
-                            self.pos = 1
                             self.Attacking = True
                             self.Defending = False
                             if self.facingRight == True:
@@ -165,7 +153,6 @@ class Player(SpriteAnimation):
                     self.kameCont +=1
                     self.acao = "punch"
                     self.pressed = True
-                    self.pos = 1
                     self.Attacking = True
                     self.Defending = False
                     if self.facingRight == True:
@@ -205,11 +192,9 @@ class Player(SpriteAnimation):
                             if player.Defending == True and player.Attacking == False:
                                 player.HP -= player.hitDefended
                     #self.inicio = time.time()
-
                 if event.key == self.k_kick:
                     self.acao = "kick"
                     self.pressed = True
-                    self.pos = 1
                     self.Attacking = True
                     self.Defending = False
                     if self.facingRight == True:
@@ -230,63 +215,43 @@ class Player(SpriteAnimation):
                 if event.key == self.k_load:
                     self.acao = "load"
                     self.pressed = True
-                    self.pos = 1
                     self.XP+= 5 
                     self.inicio = time.time()
                 if event.key == self.k_teleport:
                     self.acao = "teleport"
                     self.pressed = True
-                    self.pos = 1
                     self.x = random.randint(0,1170)
                     self.y = random.randint(0,738)
                     self.inicio = time.time()
-                if event.key == self.k_dispute:
-                    self.cronometrarDisputa = True
-                    self.releasePower = True
-                    self.voidPower = True
-                    self.kameCont =0
-                    for player in playerList:
-                        player.kameCont = 0
-                if event.key == self.k_cont:
-                    self.kameCont +=1
-                    
             if event.type == KEYUP:
                 if event.key == self.k_down:
                     self.acao = "down"
-                    self.pos = 0
                     self.movey=0
                 if event.key == self.k_up:
                     self.acao = "up"
-                    self.pos = 0
                     self.movey=0
                 if event.key == self.k_defend:
                     self.acao = "defend"
-                    self.pos = 0
                     self.Defending = False
                 if event.key == self.k_punch:
                     self.Attacking = False
                 if self.facingRight  == True:
                     if event.key == self.k_rightArrow:
                         self.acao = "right"
-                        self.pos = 0
                         self.movex=0
                     if event.key == self.k_leftArrow:
                         self.acao = "up"
-                        self.pos = 0
                         self.movex=0
                 if self.facingRight  == False:
                     if event.key == self.k_leftArrow:
                         self.acao = "right"
-                        self.pos = 0
                         self.movex=0
                     if event.key == self.k_rightArrow:
                         self.acao = "up"
-                        self.pos = 0
                         self.movex=0
                 if event.key == self.k_kameham:
                     self.acao = "kameham"
                     power1.acao = "void"
-                    self.pos = 0
                     self.movex=0
     
     def kameham(self,localPower,playerList,powers):
@@ -307,7 +272,6 @@ class Player(SpriteAnimation):
                 self.x = 1120 
                 self.y = self.staticy
             self.acao = "disputa"
-            self.pos = 1
             self.pressed = True
             localPower.pressed = True
             self.inicio = time.time()
@@ -747,7 +711,7 @@ class Player(SpriteAnimation):
             self.buildAnimation("defend",hold=False, speed = 10)
             self.insertFrame(15,1412,57,80)
             self.buildAnimation("teleport",hold=True, speed = 10)
-            self.insertFrame(70,564,60,80)
+            #self.insertFrame(70,564,60,80)
             self.insertFrame(127,564,60,80)
             self.insertFrame(182,564,75,80)
             self.insertFrame(182,564,75,80)
@@ -791,6 +755,16 @@ class Player(SpriteAnimation):
         power.buildAnimation("from-right",hold=True, speed = 10)
         power.insertFrame(3,720,1200,50) #void
         power.buildAnimation("from-left",hold=True, speed = 10)
+        power.insertFrame(266,1580,50,50)
+        power.insertFrame(108,1486,40,40)
+        power.insertFrame(72,1486,40,40)
+        power.insertFrame(295,1486,40,40)
+        power.buildAnimation("faiscas",hold=False, speed = 10)
+        power.insertFrame(506,2850,100,110)
+        power.insertFrame(358,2883,77,90)
+        power.insertFrame(274,2883,47,80)
+        power.insertFrame(1300,1604,146,40) #void
+        power.buildAnimation("explosao",hold=False, speed = 15)
     
     def playPC(self, enemyPlayer, power2,screen):
         """

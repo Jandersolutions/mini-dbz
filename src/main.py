@@ -874,7 +874,6 @@ def distance(xo,yo,x,y):
     d = ((dx**2)+(dy**2))**0.5
     return d
 
-
 def playLoop():
     """
     Game Loop
@@ -922,11 +921,11 @@ def playLoop():
         player2.standUpPosition()
         player2.defeated(screen,player1)
         player2.TurnAround(player1)
-        player1.update(player1.pos,screen)
-        player2.update(player2.pos,screen)
-        power1.update(player1.pos,screen)
-        powerDispute.update(player1.pos,screen)
-        power2.update(player2.pos,screen)
+        player1.update(screen)
+        player2.update(screen)
+        power1.update(screen)
+        powerDispute.update(screen)
+        power2.update(screen)
     if vsPC == True and multiplayer == False:
         player1.lockInsideScreen(width,height,delta)
         player1.physicalRect()
@@ -935,10 +934,9 @@ def playLoop():
         player1.standUpPosition()
         player1.defeated(screen,playerPC)
         #player1.TurnAround(playerPC)
-        player1.update(player1.pos,screen)
+        player1.update(screen)
         player1.kameham(powerDispute,PCPlayers,powers)
         #power1.update(player1.pos,screen)
-        
         #playerPC.playPC(player1,power3,screen)
         playerPC.lockInsideScreenPC(width, height, delta, player1)
         playerPC.physicalRect()
@@ -946,20 +944,20 @@ def playLoop():
         playerPC.statusBar(screen,width)
         playerPC.standUpPosition()
         #playerPC.TurnAround(player1)
-        playerPC.update(playerPC.pos,screen)
-        power3.update(playerPC.pos,screen)
+        playerPC.update(screen)
+        power3.update(screen)
         if pcNumber == 1:
             player1.TurnAround(playerPC)
             playerPC.TurnAround(player1)
             playerPC.playPC(player1,power3,screen)
             playerPC.defeated(screen,player1)
-            power1.update(player1.pos,screen)
-            powerDispute.update(player1.pos,screen)
+            power1.update(screen)
+            powerDispute.update(screen)
         if pcNumber >= 2:
             playerPC.TurnAround(player1)
             playerPC.playPC(player1,power3,screen)
-            power1.update(player1.pos,screen)
-            powerDispute.update(player1.pos,screen)
+            power1.update(screen)
+            powerDispute.update(screen)
             
             playerPC2.playPC(player1,power4,screen)
             playerPC2.lockInsideScreenPC(width, height, delta, player1)
@@ -970,7 +968,7 @@ def playLoop():
             #playerPC2.defeated(screen,player1)
             playerPC2.TurnAround(player1)
             playerPC2.teamDefeated(screen,player1,PCPlayers)
-            playerPC2.update(playerPC2.pos,screen)
+            playerPC2.update(screen)
             
             if pcNumber == 2:
                 d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
@@ -984,7 +982,7 @@ def playLoop():
                     player1.TurnAround(playerPC)
                 if playerPC2.HP>0 and playerPC.HP<=0:
                     player1.TurnAround(playerPC2)
-            power4.update(playerPC2.pos,screen)
+            power4.update(screen)
         contador +=1
         if pcNumber >= 3:
             playerPC3.playPC(player1,power5,screen)
@@ -996,8 +994,8 @@ def playLoop():
             #playerPC2.defeated(screen,player1)
             playerPC3.TurnAround(player1)
             playerPC3.teamDefeated(screen,player1,PCPlayers)
-            playerPC3.update(playerPC3.pos,screen)
-            power5.update(playerPC3.pos,screen)
+            playerPC3.update(screen)
+            power5.update(screen)
             if pcNumber == 3:
                 d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
                 d2=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
@@ -1049,10 +1047,10 @@ def playLoop():
         player2.standUpPosition()
         #player2.defeated(screen,playerPC)
         player2.TurnAround(playerPC)
-        player1.update(player1.pos,screen)
-        player2.update(player2.pos,screen)
-        power1.update(player1.pos,screen)
-        power2.update(player2.pos,screen)
+        player1.update(screen)
+        player2.update(screen)
+        power1.update(screen)
+        power2.update(screen)
 
         #playerPC.playPC(player1,power3,screen)
         playerPC.physicalRect()
@@ -1061,10 +1059,10 @@ def playLoop():
         playerPC.standUpPosition()
         playerPC.defeated(screen,player1)
         #playerPC.TurnAround(player1)
-        playerPC.update(playerPC.pos,screen)
-        power3.update(playerPC.pos,screen)
-        powerDispute.update(player1.pos,screen)
-        powerDispute2.update(player2.pos,screen)
+        playerPC.update(screen)
+        power3.update(screen)
+        powerDispute.update(screen)
+        powerDispute2.update(screen)
 
         d3=distance(player1.x,player1.y,playerPC.x,playerPC.y)
         d5=distance(player2.x,player2.y,playerPC.x,playerPC.y)
