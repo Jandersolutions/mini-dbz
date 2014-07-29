@@ -24,8 +24,8 @@ ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-#screen = pygame.display.set_mode(resolution)
+#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 scene1 = pygame.transform.scale(scenery[0], (500,300))
@@ -80,9 +80,13 @@ power4 = SpriteAnimation(acaoInicial="void")
 power5 = SpriteAnimation(acaoInicial="void")
 powerDispute = SpriteAnimation(acaoInicial="void")
 powerDispute2 = SpriteAnimation(acaoInicial="void")
+effects = SpriteAnimation(acaoInicial="void")
+effects2 = SpriteAnimation(acaoInicial="void")
 player1.loadPower(power1)
 player1.loadPower(powerDispute)
 player2.loadPower(powerDispute2)
+player1.loadPower(effects)
+player2.loadPower(effects2)
 player2.loadPower(power2)
 playerPC.loadPower(power3)
 playerPC2.loadPower(power4)
@@ -128,16 +132,16 @@ def restart():
         player1.y = 350
         playerPC.x = 850
         playerPC.y = 350
-        player1.HP = 140
-        player2.HP = 140
+        player1.HP = 400
+        player2.HP = 400
         player2.XP = 50
-        playerPC.HP = 140
+        playerPC.HP = 400
         player1.XP = 50
         playerPC.XP = 0
         playerPC.inicio1Pc = time.time()
-        playerPC2.HP = 140
+        playerPC2.HP = 400
         playerPC2.XP = 0
-        playerPC3.HP = 140
+        playerPC3.HP = 400
         playerPC3.XP = 0
         player1.cronometrarDisputa = False
     else:
@@ -914,6 +918,7 @@ def playLoop():
         player1.standUpPosition()
         player1.defeated(screen,player2)
         player1.TurnAround(player2)
+        player1.playEffects(effects)
         player2.lockInsideScreen(width,height,delta)
         player2.physicalRect()
         player2.powerPlacing(power2,dx2=920,dy2=0)
@@ -926,12 +931,14 @@ def playLoop():
         power1.update(screen)
         powerDispute.update(screen)
         power2.update(screen)
+        effects.update(screen)
     if vsPC == True and multiplayer == False:
         player1.lockInsideScreen(width,height,delta)
         player1.physicalRect()
         player1.powerPlacing(power1)
         player1.statusBar(screen,width)
         player1.standUpPosition()
+        player1.playEffects(effects)
         player1.defeated(screen,playerPC)
         #player1.TurnAround(playerPC)
         player1.update(screen)
@@ -1028,6 +1035,7 @@ def playLoop():
                     player1.TurnAround(playerPC2)
                 if playerPC.HP <=0 and playerPC2.HP<=0 and playerPC3.HP>0:
                     player1.TurnAround(playerPC3)
+        effects.update(screen)
 
     if multiplayer == True:
         player1.lockInsideScreen(width,height,delta)
@@ -1035,6 +1043,7 @@ def playLoop():
         player1.powerPlacing(power1)
         player1.statusBar(screen,width)
         player1.standUpPosition()
+        player1.playEffects(effects)
         #player1.defeated(screen,playerPC)
         player1.teamDefeated(screen,playerPC,humanPlayers)
         player1.TurnAround(playerPC)
@@ -1045,6 +1054,7 @@ def playLoop():
         player2.powerPlacing(power2,dx2=920,dy2=0)
         player2.statusBar(screen,width)
         player2.standUpPosition()
+        player2.playEffects(effects2)
         #player2.defeated(screen,playerPC)
         player2.TurnAround(playerPC)
         player1.update(screen)
@@ -1063,6 +1073,8 @@ def playLoop():
         power3.update(screen)
         powerDispute.update(screen)
         powerDispute2.update(screen)
+        effects.update(screen)
+        effects2.update(screen)
 
         d3=distance(player1.x,player1.y,playerPC.x,playerPC.y)
         d5=distance(player2.x,player2.y,playerPC.x,playerPC.y)

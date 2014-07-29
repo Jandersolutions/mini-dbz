@@ -35,7 +35,7 @@ class Player(SpriteAnimation):
         self.powerDamage = 10
         self.powerDamageDefended = 2
         self.comboDamage = 10
-        self.HP = 140
+        self.HP = 400
         self.XP = 50
         self.playerId = playerId
         self.loading = False
@@ -72,6 +72,8 @@ class Player(SpriteAnimation):
         self.inicio6Pc = time.time()*1000
         self.inicio7Pc = time.time()*1000
         self.inicio8Pc = time.time()*1000
+        self.inicioFaisca = time.time()*1000
+        self.inicioExplosao = time.time()*1000
         self.inicio2 = 0
         self.kamehamMs = 160
         self.punchMs = 90
@@ -82,6 +84,7 @@ class Player(SpriteAnimation):
         self.staticy = 0
         self.inicioKame = time.time()*1000
         self.inicioPunch = time.time()*1000
+        self.inicioEffects = time.time()*1000
         self.isPC = False
         self.singleKameham = True
     
@@ -160,7 +163,7 @@ class Player(SpriteAnimation):
                         selfAttackRect = Rect(self.x+30, self.y, 50, 70)
                         #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
                     if self.facingRight == False:
-                        selfAttackRect = Rect(self.x-5, self.y, 50, 70)
+                        selfAttackRect = Rect(self.x-20, self.y, 50, 70)
                         #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
                     self.inicioPunch = time.time()*1000
                     for player in playerList:
@@ -168,7 +171,7 @@ class Player(SpriteAnimation):
                             if player.Defending == False:
                                 player.HP -= self.punchDamage
                                 player.inicio = time.time()
-                                if abs(self.x - player.x) <30 and abs(player.inicioPunch-self.inicioPunch)<400:
+                                if abs(player.inicioPunch-self.inicioPunch)<400:
                                     pass
                                 else:
                                     player.acao = "hited"
@@ -186,7 +189,7 @@ class Player(SpriteAnimation):
                         selfAttackRect = Rect(self.x+30, self.y, 50, 70)
                         #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
                     if self.facingRight == False:
-                        selfAttackRect = Rect(self.x-5, self.y, 50, 70)
+                        selfAttackRect = Rect(self.x-15, self.y, 50, 70)
                         #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
                     for player in playerList:
                         if selfAttackRect.colliderect(player.Rect) == True:
@@ -206,15 +209,15 @@ class Player(SpriteAnimation):
                         selfAttackRect = Rect(self.x+30, self.y, 35, 70)
                         #pygame.draw.rect(screen, (255,0,0), selfAttackRect)
                     if self.facingRight == False:
-                        selfAttackRect = Rect(self.x-5, self.y, 35, 70)
+                        selfAttackRect = Rect(self.x-20, self.y, 35, 70)
                         #pygame.draw.rect(screen, (255,0,0), selfAttackRect)
                     self.inicioPunch = time.time()*1000
                     for player in playerList:
                         if selfAttackRect.colliderect(player.Rect) == True:
                             if player.Defending == False:
                                 player.HP -= self.kickDamage
-                                if abs(self.x - player.x) <30 and abs(player.inicioPunch-self.inicioPunch)<400:
-                                    pass
+                                if abs(player.inicioPunch-self.inicioPunch)<400:
+                                    self.inicioEffects = time.time()*1000
                                 else:
                                     player.acao = "hited"
                                 player.inicio = time.time()
@@ -326,6 +329,35 @@ class Player(SpriteAnimation):
             self.singleKameham = True
             for otherPlayer in playerList:
                 otherPlayer.singleKameham = True
+    def playEffects(self, effects):
+        if abs(time.time()*1000-self.inicioEffects) < 200:
+            if random.random()>0.5 and abs(time.time()*1000-self.inicioFaisca)>1500:
+                effects.acao = "faiscas"
+                if abs(time.time()*1000 - self.inicioFaisca) > 2500:
+                    effects.acao = "void"
+                    self.inicioFaisca = time.time()*1000
+            if random.random()<0.5 and abs(time.time()*1000-self.inicioExplosao)>3500:
+                effects.acao = "explosao"
+                if abs(time.time()*1000 - self.inicioExplosao) > 3700:
+                    effects.acao = "void"
+                    self.inicioExplosao = time.time()*1000
+        else:
+            effects.acao = "void"
+        if self.facingRight == True:
+            if effects.acao == "faiscas":
+                effects.x = self.x+20
+                effects.y = self.y+15
+            if effects.acao == "explosao":
+                effects.x = self.x
+                effects.y = self.y-20
+        else:
+            if effects.acao == "faiscas":
+                effects.x = self.x-5
+                effects.y = self.y+15
+            if effects.acao == "explosao":
+                effects.x = self.x-25
+                effects.y = self.y-25
+
     def TurnAround(self,otherPlayer):
         """
         Turn around automatically for player1 and player2
@@ -769,10 +801,11 @@ class Player(SpriteAnimation):
         power.insertFrame(295,1486,40,40)
         power.buildAnimation("faiscas",hold=False, speed = 10)
         power.insertFrame(506,2850,100,110)
+        power.insertFrame(506,2850,100,110)
         power.insertFrame(358,2883,77,90)
-        power.insertFrame(274,2883,47,80)
+        #power.insertFrame(274,2883,47,80)
         power.insertFrame(1300,1604,146,40) #void
-        power.buildAnimation("explosao",hold=False, speed = 15)
+        power.buildAnimation("explosao",hold=False, speed = 20)
     
     def playPC(self, enemyPlayer, power2,screen):
         """
