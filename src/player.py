@@ -447,19 +447,19 @@ class Player(SpriteAnimation):
         Hp and XP bars of player1
         """
         if self.playerId == 1:
-            playerHPRect = Rect(80 , 20, self.HP*2, 20)
+            playerHPRect = Rect(80 , 20, self.HP, 20)
             playerXPRect = Rect(80 , 60, self.XP*2, 20)
             screen.blit(self.photo3x4, (0,20))
         if self.playerId == 4:
-            playerHPRect = Rect(80 , 100, self.HP*2, 20)
+            playerHPRect = Rect(80 , 100, self.HP, 20)
             playerXPRect = Rect(80 , 140, self.XP*2, 20)
             screen.blit(self.photo3x4, (0,100))
         if self.playerId == 2 or self.playerId ==0:
-            playerHPRect = Rect(width-80, 20, -self.HP*2, 20)
+            playerHPRect = Rect(width-80, 20, -self.HP, 20)
             playerXPRect = Rect(width-80, 60, -self.XP*2, 20)
             screen.blit(self.photo3x4Fliped, (width-70,20))
         if self.playerId == 3:
-            playerHPRect = Rect(width-80, 100, -self.HP*2, 20)
+            playerHPRect = Rect(width-80, 100, -self.HP, 20)
             playerXPRect = Rect(width-80, 140, -self.XP*2, 20)
             screen.blit(self.photo3x4Fliped, (width-70,100))
         if self.HP >=0:
