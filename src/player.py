@@ -17,8 +17,8 @@ class Player(SpriteAnimation):
         self.x = 250
         self.y = 350
         self.Rect = Rect(self.x, self.y, 35, 70)
-        self.HP = 150
-        self.XP =30
+        self.HP = 400
+        self.XP = 50
         self.Defending = False
         self.Attacking = False
         self.punchDamage = 0
@@ -35,8 +35,6 @@ class Player(SpriteAnimation):
         self.powerDamage = 10
         self.powerDamageDefended = 2
         self.comboDamage = 10
-        self.HP = 400
-        self.XP = 50
         self.playerId = playerId
         self.loading = False
         self.powerDisputa = True
@@ -294,18 +292,18 @@ class Player(SpriteAnimation):
                 power.acao = 'void'
             for otherPlayer in playerList:
                 if self.facingRight == True:
-                    if self.kameCont-otherPlayer.kameCont >3:
+                    if self.kameCont-otherPlayer.kameCont >0:
                         localPower.acao = "disputa3"
-                    if otherPlayer.kameCont-self.kameCont >3:
+                    if otherPlayer.kameCont-self.kameCont >0:
                         localPower.acao = "disputa2"
-                    if self.kameCont-otherPlayer.kameCont <2 and self.kameCont-otherPlayer.kameCont>=0:
+                    if self.kameCont-otherPlayer.kameCont == 0:
                         localPower.acao = "disputa"
                 if self.facingRight == False:
-                    if self.kameCont-otherPlayer.kameCont >3:
+                    if self.kameCont-otherPlayer.kameCont >0:
                         localPower.acao = "disputa2"
-                    if otherPlayer.kameCont-self.kameCont >3:
+                    if otherPlayer.kameCont-self.kameCont >0:
                         localPower.acao = "disputa3"
-                    if self.kameCont-otherPlayer.kameCont <2 and self.kameCont-otherPlayer.kameCont>=0:
+                    if self.kameCont-otherPlayer.kameCont == 0:
                         localPower.acao = "disputa"
                 if self.facingRight == True:
                     otherPlayer.y = self.y+10

@@ -157,8 +157,8 @@ def restart():
         player1.y = 350
         player2.x = 850
         player2.y = 350
-        player1.HP = 140
-        player2.HP = 140
+        player1.HP = 400
+        player2.HP = 400
         player1.XP = 50
         player2.XP = 50
 
