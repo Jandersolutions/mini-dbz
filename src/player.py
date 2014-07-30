@@ -271,10 +271,10 @@ class Player(SpriteAnimation):
             self.inicio2 = time.time()*1000
             self.cronometrarDisputa = False
             self.staticy = self.y
-        if time.time()*1000-self.inicio2 < 3000:
+        if time.time()*1000-self.inicio2 < 4000:
             #powerDisputa responsabilidade de um player pela Disputa
-            if self.powerDisputa == True:
-                localPower.acao = "disputa"
+            #if self.powerDisputa == True:
+                #localPower.acao = "disputa"
             if self.facingRight == True:
                 localPower.x = self.x+52
                 localPower.y = self.y+10
@@ -294,6 +294,20 @@ class Player(SpriteAnimation):
                 power.acao = 'void'
             for otherPlayer in playerList:
                 if self.facingRight == True:
+                    if self.kameCont-otherPlayer.kameCont >3:
+                        localPower.acao = "disputa3"
+                    if otherPlayer.kameCont-self.kameCont >3:
+                        localPower.acao = "disputa2"
+                    if self.kameCont-otherPlayer.kameCont <2 and self.kameCont-otherPlayer.kameCont>=0:
+                        localPower.acao = "disputa"
+                if self.facingRight == False:
+                    if self.kameCont-otherPlayer.kameCont >3:
+                        localPower.acao = "disputa2"
+                    if otherPlayer.kameCont-self.kameCont >3:
+                        localPower.acao = "disputa3"
+                    if self.kameCont-otherPlayer.kameCont <2 and self.kameCont-otherPlayer.kameCont>=0:
+                        localPower.acao = "disputa"
+                if self.facingRight == True:
                     otherPlayer.y = self.y+10
                     otherPlayer.x = self.x+1080
                 if self.facingRight == False:
@@ -304,7 +318,7 @@ class Player(SpriteAnimation):
                 otherPlayer.acao = 'disputa'
                 otherPlayer.inicio = time.time()
                 otherPlayer.singleKameham = False
-        if time.time()*1000 -self.inicio2 > 3000 and self.releasePower == True:
+        if time.time()*1000 -self.inicio2 > 4000 and self.releasePower == True:
             for otherPlayer in playerList:
                 self.releasePower = False
                 self.enemykameCont = otherPlayer.kameCont
@@ -323,7 +337,7 @@ class Player(SpriteAnimation):
                     localPower.acao = "void"
             if self.kameCont < self.enemykameCont:
                 self.HP -= 50
-        if time.time()*1000 -self.inicio2 > 3500 and self.voidPower == True:
+        if time.time()*1000 -self.inicio2 > 4500 and self.voidPower == True:
             self.voidPower = False
             localPower.acao = "void"
             self.singleKameham = True
@@ -789,6 +803,12 @@ class Player(SpriteAnimation):
         power.insertFrame(10,370,1200,50) 
         power.insertFrame(10,540,1200,50) 
         power.buildAnimation("disputa",hold=False, speed = 10)
+        power.insertFrame(10,851,1200,50) 
+        power.insertFrame(10,914,1200,50) 
+        power.buildAnimation("disputa2",hold=False, speed = 10)
+        power.insertFrame(10,972,1200,50) 
+        power.insertFrame(10,1037,1200,50) 
+        power.buildAnimation("disputa3",hold=False, speed = 10)
         power.insertFrame(10,600,1200,50) #void
         power.insertFrame(10,660,1200,50) #void
         #power.insertFrame(1300,1604,146,40) #void
