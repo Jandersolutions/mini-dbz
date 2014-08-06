@@ -48,7 +48,7 @@ sc1 = 0
 sc2 = 1
 sg = 0
 df = 2
-volume = 0.0
+volume = 0.4
 vsPC = False
 song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
@@ -434,7 +434,7 @@ def Credits():
     boldFont = pygame.font.SysFont("monospace", 55,bold =True)
     gameDeveloper = boldFont.render("Game Developer", 1, (255,255,255))
     estevao = myfont.render("Estevao Fonseca", 1, (255,255,255))
-    supporters = boldFont.render("Game Designers", 1, (255,255,255))
+    supporters = boldFont.render("Special Thanks", 1, (255,255,255))
     bru = myfont.render("Bruno Fonseca", 1, (255,255,255))
     hel = myfont.render("Helena A. Lisboa", 1, (255,255,255))
     artWork = boldFont.render("Art Work", 1, (255,255,255))
@@ -443,11 +443,10 @@ def Credits():
     screen.blit(gameDeveloper, (340,150))
     screen.blit(estevao, (340,210))
     screen.blit(supporters, (340,270))
-    screen.blit(estevao, (340,330))
-    screen.blit(bru, (340,390))
-    screen.blit(hel, (340,450))
-    screen.blit(artWork, (340,510))
-    screen.blit(akira, (340,570))
+    screen.blit(bru, (340,330))
+    screen.blit(hel, (340,390))
+    screen.blit(artWork, (340,450))
+    screen.blit(akira, (340,510))
     pygame.display.update()
     for event in pygame.event.get():
         if event.type == QUIT:
