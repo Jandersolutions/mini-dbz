@@ -33,13 +33,13 @@ clock = pygame.time.Clock()
 pygame.mouse.set_visible(0)
 gameState = 0 #Menu
 previousGameState = 0
-s0Option = range(4) 
+s0Option = range(5) 
 is0 = 0
 s1Option = range(5)
 is1 = 0
 s3Option = range(7)
 is3 = 0
-s4Option = range(3)
+s4Option = range(2)
 is4 = 0
 s5Option = range(3)
 is5 = 0
@@ -238,26 +238,30 @@ def openMenu():
     titlefont = pygame.font.SysFont("monospace", 75,bold = True)
     boldFont = pygame.font.SysFont("monospace", 75,bold =True)
     title = titlefont.render("SS4-Battle", 1, (255,255,255))
-    playerVsPc = myfont.render("Play", 1, (255,255,255))
+    playerVsPc = myfont.render("Play Vs PC", 1, (255,255,255))
+    playerVsPlayer = myfont.render("Play Vs Player2", 1, (255,255,255))
     options = myfont.render("Options", 1, (255,255,255))
     credits = myfont.render("Credits", 1, (255,255,255))
     quit = myfont.render("Quit", 1, (255,255,255))
 
     global is0
     if s0Option[is0] == 0:
-        playerVsPc = boldFont.render("Play", 1, (255,255,255))
+        playerVsPc = boldFont.render("Play Vs Pc", 1, (255,255,255))
     if s0Option[is0] == 1:
-        options = boldFont.render("Options", 1, (255,255,255))
+        playerVsPlayer = boldFont.render("Play Vs Player2", 1, (255,255,255))
     if s0Option[is0] == 2:
-        credits = boldFont.render("Credits", 1, (255,255,255))
+        options = boldFont.render("Options", 1, (255,255,255))
     if s0Option[is0] == 3:
+        credits = boldFont.render("Credits", 1, (255,255,255))
+    if s0Option[is0] == 4:
         quit = boldFont.render("Quit", 1, (255,255,255))
 
     #screen.blit(title, (200,105))
     screen.blit(playerVsPc, (380,250))
-    screen.blit(options, (380,320))
-    screen.blit(credits, (380,390))
-    screen.blit(quit, (380,460))
+    screen.blit(playerVsPlayer, (380,320))
+    screen.blit(options, (380,390))
+    screen.blit(credits, (380,460))
+    screen.blit(quit, (380,530))
     pygame.display.update()
     
     for event in pygame.event.get():
@@ -269,16 +273,26 @@ def openMenu():
                 gameState = previousGameState
             if event.key==K_RETURN:
                 if s0Option[is0] == 0:
-                    gameState = 8
+                    player2.playerId = 2
+                    multiplayer = False
+                    gameState = 5
+                    vsPC = True
+                    restart()
+                    pcNumber = 1
+                if s0Option[is0] == 1:
+                    gameState = 5
                     restart()
                     vsPC = False
-                if s0Option[is0] == 1:
-                    previousGameState = 0
-                    gameState = 3
+                    player2.playerId = 2
+                    multiplayer = False
+
                 if s0Option[is0] == 2:
                     previousGameState = 0
-                    gameState = 6
+                    gameState = 3
                 if s0Option[is0] == 3:
+                    previousGameState = 0
+                    gameState = 6
+                if s0Option[is0] == 4:
                     pygame.quit()
                     sys.exit()
             if event.key==K_DOWN:
@@ -729,148 +743,11 @@ def loadMenu():
                 if s1Option[is1] > s1Option[0]:
                     is1 -= 1
 
-def playOptions():
-    """
-    Menu during the playing game
-    """
-    global gameState
-    global previousGameState
-    global multiplayer
-    global vsPC
-    black = 0,0,0
-    screen.fill(black)
-    screen.blit(background_openning, (-70,0))
-    myfont = pygame.font.SysFont("monospace", 45)
-    boldFont = pygame.font.SysFont("monospace", 55,bold =True)
-    initialScreen = myfont.render("Player Vs PC", 1, (255,255,255))
-    playerVsPlayer = myfont.render("Player Vs Player", 1, (255,255,255))
-    playerVsPc = myfont.render("Player 1 & 2 Vs PC", 1, (255,255,255))
-
-    global is4
-    if s4Option[is4] == 0:
-        initialScreen = boldFont.render("Player Vs Pc", 1, (255,255,255))
-    if s4Option[is4] == 1:
-        playerVsPlayer = boldFont.render("Player Vs Player", 1, (255,255,255))
-    if s4Option[is4] == 2:
-        playerVsPc = boldFont.render("Player 1 & 2 Vs PC", 1, (255,255,255))
-    screen.blit(initialScreen, (340,250))
-    screen.blit(playerVsPlayer, (340,305))
-    screen.blit(playerVsPc, (340,360))
-    pygame.display.update()
-    
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type==KEYDOWN:
-            if event.key==K_ESCAPE:
-                gameState = 0
-            if event.key==K_RETURN:
-                if s4Option[is4] == 0:
-                    gameState = 9
-                    player2.playerId = 2
-                    multiplayer = False
-                if s4Option[is4] == 1:
-                    gameState = 5
-                    restart()
-                    vsPC = False
-                    player2.playerId = 2
-                    multiplayer = False
-                if s4Option[is4] == 2:
-                    vsPC = True
-                    multiplayer = True
-                    gameState = 5
-                    restart()
-                    pcNumber = 1
-                    player2.playerId = 4
-                    player2.x = 250
-                    player2.y = 150
-            if event.key==K_DOWN:
-                if s4Option[is4] < s4Option[-1]:
-                    is4 += 1
-            if event.key==K_UP:
-                if s4Option[is4] > s4Option[0]:
-                    is4 -= 1
-
-def PCOptions():
-    """
-    Menu during the playing game
-    """
-    global gameState
-    global previousGameState
-    global vsPC
-    global pcNumber
-    global df
-    global PCPlayers
-    black = 0,0,0
-    screen.fill(black)
-    screen.blit(background_openning, (-70,0))
-    myfont = pygame.font.SysFont("monospace", 65)
-    boldFont = pygame.font.SysFont("monospace", 75,bold =True)
-    initialScreen = myfont.render("Vs 1 PC", 1, (255,255,255))
-    playerVsPlayer = myfont.render("Vs 2 PC", 1, (255,255,255))
-    playerVsPc = myfont.render("Vs 3 PC", 1, (255,255,255))
-
-    global is5
-    if s5Option[is5] == 0:
-        initialScreen = boldFont.render("Vs 1 PC", 1, (255,255,255))
-    if s5Option[is5] == 1:
-        playerVsPlayer = boldFont.render("Vs 2 PC", 1, (255,255,255))
-    if s5Option[is5] == 2:
-        playerVsPc = boldFont.render("Vs 3 PC", 1, (255,255,255))
-    screen.blit(initialScreen, (380,250))
-    screen.blit(playerVsPlayer, (380,320))
-    screen.blit(playerVsPc, (380,390))
-    pygame.display.update()
-    
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type==KEYDOWN:
-            if event.key==K_ESCAPE:
-                gameState = 0
-            if event.key==K_RETURN:
-                if s5Option[is5] == 0:
-                    gameState = 5
-                    vsPC = True
-                    restart()
-                    pcNumber = 1
-                if s5Option[is5] == 1:
-                    gameState = 5
-                    vsPC = True
-                    restart()
-                    pcNumber = 2
-                    df = 4
-                    playerPC.kamehamMs = 3000
-                    playerPC.punchMs = 1500
-                    playerPC2.kamehamMs = 3000
-                    playerPC2.punchMs = 1500
-                    PCPlayers = [playerPC,playerPC2]
-                if s5Option[is5] == 2:
-                    gameState = 5
-                    vsPC = True
-                    restart()
-                    pcNumber = 3
-                    df = 5
-                    playerPC.kamehamMs = 3000
-                    playerPC.punchMs = 350
-                    playerPC2.kamehamMs = 3000
-                    playerPC2.punchMs = 350
-                    playerPC3.kamehamMs = 3000
-                    playerPC3.punchMs = 350
-                    PCPlayers = [playerPC,playerPC2,playerPC3]
-            if event.key==K_DOWN:
-                if s5Option[is5] < s5Option[-1]:
-                    is5 += 1
-            if event.key==K_UP:
-                if s5Option[is5] > s5Option[0]:
-                    is5 -= 1
-
 def loadMusic (music):
     """Load the musics of a list"""
     pygame.mixer.music.load(music)
     pygame.mixer.music.play(-1)
+
 def distance(xo,yo,x,y):
     dx = x - xo
     dy = y - yo
@@ -959,143 +836,9 @@ def playLoop():
             playerPC.defeated(screen,player1)
             power1.update(screen)
             powerDispute.update(screen)
-        if pcNumber >= 2:
-            playerPC.TurnAround(player1)
-            playerPC.playPC(player1,power3,screen)
-            power1.update(screen)
-            powerDispute.update(screen)
-            
-            playerPC2.playPC(player1,power4,screen)
-            playerPC2.lockInsideScreenPC(width, height, delta, player1)
-            playerPC2.physicalRect()
-            playerPC2.powerPlacing(power4)
-            playerPC2.statusBar(screen,width)
-            playerPC2.standUpPosition()
-            #playerPC2.defeated(screen,player1)
-            playerPC2.TurnAround(player1)
-            playerPC2.teamDefeated(screen,player1,PCPlayers)
-            playerPC2.update(screen)
-            
-            if pcNumber == 2:
-                d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
-                d2=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
-                if playerPC.HP >0 and playerPC2.HP >0:
-                    if d1 < d2:
-                        player1.TurnAround(playerPC)
-                    if d1 > d2:
-                        player1.TurnAround(playerPC2)
-                if playerPC.HP >0 and playerPC2.HP<=0:
-                    player1.TurnAround(playerPC)
-                if playerPC2.HP>0 and playerPC.HP<=0:
-                    player1.TurnAround(playerPC2)
-            power4.update(screen)
-        contador +=1
-        if pcNumber >= 3:
-            playerPC3.playPC(player1,power5,screen)
-            playerPC3.lockInsideScreenPC(width, height, delta, player1)
-            playerPC3.physicalRect()
-            playerPC3.powerPlacing(power5)
-            playerPC3.statusBar(screen,width)
-            playerPC3.standUpPosition()
-            #playerPC2.defeated(screen,player1)
-            playerPC3.TurnAround(player1)
-            playerPC3.teamDefeated(screen,player1,PCPlayers)
-            playerPC3.update(screen)
-            power5.update(screen)
-            if pcNumber == 3:
-                d1=distance(player1.x,player1.y,playerPC.x,playerPC.y)
-                d2=distance(player1.x,player1.y,playerPC2.x,playerPC2.y)
-                d3=distance(player1.x,player1.y,playerPC3.x,playerPC3.y)
-                if playerPC.HP >0 and playerPC2.HP >0 and playerPC3.HP>0:
-                    if d1 < d2 and d1<d3:
-                        player1.TurnAround(playerPC)
-                    if d2 < d1 and d1<d3:
-                        player1.TurnAround(playerPC2)
-                    if d3 < d1 and d3<d2:
-                        player1.TurnAround(playerPC3)
-                if playerPC.HP >0 and playerPC2.HP >0 and playerPC3.HP<=0:
-                    if d1 < d2:
-                        player1.TurnAround(playerPC)
-                    if d2 < d1:
-                        player1.TurnAround(playerPC2)
-                if playerPC.HP >0 and playerPC3.HP >0 and playerPC2.HP<=0:
-                    if d1 < d3:
-                        player1.TurnAround(playerPC)
-                    if d3 < d1:
-                        player1.TurnAround(playerPC3)
-                if playerPC2.HP >0 and playerPC3.HP >0 and playerPC<=0:
-                    if d2 <d3:
-                        player1.TurnAround(playerPC2)
-                    if d3 < d2:
-                        player1.TurnAround(playerPC3)
-                if playerPC.HP >0 and playerPC2.HP<=0 and playerPC3.HP<=0:
-                    player1.TurnAround(playerPC)
-                if playerPC.HP <=0 and playerPC2.HP>0 and playerPC3.HP<=0:
-                    player1.TurnAround(playerPC2)
-                if playerPC.HP <=0 and playerPC2.HP<=0 and playerPC3.HP>0:
-                    player1.TurnAround(playerPC3)
-        effects.update(screen)
+            effects.update(screen)
 
-    if multiplayer == True:
-        player1.lockInsideScreen(width,height,delta)
-        player1.physicalRect()
-        player1.powerPlacing(power1)
-        player1.statusBar(screen,width)
-        player1.standUpPosition()
-        player1.playEffects(effects)
-        #player1.defeated(screen,playerPC)
-        player1.teamDefeated(screen,playerPC,humanPlayers)
-        player1.TurnAround(playerPC)
-        player1.kameham(powerDispute,PCPlayers,powers)
-        player2.kameham(powerDispute2,PCPlayers,powers)
-        player2.lockInsideScreen(width,height,delta)
-        player2.physicalRect()
-        player2.powerPlacing(power2,dx2=920,dy2=0)
-        player2.statusBar(screen,width)
-        player2.standUpPosition()
-        player2.playEffects(effects2)
-        #player2.defeated(screen,playerPC)
-        player2.TurnAround(playerPC)
-        player1.update(screen)
-        player2.update(screen)
-        power1.update(screen)
-        power2.update(screen)
-
-        #playerPC.playPC(player1,power3,screen)
-        playerPC.physicalRect()
-        playerPC.powerPlacing(power3)
-        playerPC.statusBar(screen,width)
-        playerPC.standUpPosition()
-        playerPC.defeated(screen,player1)
-        #playerPC.TurnAround(player1)
-        playerPC.update(screen)
-        power3.update(screen)
-        powerDispute.update(screen)
-        powerDispute2.update(screen)
-        effects.update(screen)
-        effects2.update(screen)
-
-        d3=distance(player1.x,player1.y,playerPC.x,playerPC.y)
-        d5=distance(player2.x,player2.y,playerPC.x,playerPC.y)
-        if player1.HP> 0 and player2.HP >0:
-            if d3<d5:
-                playerPC.playPC(player1,power3,screen)
-                playerPC.TurnAround(player1)
-                playerPC.lockInsideScreenPC(width, height, delta, player1)
-            if d5<d3:
-                playerPC.playPC(player2,power3,screen)
-                playerPC.TurnAround(player2)
-                playerPC.lockInsideScreenPC(width, height, delta, player2)
-        if player1.HP <=0:
-            playerPC.playPC(player2,power3,screen)
-            playerPC.TurnAround(player2)
-            playerPC.lockInsideScreenPC(width, height, delta, player2)
-        if player2.HP <=0:
-            playerPC.playPC(player1,power3,screen)
-            playerPC.TurnAround(player1)
-            playerPC.lockInsideScreenPC(width, height, delta, player1)
-
-    clock.tick(60)
+        clock.tick(60)
     pygame.display.update()
 
 show_splashscreen()
@@ -1118,7 +861,3 @@ while 1:
         Credits()
     elif gameState == 7:
         keyboard()
-    elif gameState == 8:
-        playOptions()
-    elif gameState == 9:
-        PCOptions()
