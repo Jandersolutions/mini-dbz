@@ -41,6 +41,7 @@ class Player(SpriteAnimation):
         self.powerDisputa = True
         self.superPunch = False
         self.superKick = False
+        self.fatorSuper = 1.3
         if self.playerId == 1:
             self.k_down = K_s
             self.k_up = K_w
@@ -77,6 +78,7 @@ class Player(SpriteAnimation):
         self.beginTimer = time.time()*1000
         self.inicioFaisca = time.time()*1000
         self.inicioExplosao = time.time()*1000
+        self.inicioExplosao2 = time.time()*1000
         self.inicio2 = 0
         self.kamehamMs = 160
         self.punchMs = 90
@@ -88,6 +90,7 @@ class Player(SpriteAnimation):
         self.inicioKame = time.time()*1000
         self.inicioPunch = time.time()*1000
         self.inicioEffects = time.time()*1000
+        self.inicioEffects2 = time.time()*1000
         self.isPC = False
         self.singleKameham = True
         self.disputeKameham = True
@@ -199,11 +202,13 @@ class Player(SpriteAnimation):
                                 if self.XP <= self.XPMAX:
                                     player.HP -= self.punchDamage
                                 if self.XP == self.XPMAX:
-                                    player.HP -= self.powerDamage
+                                    player.HP -= self.powerDamage*self.fatorSuper
                                     self.superPunch = True
+                                    #self.inicioEffects2 = time.time()*1000
                                 player.inicio = time.time()
                                 if abs(player.inicioPunch-self.inicioPunch)<400:
-                                    pass
+                                    self.inicioEffects = time.time()*1000
+                                    #pass
                                 else:
                                     player.acao = "hited"
                             if player.Defending == True and player.Attacking == False:
@@ -249,8 +254,9 @@ class Player(SpriteAnimation):
                                 if self.XP <= self.XPMAX:
                                     player.HP -= self.kickDamage
                                 if self.XP == self.XPMAX:
-                                    player.HP -= self.powerDamage
+                                    player.HP -= self.powerDamage*self.fatorSuper
                                     self.superKick = True
+                                    #self.inicioEffects2 = time.time()*1000
                                 if abs(player.inicioPunch-self.inicioPunch)<400:
                                     self.inicioEffects = time.time()*1000
                                 else:
@@ -395,6 +401,15 @@ class Player(SpriteAnimation):
                     self.inicioExplosao = time.time()*1000
         else:
             effects.acao = "void"
+        """
+        if abs(time.time()*1000-self.inicioEffects2) < 400 and abs(time.time()*1000-self.inicioEffects2) > 200:
+            effects.acao = "explosao"
+            if abs(time.time()*1000 - self.inicioExplosao) > 3700:
+                effects.acao = "void"
+                self.inicioExplosao = time.time()*1000
+        else:
+            effects.acao = "void"
+        """
         if self.facingRight == True:
             if effects.acao == "faiscas":
                 effects.x = self.x+20
@@ -953,13 +968,15 @@ class Player(SpriteAnimation):
                 if selfAttackRect.colliderect(enemyPlayer.Rect) == True:
                     if enemyPlayer.Defending == False:
                         if self.XP <= self.XPMAX:
-                            enemyPlayer.HP -= self.punchDamage
+                            enemyPlayer.HP -= self.punchDamage*self.fatorSuper
                         if self.XP == self.XPMAX:
                             enemyPlayer.HP -= self.powerDamage
                             if random.randint(0,11) > 5:
                                 self.superPunch = True
+                                #self.inicioEffects2 = time.time()*1000
                             else:
                                 self.superKick = True
+                                #self.inicioEffects2 = time.time()*1000
 
                         if abs(self.x - enemyPlayer.x) <30 and abs(enemyPlayer.inicioPunch-self.inicioPunch)<400:
                             pass

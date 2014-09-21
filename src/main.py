@@ -258,11 +258,11 @@ def openMenu():
         quit = boldFont.render("Quit", 1, (255,255,255))
 
     #screen.blit(title, (200,105))
-    screen.blit(playerVsPc, (380,250))
-    screen.blit(playerVsPlayer, (380,320))
-    screen.blit(options, (380,390))
-    screen.blit(credits, (380,460))
-    screen.blit(quit, (380,530))
+    screen.blit(playerVsPc, (310,250))
+    screen.blit(playerVsPlayer, (310,320))
+    screen.blit(options, (310,390))
+    screen.blit(credits, (310,460))
+    screen.blit(quit, (310,530))
     pygame.display.update()
     
     for event in pygame.event.get():
@@ -805,10 +805,12 @@ def playLoop():
         player2.TurnAround(player1)
         player1.update(screen)
         player2.update(screen)
+        player2.playEffects(effects2)
         power1.update(screen)
         powerDispute.update(screen)
         power2.update(screen)
         effects.update(screen)
+        effects2.update(screen)
     if vsPC == True and multiplayer == False:
         player1.lockInsideScreen(width,height,delta)
         player1.physicalRect()
@@ -827,6 +829,7 @@ def playLoop():
         playerPC.powerPlacing(power3)
         playerPC.statusBar(screen,width)
         playerPC.standUpPosition()
+        playerPC.playEffects(effects2)
         #playerPC.TurnAround(player1)
         playerPC.update(screen)
         power3.update(screen)
@@ -838,6 +841,7 @@ def playLoop():
             power1.update(screen)
             powerDispute.update(screen)
             effects.update(screen)
+            effects2.update(screen)
 
         clock.tick(60)
     pygame.display.update()
