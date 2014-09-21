@@ -48,7 +48,7 @@ sc1 = 0
 sc2 = 1
 sg = 0
 df = 2
-volume = 0.4
+volume = 0.3
 vsPC = False
 song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
@@ -191,6 +191,7 @@ def show_splashscreen():
     pygame.time.wait(1500)
     global gameState
     gameState = 0
+
 def show_video():
     inicio = time.time()
     loadMusic(song[0])

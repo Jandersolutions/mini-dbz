@@ -19,6 +19,7 @@ class Player(SpriteAnimation):
         self.Rect = Rect(self.x, self.y, 35, 70)
         self.HP = 400
         self.XP = 50
+        self.XPMAX = 200
         self.Defending = False
         self.Attacking = False
         self.punchDamage = 0
@@ -38,6 +39,8 @@ class Player(SpriteAnimation):
         self.playerId = playerId
         self.loading = False
         self.powerDisputa = True
+        self.superPunch = False
+        self.superKick = False
         if self.playerId == 1:
             self.k_down = K_s
             self.k_up = K_w
@@ -62,6 +65,7 @@ class Player(SpriteAnimation):
             self.k_leftArrow = K_LEFT
             self.k_combo = K_n
             self.k_teleport = K_KP6
+        #self.inicialTime
         self.inicio1Pc = time.time()*1000
         self.inicio2Pc = time.time()*1000
         self.inicio3Pc = time.time()*1000
@@ -70,6 +74,7 @@ class Player(SpriteAnimation):
         self.inicio6Pc = time.time()*1000
         self.inicio7Pc = time.time()*1000
         self.inicio8Pc = time.time()*1000
+        self.beginTimer = time.time()*1000
         self.inicioFaisca = time.time()*1000
         self.inicioExplosao = time.time()*1000
         self.inicio2 = 0
@@ -85,12 +90,33 @@ class Player(SpriteAnimation):
         self.inicioEffects = time.time()*1000
         self.isPC = False
         self.singleKameham = True
+        self.disputeKameham = True
     
     def playPlayer(self,eventArg, playerList, power1):
         """
         Activate player movements and skills
         """
         if self.HP>0:
+            if self.superPunch == True:
+                if time.time()*1000-self.inicioPunch <200:
+                    for player in playerList:
+                        if self.facingRight == True:
+                            player.movex = 3
+                        if self.facingRight == False:
+                            player.movex = -3
+                else:
+                    for player in playerList:
+                        player.movex = 0
+                    self.superPunch = False
+            if self.superKick == True:
+                if time.time()*1000-self.inicioPunch <200:
+                    for player in playerList:
+                        player.movey = -3
+                else:
+                    for player in playerList:
+                        player.movey= 0
+                    self.superKick = False
+
             event = eventArg
             if event.type == KEYDOWN:
                 #Goku
@@ -119,15 +145,18 @@ class Player(SpriteAnimation):
                         self.movex-=1
                 if event.key == self.k_kameham:
                     self.inicioKame = time.time()*1000
+                    self.kameCont +=1
                     if self.XP > 0:
                         for player in playerList:
                             if abs(self.y - player.y) <50 and abs(player.inicioKame-self.inicioKame)<400:
-                                self.cronometrarDisputa = True
-                                self.releasePower = True
-                                self.voidPower = True
-                                self.kameCont =0
-                                if player.isPC == False:
-                                    player.kameCont = 0
+                                if self.disputeKameham == True:
+                                    self.cronometrarDisputa = True
+                                    self.releasePower = True
+                                    self.voidPower = True
+                                    self.kameCont =0
+                                    if player.isPC == False:
+                                        player.kameCont = 0
+                                    self.disputeKameham = False
                         if self.singleKameham == True:
                             self.acao = "kameham"
                             power1.acao = "kame"
@@ -152,7 +181,7 @@ class Player(SpriteAnimation):
                             self.XP-=10
                             self.inicio = time.time()
                 if event.key == self.k_punch:
-                    self.kameCont +=1
+                    #self.kameCont +=1
                     self.acao = "punch"
                     self.pressed = True
                     self.Attacking = True
@@ -167,7 +196,11 @@ class Player(SpriteAnimation):
                     for player in playerList:
                         if selfAttackRect.colliderect(player.Rect) == True:
                             if player.Defending == False:
-                                player.HP -= self.punchDamage
+                                if self.XP <= self.XPMAX:
+                                    player.HP -= self.punchDamage
+                                if self.XP == self.XPMAX:
+                                    player.HP -= self.powerDamage
+                                    self.superPunch = True
                                 player.inicio = time.time()
                                 if abs(player.inicioPunch-self.inicioPunch)<400:
                                     pass
@@ -213,7 +246,11 @@ class Player(SpriteAnimation):
                     for player in playerList:
                         if selfAttackRect.colliderect(player.Rect) == True:
                             if player.Defending == False:
-                                player.HP -= self.kickDamage
+                                if self.XP <= self.XPMAX:
+                                    player.HP -= self.kickDamage
+                                if self.XP == self.XPMAX:
+                                    player.HP -= self.powerDamage
+                                    self.superKick = True
                                 if abs(player.inicioPunch-self.inicioPunch)<400:
                                     self.inicioEffects = time.time()*1000
                                 else:
@@ -225,8 +262,9 @@ class Player(SpriteAnimation):
                 if event.key == self.k_load:
                     self.acao = "load"
                     self.pressed = True
-                    self.XP+= 5 
                     self.inicio = time.time()
+                    if self.XP < self.XPMAX:
+                        self.XP+= 5 
                 if event.key == self.k_teleport:
                     self.acao = "teleport"
                     self.pressed = True
@@ -341,6 +379,8 @@ class Player(SpriteAnimation):
             self.singleKameham = True
             for otherPlayer in playerList:
                 otherPlayer.singleKameham = True
+        if time.time()*1000 -self.inicio2 > 5000:
+            self.disputeKameham = True
     def playEffects(self, effects):
         if abs(time.time()*1000-self.inicioEffects) < 200:
             if random.random()>0.5 and abs(time.time()*1000-self.inicioFaisca)>1500:
@@ -385,6 +425,7 @@ class Player(SpriteAnimation):
         """
         Lock the player to the visible screen
         """
+        """
         if self.facingRight == True:
             if self.movex == -1 and self.x>0:
                 self.x += self.movex * delta
@@ -399,26 +440,43 @@ class Player(SpriteAnimation):
             self.y += self.movey * delta
         if self.movey == -1 and self.y>0:
             self.y += self.movey * delta
+        """
+
+        if self.facingRight == True:
+            if self.movex <= -1 and self.x>0:
+                self.x += self.movex * delta
+            if self.movex >= 1 and self.x<width-50:
+                self.x += self.movex * delta
+        if self.facingRight == False:
+            if self.movex <= -1 and self.x>0:
+                self.x += self.movex * delta
+            if self.movex >= 1 and self.x<width-50:
+                self.x += self.movex * delta
+        if self.movey >= 1 and self.y<height-70:
+            self.y += self.movey * delta
+        if self.movey <= -1 and self.y>0:
+            self.y += self.movey * delta
+
     def lockInsideScreenPC(self,width,height,delta,player1):
         """
         Lock the PC to the visible screen
         """
         if self.facingRight == True:
-            if self.movex == -1 and self.x>0:
+            if self.movex <= -1 and self.x>0:
                 self.x += self.movex * delta
-            if self.movex == 1 and self.x<width-50:
+            if self.movex >= 1 and self.x<width-50:
                 self.x += self.movex * delta
         if self.facingRight == False:
-            if self.movex == -1 and self.x>0:
+            if self.movex <= -1 and self.x>0:
                 self.x += self.movex * delta
-            if self.movex == 1 and self.x<width-50:
+            if self.movex >= 1 and self.x<width-50:
                 self.x += self.movex * delta
-        if self.y < player1.y:
-            if self.movey == 1 and self.y<height-70:
-                self.y += self.movey * delta
-        if self.y > player1.y:
-            if self.movey == -1 and self.y>0:
-                self.y += self.movey * delta
+        #if self.y < player1.y:
+        if self.movey >= 1 and self.y<height-70:
+            self.y += self.movey * delta
+        #if self.y > player1.y:
+        if self.movey <= -1 and self.y>0:
+            self.y += self.movey * delta
 
     def powerPlacing(self,power,dx1=45,dy1=25,dx2=930,dy2=20):
         """
@@ -465,6 +523,8 @@ class Player(SpriteAnimation):
         if self.HP >=0:
             pygame.draw.rect(screen, (255,0,0), playerHPRect)
         pygame.draw.rect(screen, (0,0,255), playerXPRect)
+        if self.XP == self.XPMAX:
+            pygame.draw.rect(screen, (0,255,0), playerXPRect)
 
     def standUpPosition(self):
         """
@@ -816,6 +876,7 @@ class Player(SpriteAnimation):
         power.insertFrame(266,1580,50,50)
         power.insertFrame(108,1486,40,40)
         power.insertFrame(72,1486,40,40)
+
         power.insertFrame(295,1486,40,40)
         power.buildAnimation("faiscas",hold=False, speed = 10)
         power.insertFrame(506,2850,100,110)
@@ -830,6 +891,22 @@ class Player(SpriteAnimation):
         Pc player
         """
         if self.HP > 0:
+            if self.superPunch == True:
+                if time.time()*1000-self.inicioPunch <200:
+                    if self.facingRight == True:
+                        enemyPlayer.movex = 3
+                    if self.facingRight == False:
+                        enemyPlayer.movex = -3
+                else:
+                    enemyPlayer.movex = 0
+                    self.superPunch = False
+            if self.superKick == True:
+                if time.time()*1000-self.inicioPunch <200:
+                    enemyPlayer.movey = -3
+                else:
+                    enemyPlayer.movey= 0
+                    self.superKick = False
+
             if time.time()*1000-self.inicio1Pc>self.kamehamMs and abs(self.y-enemyPlayer.y)< 50 and self.loading == False and abs(self.x-enemyPlayer.x)>65:
                 if self.XP >= 10:
                     if self.singleKameham == True:
@@ -875,7 +952,15 @@ class Player(SpriteAnimation):
                 self.inicioPunch = time.time()*1000
                 if selfAttackRect.colliderect(enemyPlayer.Rect) == True:
                     if enemyPlayer.Defending == False:
-                        enemyPlayer.HP -= self.punchDamage
+                        if self.XP <= self.XPMAX:
+                            enemyPlayer.HP -= self.punchDamage
+                        if self.XP == self.XPMAX:
+                            enemyPlayer.HP -= self.powerDamage
+                            if random.randint(0,11) > 5:
+                                self.superPunch = True
+                            else:
+                                self.superKick = True
+
                         if abs(self.x - enemyPlayer.x) <30 and abs(enemyPlayer.inicioPunch-self.inicioPunch)<400:
                             pass
                         else:
@@ -889,7 +974,8 @@ class Player(SpriteAnimation):
                 self.acao = "load"
                 self.pressed = True
                 self.pos = 1
-                self.XP+= 2 
+                if self.XP < self.XPMAX:
+                    self.XP+= 1 
                 self.inicio = time.time()
                 self.loading = True
                 if abs(time.time()*1000-self.inicio4Pc) >3000:
