@@ -19,7 +19,7 @@ class Player(SpriteAnimation):
         self.Rect = Rect(self.x, self.y, 35, 70)
         self.HP = 400
         self.XP = 50
-        self.XPMAX = 200
+        self.XPMAX = 150
         self.Defending = False
         self.Attacking = False
         self.punchDamage = 0
@@ -410,6 +410,14 @@ class Player(SpriteAnimation):
         else:
             effects.acao = "void"
         """
+        if self.XP == self.XPMAX:
+            effects.acao = "ki"
+            if self.facingRight == True:
+                effects.x = self.x-22
+                effects.y = self.y-20
+            else:
+                effects.x = self.x-30
+                effects.y = self.y-20
         if self.facingRight == True:
             if effects.acao == "faiscas":
                 effects.x = self.x+20
@@ -900,6 +908,9 @@ class Player(SpriteAnimation):
         #power.insertFrame(274,2883,47,80)
         power.insertFrame(1300,1604,146,40) #void
         power.buildAnimation("explosao",hold=False, speed = 20)
+        power.insertFrame(358,2434,98,90)
+        power.insertFrame(449,2434,98,90)
+        power.buildAnimation("ki",hold=False, speed = 20)
     
     def playPC(self, enemyPlayer, power2,screen):
         """
