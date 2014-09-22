@@ -41,7 +41,7 @@ class Player(SpriteAnimation):
         self.powerDisputa = True
         self.superPunch = False
         self.superKick = False
-        self.fatorSuper = 1.3
+        self.fatorSuper = 1.4
         if self.playerId == 1:
             self.k_down = K_s
             self.k_up = K_w
