@@ -24,8 +24,8 @@ ch = pygame.transform.scale(photos3x4[0], (100,100))
 background = pygame.image.load(scenery4)
 resolution = background.get_size()
 width, height = resolution
-#screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
-screen = pygame.display.set_mode(resolution)
+screen = pygame.display.set_mode(resolution, pygame.FULLSCREEN, 32)
+#screen = pygame.display.set_mode(resolution)
 background.convert()
 background_openning = pygame.image.load(menu_image).convert()
 scene1 = pygame.transform.scale(scenery[0], (500,300))
@@ -54,7 +54,7 @@ song1 = '../resources/sounds/sparking.mp3'
 song2 = '../resources/sounds/temos-a-forca-1.wav'
 song3 = '../resources/sounds/cha-la.mp3'
 song = [song1,song2,song3]
-level = ['easy','Medium','Hard','Super Sayajin','Multiplayer vs 2','Multiplayer vs 3']
+level = ['easy','Medium','Hard','Super Sayajin']
 xp1 = 400
 yp1 = 400
 xp1d = xp1
@@ -66,18 +66,15 @@ yp2d = yp2
 pcNumber = 1
 multiplayer = False
 contador = 0
+playedOnce = False
 
 characters = ['goku','vegeta','gohan','trunks','frieza']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
 playerPC = Player(acaoInicial="down",playerId=0)
-playerPC2 = Player(acaoInicial="down",playerId=3)
-playerPC3 = Player(acaoInicial="down",playerId=4)
 power1 = SpriteAnimation(acaoInicial="void")
 power2 = SpriteAnimation(acaoInicial="void")
 power3 = SpriteAnimation(acaoInicial="void")
-power4 = SpriteAnimation(acaoInicial="void")
-power5 = SpriteAnimation(acaoInicial="void")
 powerDispute = SpriteAnimation(acaoInicial="void")
 powerDispute2 = SpriteAnimation(acaoInicial="void")
 effects = SpriteAnimation(acaoInicial="void")
@@ -89,20 +86,14 @@ player1.loadPower(effects)
 player2.loadPower(effects2)
 player2.loadPower(power2)
 playerPC.loadPower(power3)
-playerPC2.loadPower(power4)
-playerPC3.loadPower(power5)
 playerPC.loadCharacter(characters[1])
-playerPC2.loadCharacter(characters[1])
-playerPC3.loadCharacter(characters[2])
 player2.loadCharacter(characters[1])
-PCPlayers = [playerPC,playerPC2,playerPC3]
+PCPlayers = [playerPC]
 humanPlayers = [player1,player2]
 #player2.powerDisputa = False
 player2.powerDisputa = True
 playerPC.isPC = True
-playerPC2.isPC = True
-playerPC3.isPC = True
-powers = [power1,power2,power3,power4,power5]
+powers = [power1,power2,power3]
 delta = 13 #Velocidade do movimento, quanto maior mais rapido
 player2.facingRight = False
 player2.x = 850
@@ -110,9 +101,6 @@ player2.y = 350
 playerPC.x = 850
 playerPC.y = 350
 playerPC.XP = 0
-playerPC2.x = 150
-playerPC2.y = 50
-playerPC2.XP = 0
 
 def restart():
     """
@@ -139,10 +127,6 @@ def restart():
         player1.XP = 50
         playerPC.XP = 0
         playerPC.inicio1Pc = time.time()
-        playerPC2.HP = 400
-        playerPC2.XP = 0
-        playerPC3.HP = 400
-        playerPC3.XP = 0
         player1.cronometrarDisputa = False
     else:
         player2.acao = "down"
@@ -314,6 +298,7 @@ def Options():
     global sg
     global df
     global level
+    global playedOnce
     black = 0,0,0
     screen.fill(black)
     screen.blit(background_openning, (-70,0))
@@ -366,7 +351,10 @@ def Options():
                 gameState = previousGameState
             if event.key==K_RETURN:
                 if s3Option[is3] == 5:
-                    gameState = 2
+                    if playedOnce == True:
+                        gameState = 2
+                    else:
+                        pass
                 if s3Option[is3] == 6:
                     gameState = previousGameState
                 if s3Option[is3] == 4:
@@ -422,18 +410,6 @@ def Options():
     if df==3:
         playerPC.kamehamMs = 70
         playerPC.punchMs = 70
-    if df==4:
-        playerPC.kamehamMs = 300
-        playerPC.punchMs = 150
-        playerPC2.kamehamMs = 300
-        playerPC2.punchMs = 150
-    if df==5:
-        playerPC.kamehamMs = 3000
-        playerPC.punchMs = 350
-        playerPC2.kamehamMs = 3000
-        playerPC2.punchMs = 350
-        playerPC3.kamehamMs = 3000
-        playerPC3.punchMs = 350
         
 def Credits():
     """
@@ -505,6 +481,7 @@ def keyboard():
     kick = myfont.render("o - Kick", 1, (255,255,0))
     defend = myfont.render("p - Defend", 1, (255,255,0))
     load = myfont.render("j - Load", 1, (255,255,0))
+    teleport = myfont.render("k - Teleport", 1, (255,255,0))
 
     player2 = boldFont.render("Player 2", 1, (255,255,255))
     left2 = myfont.render("left arrow - Left", 1, (255,255,0))
@@ -517,6 +494,7 @@ def keyboard():
     defend2 = myfont.render("6 - Defend", 1, (255,255,0))
     load2 = myfont.render("5 - Load", 1, (255,255,0))
     back = boldFont.render("OK", 1, (255,255,255))
+    teleport2 = myfont.render("6 - Teleport", 1, (255,255,0))
 
     screen.blit(player1, (300,100))
     screen.blit(left, (300,180))
@@ -528,6 +506,7 @@ def keyboard():
     screen.blit(kick, (300,480))
     screen.blit(defend, (300,530))
     screen.blit(load, (300,580))
+    screen.blit(teleport, (300,630))
 
     screen.blit(player2, (680,100))
     screen.blit(left2, (680,180))
@@ -539,6 +518,7 @@ def keyboard():
     screen.blit(kick2, (680,480))
     screen.blit(defend2, (680,530))
     screen.blit(load2, (680,580))
+    screen.blit(teleport2, (680,630))
     screen.blit(back, (780,680))
 
     pygame.display.update()
@@ -774,6 +754,8 @@ def playLoop():
     global vsPC
     global pcNumber
     global contador
+    global playedOnce
+    playedOnce = True
     screen.blit(background, (0,0))
     p1 = [humanPlayers[0]]
     p2 = [humanPlayers[1]]
@@ -848,7 +830,7 @@ def playLoop():
         if pcNumber == 1:
             player1.TurnAround(playerPC)
             playerPC.TurnAround(player1)
-            playerPC.playPC(player1,power3,screen)
+            playerPC.playPC(player1,power3,resolution)
             playerPC.defeated(screen,player1)
             power1.update(screen)
             powerDispute.update(screen)

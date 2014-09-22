@@ -75,7 +75,7 @@ class Player(SpriteAnimation):
         self.inicio6Pc = time.time()*1000
         self.inicio7Pc = time.time()*1000
         self.inicio8Pc = time.time()*1000
-        self.beginTimer = time.time()*1000
+        self.startTimer = time.time()*1000
         self.inicioFaisca = time.time()*1000
         self.inicioExplosao = time.time()*1000
         self.inicioExplosao2 = time.time()*1000
@@ -84,7 +84,7 @@ class Player(SpriteAnimation):
         self.punchMs = 90
         self.releasePower = True
         self.voidPower = True
-        self.kameCont = 12
+        self.kameCont = 25
         self.enemykameCont = 0
         self.staticy = 0
         self.inicioKame = time.time()*1000
@@ -401,15 +401,7 @@ class Player(SpriteAnimation):
                     self.inicioExplosao = time.time()*1000
         else:
             effects.acao = "void"
-        """
-        if abs(time.time()*1000-self.inicioEffects2) < 400 and abs(time.time()*1000-self.inicioEffects2) > 200:
-            effects.acao = "explosao"
-            if abs(time.time()*1000 - self.inicioExplosao) > 3700:
-                effects.acao = "void"
-                self.inicioExplosao = time.time()*1000
-        else:
-            effects.acao = "void"
-        """
+
         if self.XP == self.XPMAX:
             effects.acao = "ki"
             if self.facingRight == True:
@@ -446,25 +438,9 @@ class Player(SpriteAnimation):
 
     def lockInsideScreen(self,width,height,delta):
         """
-        Lock the player to the visible screen
+        Movement of the player, locking him 
+        on the visible screen
         """
-        """
-        if self.facingRight == True:
-            if self.movex == -1 and self.x>0:
-                self.x += self.movex * delta
-            if self.movex == 1 and self.x<width-50:
-                self.x += self.movex * delta
-        if self.facingRight == False:
-            if self.movex == -1 and self.x>0:
-                self.x += self.movex * delta
-            if self.movex == 1 and self.x<width-50:
-                self.x += self.movex * delta
-        if self.movey == 1 and self.y<height-70:
-            self.y += self.movey * delta
-        if self.movey == -1 and self.y>0:
-            self.y += self.movey * delta
-        """
-
         if self.facingRight == True:
             if self.movex <= -1 and self.x>0:
                 self.x += self.movex * delta
@@ -482,7 +458,8 @@ class Player(SpriteAnimation):
 
     def lockInsideScreenPC(self,width,height,delta,player1):
         """
-        Lock the PC to the visible screen
+        Movement of the pc locking him
+        on the visible screen
         """
         if self.facingRight == True:
             if self.movex <= -1 and self.x>0:
@@ -912,10 +889,11 @@ class Player(SpriteAnimation):
         power.insertFrame(449,2434,98,90)
         power.buildAnimation("ki",hold=False, speed = 20)
     
-    def playPC(self, enemyPlayer, power2,screen):
+    def playPC(self, enemyPlayer, power2,resolution):
         """
         Pc player
         """
+        width,height = resolution
         if self.HP > 0:
             if self.superPunch == True:
                 if time.time()*1000-self.inicioPunch <200:
@@ -932,6 +910,18 @@ class Player(SpriteAnimation):
                 else:
                     enemyPlayer.movey= 0
                     self.superKick = False
+            if self.x > width-50 and abs(self.x-enemyPlayer.x)<60 or self.x<-5 and abs(self.x-enemyPlayer.x)<60:
+                    self.acao = "teleport"
+                    self.pressed = True
+                    self.x = random.randint(0,1170)
+                    self.y = random.randint(0,738)
+                    self.inicio = time.time()
+            if self.y <0 and abs(self.y -enemyPlayer.y)<40:
+                    self.acao = "teleport"
+                    self.pressed = True
+                    self.x = random.randint(0,1170)
+                    self.y = random.randint(0,738)
+                    self.inicio = time.time()
 
             if time.time()*1000-self.inicio1Pc>self.kamehamMs and abs(self.y-enemyPlayer.y)< 50 and self.loading == False and abs(self.x-enemyPlayer.x)>65:
                 if self.XP >= 10:
