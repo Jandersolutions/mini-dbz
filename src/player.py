@@ -84,7 +84,7 @@ class Player(SpriteAnimation):
         self.punchMs = 90
         self.releasePower = True
         self.voidPower = True
-        self.kameCont = 25
+        self.kameCont = 22
         self.enemykameCont = 0
         self.staticy = 0
         self.inicioKame = time.time()*1000
@@ -94,6 +94,7 @@ class Player(SpriteAnimation):
         self.isPC = False
         self.singleKameham = True
         self.disputeKameham = True
+        self.teleport = True
     
     def playPlayer(self,eventArg, playerList, power1):
         """
@@ -910,18 +911,19 @@ class Player(SpriteAnimation):
                 else:
                     enemyPlayer.movey= 0
                     self.superKick = False
-            if self.x > width-50 and abs(self.x-enemyPlayer.x)<60 or self.x<-5 and abs(self.x-enemyPlayer.x)<60:
-                    self.acao = "teleport"
-                    self.pressed = True
-                    self.x = random.randint(0,1170)
-                    self.y = random.randint(0,738)
-                    self.inicio = time.time()
-            if self.y <0 and abs(self.y -enemyPlayer.y)<40:
-                    self.acao = "teleport"
-                    self.pressed = True
-                    self.x = random.randint(0,1170)
-                    self.y = random.randint(0,738)
-                    self.inicio = time.time()
+            if self.teleport == True:
+                if self.x > width-50 and abs(self.x-enemyPlayer.x)<60 or self.x<-5 and abs(self.x-enemyPlayer.x)<60:
+                        self.acao = "teleport"
+                        self.pressed = True
+                        self.x = random.randint(0,1170)
+                        self.y = random.randint(0,738)
+                        self.inicio = time.time()
+                if self.y <0 and abs(self.y -enemyPlayer.y)<40:
+                        self.acao = "teleport"
+                        self.pressed = True
+                        self.x = random.randint(0,1170)
+                        self.y = random.randint(0,738)
+                        self.inicio = time.time()
 
             if time.time()*1000-self.inicio1Pc>self.kamehamMs and abs(self.y-enemyPlayer.y)< 50 and self.loading == False and abs(self.x-enemyPlayer.x)>65:
                 if self.XP >= 10:

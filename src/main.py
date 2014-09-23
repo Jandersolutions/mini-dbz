@@ -401,15 +401,23 @@ def Options():
     if df==0:
         playerPC.kamehamMs = 450
         playerPC.punchMs = 200
+        playerPC.kameCont = 15
+        playerPC.teleport = False
     if df==1:
-        playerPC.kamehamMs = 200
-        playerPC.punchMs = 110
+        playerPC.kamehamMs = 160
+        playerPC.punchMs = 90
+        playerPC.kameCont = 22
+        playerPC.teleport = False
     if df==2:
         playerPC.kamehamMs = 160
         playerPC.punchMs = 90
+        playerPC.kameCont = 22
+        playerPC.teleport = True
     if df==3:
         playerPC.kamehamMs = 70
         playerPC.punchMs = 70
+        playerPC.kameCont = 23
+        playerPC.teleport = True
         
 def Credits():
     """
