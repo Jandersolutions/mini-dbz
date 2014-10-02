@@ -48,7 +48,7 @@ sc1 = 0
 sc2 = 1
 sg = 0
 df = 2
-volume = 0.3
+volume = 0.4
 vsPC = False
 song1 = '../resources/sounds/sparking.mp3'
 song3 = '../resources/sounds/cha-la.mp3'
@@ -62,11 +62,8 @@ xp2 = 550
 yp2 = 400
 xp2d = xp2
 yp2d = yp2
-pcNumber = 1
-multiplayer = False
 contador = 0
 playedOnce = False
-
 characters = ['goku','vegeta','gohan','trunks','frieza']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
@@ -89,7 +86,6 @@ playerPC.loadCharacter(characters[1])
 player2.loadCharacter(characters[1])
 PCPlayers = [playerPC]
 humanPlayers = [player1,player2]
-#player2.powerDisputa = False
 player2.powerDisputa = True
 playerPC.isPC = True
 powers = [power1,power2,power3]
@@ -103,7 +99,7 @@ playerPC.XP = 0
 
 def restart():
     """
-    Restar the game
+    Restarts the game
     """
     global vsPC
     if vsPC == True:
@@ -176,6 +172,9 @@ def show_splashscreen():
     gameState = 0
 
 def show_video():
+    """
+    Show the opening video
+    """
     inicio = time.time()
     loadMusic(song[0])
     global screen
@@ -258,17 +257,14 @@ def openMenu():
             if event.key==K_RETURN:
                 if s0Option[is0] == 0:
                     player2.playerId = 2
-                    multiplayer = False
                     gameState = 5
                     vsPC = True
                     restart()
-                    pcNumber = 1
                 if s0Option[is0] == 1:
                     gameState = 5
                     restart()
                     vsPC = False
                     player2.playerId = 2
-                    multiplayer = False
 
                 if s0Option[is0] == 2:
                     previousGameState = 0
@@ -420,7 +416,7 @@ def Options():
         
 def Credits():
     """
-    Option Menu
+    Credits screen
     """
     global gameState
     global previousGameState
@@ -468,7 +464,7 @@ def Credits():
 
 def keyboard():
     """
-    Option Menu
+    Screen showing the Keys used to play
     """
     global gameState
     global previousGameState
@@ -542,7 +538,7 @@ def keyboard():
 
 def chooseCharacter():
     """
-    Choose Scenery Screen
+    Choose character screen
     """
     global gameState
     global previousGameState
@@ -635,7 +631,7 @@ def chooseCharacter():
 
 def chooseScenery():
     """
-    Choose Scenery Screen
+    Choose scenery screen
     """
     global gameState
     global previousGameState
@@ -749,6 +745,9 @@ def loadMusic (music):
     pygame.mixer.music.play(-1)
 
 def distance(xo,yo,x,y):
+    """
+    distance between players
+    """
     dx = x - xo
     dy = y - yo
     d = ((dx**2)+(dy**2))**0.5
@@ -759,7 +758,6 @@ def playLoop():
     Game Loop
     """
     global vsPC
-    global pcNumber
     global contador
     global playedOnce
     playedOnce = True
@@ -773,10 +771,7 @@ def playLoop():
         if vsPC == False:
             player1.playPlayer(event,p2,power1)
             player2.playPlayer(event,p1,power2)
-        if multiplayer == True:
-            player2.playPlayer(event,PCPlayers,power2)
-            player1.playPlayer(event,PCPlayers,power1)
-        if vsPC == True and multiplayer ==False:
+        if vsPC == True:
             player1.playPlayer(event,PCPlayers,power1)
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
@@ -787,10 +782,10 @@ def playLoop():
     global width
     global height
     #playerVsplayer
-    if vsPC == False and multiplayer == False:
+    if vsPC == False:
         player1.lockInsideScreen(width,height,delta)
         player1.physicalRect()
-        player1.kameham(powerDispute,p2,powers)
+        player1.kamehamDispute(powerDispute,p2,powers)
         player1.powerPlacing(power1)
         player1.statusBar(screen,width)
         player1.standUpPosition()
@@ -812,7 +807,8 @@ def playLoop():
         power2.update(screen)
         effects.update(screen)
         effects2.update(screen)
-    if vsPC == True and multiplayer == False:
+    #player Vc Pc
+    if vsPC == True:
         player1.lockInsideScreen(width,height,delta)
         player1.physicalRect()
         player1.powerPlacing(power1)
@@ -820,29 +816,24 @@ def playLoop():
         player1.standUpPosition()
         player1.playEffects(effects)
         player1.defeated(screen,playerPC)
-        #player1.TurnAround(playerPC)
         player1.update(screen)
-        player1.kameham(powerDispute,PCPlayers,powers)
-        #power1.update(player1.pos,screen)
-        #playerPC.playPC(player1,power3,screen)
+        player1.kamehamDispute(powerDispute,PCPlayers,powers)
         playerPC.lockInsideScreenPC(width, height, delta, player1)
         playerPC.physicalRect()
         playerPC.powerPlacing(power3)
         playerPC.statusBar(screen,width)
         playerPC.standUpPosition()
         playerPC.playEffects(effects2)
-        #playerPC.TurnAround(player1)
         playerPC.update(screen)
         power3.update(screen)
-        if pcNumber == 1:
-            player1.TurnAround(playerPC)
-            playerPC.TurnAround(player1)
-            playerPC.playPC(player1,power3,resolution)
-            playerPC.defeated(screen,player1)
-            power1.update(screen)
-            powerDispute.update(screen)
-            effects.update(screen)
-            effects2.update(screen)
+        player1.TurnAround(playerPC)
+        playerPC.TurnAround(player1)
+        playerPC.playPC(player1,power3,resolution)
+        playerPC.defeated(screen,player1)
+        power1.update(screen)
+        powerDispute.update(screen)
+        effects.update(screen)
+        effects2.update(screen)
 
     clock.tick(60)
     pygame.display.update()

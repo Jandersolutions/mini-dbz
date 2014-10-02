@@ -22,10 +22,9 @@ class SpriteAnimation:
     def rectList(self,xo,yo, lx, ly, n):
         """
         Build a list of rectangles sprites
-
-        xo,yo pontos iniciais
-        lx,ly comprimentos das sprites
-        numeros de sprites
+        xo,yo initial points
+        lx,ly length of sprites
+        n number of sprites
         """
         rect = []
         for i in range (n):
@@ -34,18 +33,24 @@ class SpriteAnimation:
         return rect
 
     def insertFrame(self,xo,yo,lx,ly):
-        """Insert frame by frame manually"""
+        """
+        Insert frame by frame manually
+        """
         self.manualList.append(pygame.Rect(xo,yo,lx,ly))
     
     def buildAnimation(self,acao,hold=False,speed =15):
-        """Build Animation from the inserted frames and give the animation a label"""
+        """
+        Build Animation from the inserted frames and give the animation a label
+        """
         self.animationSpeed[acao] = speed
         self.dicOfRects[acao] = self.manualList
         self.manualList = []
         self.holdState[acao] = hold
         
     def erasePositions(self, acao, indices):
-        """Erase a rectangle sprite of the self-generated rectangle list"""
+        """
+        Erase a rectangle sprite of the self-generated rectangle list
+        """
         indices.sort()
         indices.reverse()
         lista = self.dicOfRects[acao]
@@ -54,31 +59,37 @@ class SpriteAnimation:
         self.dicOfRects[acao] = lista
 
     def repeatPosition(self, acao, nvezes, indices):
-        """Repeat a rectangle sprite of the self-generated rectangle list"""
+        """
+        Repeat a rectangle sprite of the self-generated rectangle list
+        """
         indices.sort()
         lista = self.dicOfRects[acao]
-        #adiciona no final n vezes
+        #append at the end n times
         while nvezes != 0:
             for item in indices:
                 lista.append(lista[item])
             nvezes = nvezes -1
 
     def loadSprites(self, imagem):
-        """Load the image containing the sprites"""
+        """
+        Load the sprites image
+        """
         self.spriteSheet = (pygame.image.load(imagem).convert_alpha())
 
     def createAnimation(self, xo,yo,lx,ly,n, acao, hold=False, speed = 15):
-        """Create the self-generated list animation and give the animation a label"""
+        """
+        Create the self-generated list animation and give the animation a label
+        """
         self.animationSpeed[acao] = speed
         #Define Animations
         self.dicOfRects[acao] = self.rectList(xo,yo,lx,ly,n) 
         self.holdState[acao] = hold
 
     def update(self,screen):
-        """Run and update the animation"""
-        #import pdb; pdb.set_trace()
-        
-        #Nova animacao comeca no indice 0
+        """
+        Run and update the animation
+        """
+        #new animation starts at 0
         if self.acaoLocal != self.acao:
             self.ani_pos = 0
         self.acaoLocal = self.acao
@@ -87,21 +98,20 @@ class SpriteAnimation:
         self.ani_speed-=1
         if self.ani_speed == 0:
             self.ani_speed = self.animationSpeed[self.acao]
-            #Caso a animacao tenha atingido o ultimo indice e eh continua
+            #if animation has reached the last position and it is continues
             if self.ani_pos == self.ani_max and self.holdState[self.acao] == False:
                 self.ani_pos = 0
-            #Caso seja apertada a tecla novamente numa animacao desconitnua
+            #if its pressed the key and the animation its not continues
             elif self.ani_pos == self.ani_max and self.holdState[self.acao] == True and self.pressed==True:
                 self.ani_pos = 0
                 self.pressed = False
-            #Caso a animacao nao tenha atingido o ultimo indice e eh continua
+            #if the animation has reached the last position and its continues
             elif self.holdState[self.acao] == False:
                 self.ani_pos+=1
-            #Caso a animacao nao tenha atingido o ultimo indice e eh descontinua
+            #if the animation has reached the last position and isnt continues
             elif self.holdState[self.acao] == True and self.ani_pos < self.ani_max:
                 self.ani_pos+=1
                 self.pressed = False
-        #screen.blit(self.spriteSheet[0], (self.x,self.y), rectList[self.ani_pos])
         if self.facingRight == True:
             cropped = self.spriteSheet.subsurface(rectList[self.ani_pos]).copy()
             screen.blit(cropped, (self.x,self.y))
