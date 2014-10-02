@@ -3,8 +3,8 @@ import pygame, sys, glob
 from pygame import *
 
 class SpriteAnimation:
-    def __init__(self, acaoInicial, speed = 15):
-        self.acao = acaoInicial 
+    def __init__(self, initialAction, speed = 15):
+        self.action = initialAction 
         self.x = 200
         self.y = 0
         self.ani_speed = speed
@@ -13,9 +13,9 @@ class SpriteAnimation:
         self.animation = []
         self.dicOfRects = {}
         self.animationSpeed = {}
-        self.acaoLocal = ""
+        self.localAction = ""
         self.manualList = []
-        self.holdState = {} #Dicionario para registrar a continuidade ou descontinuidade da animacao
+        self.holdState = {} #Dictionarie to register continuity or discontinuaty of the animation
         self.pressed = False
         self.facingRight = True
 
@@ -38,32 +38,32 @@ class SpriteAnimation:
         """
         self.manualList.append(pygame.Rect(xo,yo,lx,ly))
     
-    def buildAnimation(self,acao,hold=False,speed =15):
+    def buildAnimation(self,action,hold=False,speed =15):
         """
         Build Animation from the inserted frames and give the animation a label
         """
-        self.animationSpeed[acao] = speed
-        self.dicOfRects[acao] = self.manualList
+        self.animationSpeed[action] = speed
+        self.dicOfRects[action] = self.manualList
         self.manualList = []
-        self.holdState[acao] = hold
+        self.holdState[action] = hold
         
-    def erasePositions(self, acao, indices):
+    def erasePositions(self, action, indices):
         """
         Erase a rectangle sprite of the self-generated rectangle list
         """
         indices.sort()
         indices.reverse()
-        lista = self.dicOfRects[acao]
+        lista = self.dicOfRects[action]
         for item in indices:
             lista.pop(item)
-        self.dicOfRects[acao] = lista
+        self.dicOfRects[action] = lista
 
-    def repeatPosition(self, acao, nvezes, indices):
+    def repeatPosition(self, action, nvezes, indices):
         """
         Repeat a rectangle sprite of the self-generated rectangle list
         """
         indices.sort()
-        lista = self.dicOfRects[acao]
+        lista = self.dicOfRects[action]
         #append at the end n times
         while nvezes != 0:
             for item in indices:
@@ -76,40 +76,40 @@ class SpriteAnimation:
         """
         self.spriteSheet = (pygame.image.load(imagem).convert_alpha())
 
-    def createAnimation(self, xo,yo,lx,ly,n, acao, hold=False, speed = 15):
+    def createAnimation(self, xo,yo,lx,ly,n, action, hold=False, speed = 15):
         """
         Create the self-generated list animation and give the animation a label
         """
-        self.animationSpeed[acao] = speed
+        self.animationSpeed[action] = speed
         #Define Animations
-        self.dicOfRects[acao] = self.rectList(xo,yo,lx,ly,n) 
-        self.holdState[acao] = hold
+        self.dicOfRects[action] = self.rectList(xo,yo,lx,ly,n) 
+        self.holdState[action] = hold
 
     def update(self,screen):
         """
         Run and update the animation
         """
         #new animation starts at 0
-        if self.acaoLocal != self.acao:
+        if self.localAction != self.action:
             self.ani_pos = 0
-        self.acaoLocal = self.acao
-        rectList = self.dicOfRects[self.acao]
+        self.localAction = self.action
+        rectList = self.dicOfRects[self.action]
         self.ani_max = len(rectList)-1
         self.ani_speed-=1
         if self.ani_speed == 0:
-            self.ani_speed = self.animationSpeed[self.acao]
+            self.ani_speed = self.animationSpeed[self.action]
             #if animation has reached the last position and it is continues
-            if self.ani_pos == self.ani_max and self.holdState[self.acao] == False:
+            if self.ani_pos == self.ani_max and self.holdState[self.action] == False:
                 self.ani_pos = 0
             #if its pressed the key and the animation its not continues
-            elif self.ani_pos == self.ani_max and self.holdState[self.acao] == True and self.pressed==True:
+            elif self.ani_pos == self.ani_max and self.holdState[self.action] == True and self.pressed==True:
                 self.ani_pos = 0
                 self.pressed = False
             #if the animation has reached the last position and its continues
-            elif self.holdState[self.acao] == False:
+            elif self.holdState[self.action] == False:
                 self.ani_pos+=1
             #if the animation has reached the last position and isnt continues
-            elif self.holdState[self.acao] == True and self.ani_pos < self.ani_max:
+            elif self.holdState[self.action] == True and self.ani_pos < self.ani_max:
                 self.ani_pos+=1
                 self.pressed = False
         if self.facingRight == True:

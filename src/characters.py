@@ -4,9 +4,9 @@ from pygame import *
 from spriteanimation import SpriteAnimation
 
 class Characters(SpriteAnimation):
-    def __init__(self, acaoInicial, speed = 15):
+    def __init__(self, initialAction, speed = 15):
         """Iniciation of the player states"""
-        SpriteAnimation.__init__(self,acaoInicial, speed = 15)
+        SpriteAnimation.__init__(self,initialAction, speed = 15)
         self.pos = 1
         self.pos2 = 1
         self.movex, self.movey = 0,0
@@ -91,7 +91,7 @@ class Characters(SpriteAnimation):
             #dispute
             self.insertFrame(498,1815,55,60)
             self.insertFrame(560,1815,55,60)
-            self.buildAnimation("disputa",hold=True, speed = 5)
+            self.buildAnimation("dispute",hold=True, speed = 5)
         if character == 'vegeta':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/vegeta/vegeta-2.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
@@ -143,7 +143,7 @@ class Characters(SpriteAnimation):
             #dispute
             self.insertFrame(333,2012,55,60)
             self.insertFrame(390,2012,55,60)
-            self.buildAnimation("disputa",hold=False, speed = 10)
+            self.buildAnimation("dispute",hold=False, speed = 10)
         if character == 'trunks':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/trunks/trunks3x4.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
@@ -166,7 +166,7 @@ class Characters(SpriteAnimation):
             self.buildAnimation("kameham",hold=True, speed = 5)
             self.insertFrame(272,1630,50,85)
             self.insertFrame(318,1630,50,85)
-            self.buildAnimation("disputa",hold=False, speed = 5)
+            self.buildAnimation("dispute",hold=False, speed = 5)
             self.insertFrame(239,2524,50,85)
             self.buildAnimation("hited",hold=True, speed = 5)
             self.insertFrame(814,2772,130,135)
@@ -232,7 +232,7 @@ class Characters(SpriteAnimation):
             self.buildAnimation("kameham",hold=False, speed = 5)
             self.insertFrame(443,2080,90,75)
             self.insertFrame(544,2080,80,85)
-            self.buildAnimation("disputa",hold=True, speed = 5)
+            self.buildAnimation("dispute",hold=True, speed = 5)
         if character == 'gohan':
             self.photo3x4 = pygame.image.load("../resources/imagens/player/gohan/gohan3x4.png")
             self.photo3x4Fliped  = pygame.transform.flip(self.photo3x4, 1,0)
@@ -274,7 +274,7 @@ class Characters(SpriteAnimation):
             self.buildAnimation("kameham",hold=False, speed = 5)
             self.insertFrame(216,1420,72,80)
             self.insertFrame(346,1420,72,80)
-            self.buildAnimation("disputa",hold=False, speed = 10)
+            self.buildAnimation("dispute",hold=False, speed = 10)
             self.insertFrame(460,1065,80,80)
             self.buildAnimation("lose",hold=False, speed = 10)
 
@@ -293,13 +293,13 @@ class Characters(SpriteAnimation):
         power.insertFrame(10,480,1200,50) 
         power.insertFrame(10,370,1200,50) 
         power.insertFrame(10,540,1200,50) 
-        power.buildAnimation("disputa",hold=False, speed = 10)
+        power.buildAnimation("dispute",hold=False, speed = 10)
         power.insertFrame(10,851,1200,50) 
         power.insertFrame(10,914,1200,50) 
-        power.buildAnimation("disputa2",hold=False, speed = 10)
+        power.buildAnimation("dispute2",hold=False, speed = 10)
         power.insertFrame(10,972,1200,50) 
         power.insertFrame(10,1037,1200,50) 
-        power.buildAnimation("disputa3",hold=False, speed = 10)
+        power.buildAnimation("dispute3",hold=False, speed = 10)
         power.insertFrame(10,600,1200,50) #void
         power.insertFrame(10,660,1200,50) #void
         power.buildAnimation("from-right",hold=True, speed = 10)
@@ -309,12 +309,12 @@ class Characters(SpriteAnimation):
         power.insertFrame(108,1486,40,40)
         power.insertFrame(72,1486,40,40)
         power.insertFrame(295,1486,40,40)
-        power.buildAnimation("faiscas",hold=False, speed = 10)
+        power.buildAnimation("spark",hold=False, speed = 10)
         power.insertFrame(506,2850,100,110)
         power.insertFrame(506,2850,100,110)
         power.insertFrame(358,2883,77,90)
         power.insertFrame(1300,1604,146,40) #void
-        power.buildAnimation("explosao",hold=False, speed = 20)
+        power.buildAnimation("explosion",hold=False, speed = 20)
         power.insertFrame(358,2434,98,90)
         power.insertFrame(449,2434,98,90)
         power.buildAnimation("ki",hold=False, speed = 20)

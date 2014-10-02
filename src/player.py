@@ -8,9 +8,11 @@ import random
 import datetime
 
 class Player(Characters):
-    def __init__(self, acaoInicial, playerId, speed = 15):
-        """Iniciation of the player states"""
-        Characters.__init__(self,acaoInicial, speed = 15)
+    def __init__(self, initialAction, playerId, speed = 15):
+        """
+        Iniciation of the player states
+        """
+        Characters.__init__(self,initialAction, speed = 15)
         self.pos = 1
         self.pos2 = 1
         self.movex, self.movey = 0,0
@@ -28,9 +30,9 @@ class Player(Characters):
         self.hitDefended = 0
         self.powerDamage = 0
         self.powerDamageDefended = 0
-        self.inicio = 0
-        self.cronometrar2 = True
-        self.cronometrarDisputa = False
+        self.initialTime = 0
+        self.timing2 = True
+        self.timingDispute = False
         self.punchDamage = 2
         self.kickDamage = 2
         self.hitDefended = 0.4
@@ -39,10 +41,9 @@ class Player(Characters):
         self.comboDamage = 10
         self.playerId = playerId
         self.loading = False
-        self.powerDisputa = True
         self.superPunchState = False
         self.superKickState = False
-        self.fatorSuper = 1.4
+        self.factorSuper = 1.4
         if self.playerId == 1:
             self.k_down = K_s
             self.k_up = K_w
@@ -67,20 +68,9 @@ class Player(Characters):
             self.k_leftArrow = K_LEFT
             self.k_combo = K_n
             self.k_teleport = K_KP6
-        #self.inicialTime
-        self.inicio1Pc = time.time()*1000
-        self.inicio2Pc = time.time()*1000
-        self.inicio3Pc = time.time()*1000
-        self.inicio4Pc = time.time()*1000
-        self.inicio5Pc = time.time()*1000
-        self.inicio6Pc = time.time()*1000
-        self.inicio7Pc = time.time()*1000
-        self.inicio8Pc = time.time()*1000
-        self.startTimer = time.time()*1000
-        self.inicioFaisca = time.time()*1000
-        self.inicioExplosao = time.time()*1000
-        self.inicioExplosao2 = time.time()*1000
-        self.inicio2 = 0
+        self.initialSpark = time.time()*1000
+        self.initialExplosion = time.time()*1000
+        self.initialTime2 = 0
         self.kamehamMs = 160
         self.punchMs = 90
         self.releasePower = True
@@ -88,20 +78,19 @@ class Player(Characters):
         self.kameCont = 22
         self.enemykameCont = 0
         self.staticy = 0
-        self.inicioKame = time.time()*1000
-        self.inicioPunch = time.time()*1000
-        self.inicioEffects = time.time()*1000
-        self.inicioEffects2 = time.time()*1000
+        self.initialKame = time.time()*1000
+        self.initialPunch = time.time()*1000
+        self.initialEffects = time.time()*1000
         self.isPC = False
         self.singleKameham = True
         self.disputeKamehamBoolean = True
 
     def superPunch(self, playerList):
         """
-        Activates the super punch
+        Activate the super punch
         """
         if self.superPunchState == True:
-            if time.time()*1000-self.inicioPunch <200:
+            if time.time()*1000-self.initialPunch <200:
                 for player in playerList:
                     if self.facingRight == True:
                         player.movex = 3
@@ -114,10 +103,10 @@ class Player(Characters):
 
     def superKick(self, playerList):
         """
-        Activates the super kick
+        Activate the super kick
         """
         if self.superKickState == True:
-            if time.time()*1000-self.inicioPunch <200:
+            if time.time()*1000-self.initialPunch <200:
                 for player in playerList:
                     player.movey = -3
             else:
@@ -129,7 +118,7 @@ class Player(Characters):
         """
         Punch action
         """
-        self.acao = "punch"
+        self.action = "punch"
         self.pressed = True
         self.Attacking = True
         self.Defending = False
@@ -139,31 +128,30 @@ class Player(Characters):
         if self.facingRight == False:
             selfAttackRect = Rect(self.x-20, self.y, 50, 70)
             #pygame.draw.rect(screen, (0,0,255), selfAttackRect)
-        self.inicioPunch = time.time()*1000
+        self.initialPunch = time.time()*1000
         for player in playerList:
             if selfAttackRect.colliderect(player.Rect) == True:
                 if player.Defending == False:
                     if self.XP <= self.XPMAX:
                         player.HP -= self.punchDamage
                     if self.XP == self.XPMAX:
-                        player.HP -= self.powerDamage*self.fatorSuper
+                        player.HP -= self.powerDamage*self.factorSuper
                         self.superPunchState = True
-                        #self.inicioEffects2 = time.time()*1000
-                    player.inicio = time.time()
-                    if abs(player.inicioPunch-self.inicioPunch)<400:
-                        self.inicioEffects = time.time()*1000
+                    player.initialTime = time.time()
+                    if abs(player.initialPunch-self.initialPunch)<400:
+                        self.initialEffects = time.time()*1000
                         #pass
                     else:
-                        player.acao = "hited"
+                        player.action = "hited"
                 if player.Defending == True and player.Attacking == False:
                     player.HP -= player.hitDefended
-        self.inicio = time.time()
+        self.initialTime = time.time()
 
     def kick(self, playerList):
         """
         Kick action
         """
-        self.acao = "kick"
+        self.action = "kick"
         self.pressed = True
         self.Attacking = True
         self.Defending = False
@@ -173,30 +161,29 @@ class Player(Characters):
         if self.facingRight == False:
             selfAttackRect = Rect(self.x-20, self.y, 35, 70)
             #pygame.draw.rect(screen, (255,0,0), selfAttackRect)
-        self.inicioPunch = time.time()*1000
+        self.initialPunch = time.time()*1000
         for player in playerList:
             if selfAttackRect.colliderect(player.Rect) == True:
                 if player.Defending == False:
                     if self.XP <= self.XPMAX:
                         player.HP -= self.kickDamage
                     if self.XP == self.XPMAX:
-                        player.HP -= self.powerDamage*self.fatorSuper
+                        player.HP -= self.powerDamage*self.factorSuper
                         self.superKickState = True
-                        #self.inicioEffects2 = time.time()*1000
-                    if abs(player.inicioPunch-self.inicioPunch)<400:
-                        self.inicioEffects = time.time()*1000
+                    if abs(player.initialPunch-self.initialPunch)<400:
+                        self.initialEffects = time.time()*1000
                     else:
-                        player.acao = "hited"
-                    player.inicio = time.time()
+                        player.action = "hited"
+                    player.initialTime = time.time()
                 if player.Defending == True and player.Attacking == False:
                     player.HP -= player.hitDefended
-        self.inicio = time.time()
+        self.initialTime = time.time()
 
     def combo(self, playerList, power1):
         """ 
         Attempt to implement combo
         """
-        self.acao = "combo"
+        self.action = "combo"
         #self.pressed = True
         self.pos = 1
         self.Attacking = True
@@ -211,8 +198,8 @@ class Player(Characters):
             if selfAttackRect.colliderect(player.Rect) == True:
                 if player.Defending == False:
                     player.HP -= self.comboDamage
-                    player.acao = "hited"
-                    player.inicio = time.time()
+                    player.action = "hited"
+                    player.initialTime = time.time()
                 if player.Defending == True and player.Attacking == False:
                     player.HP -= player.hitDefended
 
@@ -220,13 +207,13 @@ class Player(Characters):
         """
         Kameham power
         """
-        self.inicioKame = time.time()*1000
+        self.initialKame = time.time()*1000
         self.kameCont +=1
         if self.XP > 0:
             for player in playerList:
-                if abs(self.y - player.y) <50 and abs(player.inicioKame-self.inicioKame)<400:
+                if abs(self.y - player.y) <50 and abs(player.initialKame-self.initialKame)<400:
                     if self.disputeKamehamBoolean == True:
-                        self.cronometrarDisputa = True
+                        self.timingDispute = True
                         self.releasePower = True
                         self.voidPower = True
                         self.kameCont =0
@@ -234,8 +221,8 @@ class Player(Characters):
                             player.kameCont = 0
                         self.disputeKamehamBoolean = False
             if self.singleKameham == True:
-                self.acao = "kameham"
-                power1.acao = "kame"
+                self.action = "kameham"
+                power1.action = "kame"
                 self.pressed = True
                 power1.pressed = True
                 self.Attacking = True
@@ -250,32 +237,32 @@ class Player(Characters):
                     if selfAttackRect.colliderect(player.Rect) == True:
                         if player.Defending == False:
                             player.HP -= self.powerDamage
-                            player.acao = "hited"
-                            player.inicio = time.time()
+                            player.action = "hited"
+                            player.initialTime = time.time()
                         if player.Defending == True and player.Attacking == False:
                             player.HP -= player.powerDamageDefended
                 self.XP-=10
-                self.inicio = time.time()
+                self.initialTime = time.time()
 
     def load(self):
         """
-        Loads XP
+        Load XP
         """
-        self.acao = "load"
+        self.action = "load"
         self.pressed = True
-        self.inicio = time.time()
+        self.initialTime = time.time()
         if self.XP < self.XPMAX:
             self.XP+= 5 
     
     def teleport(self):
         """
-        Teleports to a random place
+        Teleport to a random place
         """
-        self.acao = "teleport"
+        self.action = "teleport"
         self.pressed = True
         self.x = random.randint(0,1170)
         self.y = random.randint(0,738)
-        self.inicio = time.time()
+        self.initialTime = time.time()
     
     def playPlayer(self,eventArg, playerList, power1):
         """
@@ -286,27 +273,27 @@ class Player(Characters):
             if event.type == KEYDOWN:
                 #Goku
                 if event.key == self.k_down:
-                    self.acao = "down"
+                    self.action = "down"
                     self.movey+=1
                 if event.key == self.k_up:
-                    self.acao = "up"
+                    self.action = "up"
                     self.movey-=1
                 if event.key == self.k_defend:
-                    self.acao = "defend"
+                    self.action = "defend"
                     self.Defending = True
                 if self.facingRight == True:
                     if event.key == self.k_rightArrow:
-                        self.acao = "right"
+                        self.action = "right"
                         self.movex+=1
                     if event.key == self.k_leftArrow:
-                        self.acao = "up"
+                        self.action = "up"
                         self.movex-=1
                 if self.facingRight == False:
                     if event.key == self.k_rightArrow:
-                        self.acao = "up"
+                        self.action = "up"
                         self.movex+=1
                     if event.key == self.k_leftArrow:
-                        self.acao = "right"
+                        self.action = "right"
                         self.movex-=1
                 if event.key == self.k_kameham:
                     self.kameham(playerList, power1)
@@ -322,33 +309,33 @@ class Player(Characters):
                     self.teleport()
             if event.type == KEYUP:
                 if event.key == self.k_down:
-                    self.acao = "down"
+                    self.action = "down"
                     self.movey=0
                 if event.key == self.k_up:
-                    self.acao = "up"
+                    self.action = "up"
                     self.movey=0
                 if event.key == self.k_defend:
-                    self.acao = "defend"
+                    self.action = "defend"
                     self.Defending = False
                 if event.key == self.k_punch:
                     self.Attacking = False
                 if self.facingRight  == True:
                     if event.key == self.k_rightArrow:
-                        self.acao = "right"
+                        self.action = "right"
                         self.movex=0
                     if event.key == self.k_leftArrow:
-                        self.acao = "up"
+                        self.action = "up"
                         self.movex=0
                 if self.facingRight  == False:
                     if event.key == self.k_leftArrow:
-                        self.acao = "right"
+                        self.action = "right"
                         self.movex=0
                     if event.key == self.k_rightArrow:
-                        self.acao = "up"
+                        self.action = "up"
                         self.movex=0
                 if event.key == self.k_kameham:
-                    self.acao = "kameham"
-                    power1.acao = "void"
+                    self.action = "kameham"
+                    power1.action = "void"
                     self.movex=0
             self.superPunch(playerList)
             self.superKick(playerList)
@@ -357,11 +344,11 @@ class Player(Characters):
         """
         Listener of the kameham dispute
         """
-        if self.cronometrarDisputa == True:
-            self.inicio2 = time.time()*1000
-            self.cronometrarDisputa = False
+        if self.timingDispute == True:
+            self.initialTime2 = time.time()*1000
+            self.timingDispute = False
             self.staticy = self.y
-        if time.time()*1000-self.inicio2 < 4000:
+        if time.time()*1000-self.initialTime2 < 4000:
             if self.facingRight == True:
                 localPower.x = self.x+52
                 localPower.y = self.y+10
@@ -370,29 +357,29 @@ class Player(Characters):
             if self.facingRight == False:
                 self.x = 1120 
                 self.y = self.staticy
-            self.acao = "disputa"
+            self.action = "dispute"
             self.pressed = True
             localPower.pressed = True
-            self.inicio = time.time()
+            self.initialTime = time.time()
             self.singleKameham = False
             powers2 = powers[:]
             for power in powers2:
-                power.acao = 'void'
+                power.action = 'void'
             for otherPlayer in playerList:
                 if self.facingRight == True:
                     if self.kameCont-otherPlayer.kameCont >0:
-                        localPower.acao = "disputa3"
+                        localPower.action = "dispute3"
                     if otherPlayer.kameCont-self.kameCont >0:
-                        localPower.acao = "disputa2"
+                        localPower.action = "dispute2"
                     if self.kameCont-otherPlayer.kameCont == 0:
-                        localPower.acao = "disputa"
+                        localPower.action = "dispute"
                 if self.facingRight == False:
                     if self.kameCont-otherPlayer.kameCont >0:
-                        localPower.acao = "disputa2"
+                        localPower.action = "dispute2"
                     if otherPlayer.kameCont-self.kameCont >0:
-                        localPower.acao = "disputa3"
+                        localPower.action = "dispute3"
                     if self.kameCont-otherPlayer.kameCont == 0:
-                        localPower.acao = "disputa"
+                        localPower.action = "dispute"
                 if self.facingRight == True:
                     otherPlayer.y = self.y+10
                     otherPlayer.x = self.x+1080
@@ -401,57 +388,57 @@ class Player(Characters):
                     otherPlayer.y = self.staticy
                     localPower.x = otherPlayer.x+42
                     localPower.y = otherPlayer.y+5
-                otherPlayer.acao = 'disputa'
-                otherPlayer.inicio = time.time()
+                otherPlayer.action = 'dispute'
+                otherPlayer.initialTime = time.time()
                 otherPlayer.singleKameham = False
-        if time.time()*1000 -self.inicio2 > 4000 and self.releasePower == True:
+        if time.time()*1000 -self.initialTime2 > 4000 and self.releasePower == True:
             for otherPlayer in playerList:
                 self.releasePower = False
                 self.enemykameCont = otherPlayer.kameCont
                 if self.kameCont > otherPlayer.kameCont:
                     otherPlayer.HP -= 50
                     if self.facingRight == True:
-                        localPower.acao = 'from-right'
+                        localPower.action = 'from-right'
                     if self.facingRight == False:
-                        localPower.acao = 'from-left'
+                        localPower.action = 'from-left'
                 if self.kameCont < otherPlayer.kameCont:
                     if self.facingRight == True:
-                        localPower.acao = 'from-left'
+                        localPower.action = 'from-left'
                     if self.facingRight == False:
-                        localPower.acao = 'from-right'
+                        localPower.action = 'from-right'
                 if self.kameCont == otherPlayer.kameCont:
-                    localPower.acao = "void"
+                    localPower.action = "void"
             if self.kameCont < self.enemykameCont:
                 self.HP -= 50
-        if time.time()*1000 -self.inicio2 > 4500 and self.voidPower == True:
+        if time.time()*1000 -self.initialTime2 > 4500 and self.voidPower == True:
             self.voidPower = False
-            localPower.acao = "void"
+            localPower.action = "void"
             self.singleKameham = True
             for otherPlayer in playerList:
                 otherPlayer.singleKameham = True
-        if time.time()*1000 -self.inicio2 > 5000:
+        if time.time()*1000 -self.initialTime2 > 5000:
             self.disputeKamehamBoolean = True
 
     def playEffects(self, effects):
         """
         Animation effects of the fight
         """
-        if abs(time.time()*1000-self.inicioEffects) < 200:
-            if random.random()>0.5 and abs(time.time()*1000-self.inicioFaisca)>1500:
-                effects.acao = "faiscas"
-                if abs(time.time()*1000 - self.inicioFaisca) > 2500:
-                    effects.acao = "void"
-                    self.inicioFaisca = time.time()*1000
-            if random.random()<0.5 and abs(time.time()*1000-self.inicioExplosao)>3500:
-                effects.acao = "explosao"
-                if abs(time.time()*1000 - self.inicioExplosao) > 3700:
-                    effects.acao = "void"
-                    self.inicioExplosao = time.time()*1000
+        if abs(time.time()*1000-self.initialEffects) < 200:
+            if random.random()>0.5 and abs(time.time()*1000-self.initialSpark)>1500:
+                effects.action = "spark"
+                if abs(time.time()*1000 - self.initialSpark) > 2500:
+                    effects.action = "void"
+                    self.initialSpark = time.time()*1000
+            if random.random()<0.5 and abs(time.time()*1000-self.initialExplosion)>3500:
+                effects.action = "explosion"
+                if abs(time.time()*1000 - self.initialExplosion) > 3700:
+                    effects.action = "void"
+                    self.initialExplosion = time.time()*1000
         else:
-            effects.acao = "void"
+            effects.action = "void"
 
         if self.XP == self.XPMAX:
-            effects.acao = "ki"
+            effects.action = "ki"
             if self.facingRight == True:
                 effects.x = self.x-22
                 effects.y = self.y-20
@@ -459,17 +446,17 @@ class Player(Characters):
                 effects.x = self.x-30
                 effects.y = self.y-20
         if self.facingRight == True:
-            if effects.acao == "faiscas":
+            if effects.action == "spark":
                 effects.x = self.x+20
                 effects.y = self.y+15
-            if effects.acao == "explosao":
+            if effects.action == "explosion":
                 effects.x = self.x
                 effects.y = self.y-20
         else:
-            if effects.acao == "faiscas":
+            if effects.action == "spark":
                 effects.x = self.x-5
                 effects.y = self.y+15
-            if effects.acao == "explosao":
+            if effects.action == "explosion":
                 effects.x = self.x-25
                 effects.y = self.y-25
 
@@ -517,11 +504,11 @@ class Player(Characters):
         """
         Physical Rectangle of player1
         """
-        if self.acao != "right":
+        if self.action != "right":
             self.Rect = Rect(self.x, self.y, 35, 70)
-        elif self.acao == "right" and self.facingRight == True:
+        elif self.action == "right" and self.facingRight == True:
             self.Rect = Rect(self.x+30, self.y, 35, 70)
-        elif self.acao == "right" and self.facingRight == False:
+        elif self.action == "right" and self.facingRight == False:
             self.Rect = Rect(self.x, self.y, 35, 70)
 
     def statusBar(self,screen,width):
@@ -532,18 +519,10 @@ class Player(Characters):
             playerHPRect = Rect(80 , 20, self.HP, 20)
             playerXPRect = Rect(80 , 60, self.XP*2, 20)
             screen.blit(self.photo3x4, (0,20))
-        if self.playerId == 4:
-            playerHPRect = Rect(80 , 100, self.HP, 20)
-            playerXPRect = Rect(80 , 140, self.XP*2, 20)
-            screen.blit(self.photo3x4, (0,100))
         if self.playerId == 2 or self.playerId ==0:
             playerHPRect = Rect(width-80, 20, -self.HP, 20)
             playerXPRect = Rect(width-80, 60, -self.XP*2, 20)
             screen.blit(self.photo3x4Fliped, (width-70,20))
-        if self.playerId == 3:
-            playerHPRect = Rect(width-80, 100, -self.HP, 20)
-            playerXPRect = Rect(width-80, 140, -self.XP*2, 20)
-            screen.blit(self.photo3x4Fliped, (width-70,100))
         if self.HP >=0:
             pygame.draw.rect(screen, (255,0,0), playerHPRect)
         pygame.draw.rect(screen, (0,0,255), playerXPRect)
@@ -555,41 +534,23 @@ class Player(Characters):
         Standard stand up position of player
         """
         if self.movex or self.movey !=0:
-            self.inicio = time.time()
+            self.initialTime = time.time()
         if self.Defending== True:
-            self.inicio = time.time()
-        if time.time()-self.inicio>0.4 and self.HP>0:
-            self.acao = "down"
-            self.inicio = time.time()+1000
+            self.initialTime = time.time()
+        if time.time()-self.initialTime>0.4 and self.HP>0:
+            self.action = "down"
+            self.initialTime = time.time()+1000
 
-    def teamDefeated(self,screen,otherPlayer,teamList):
-        """
-        Show the win picture of the otherPlayer
-        """
-        mortos = 0
-        totalOfPlayer=len(teamList)
-        for player in teamList:
-            if player.HP <= 0:
-                mortos+=1
-                
-        if mortos == totalOfPlayer:
-            #import pdb; pdb.set_trace()
-            self.acao = "lose"
-            if self.cronometrar2 == True:
-                self.inicioDead = time.time()
-                self.cronometrar2 = False
-            if time.time()-self.inicioDead>1:
-                screen.blit(otherPlayer.Win, (300,200))
-    
     def defeated(self,screen,otherPlayer):
         """
         Show the win picture of player1
         """
         if self.HP <= 0:
             #import pdb; pdb.set_trace()
-            self.acao = "lose"
-            if self.cronometrar2 == True:
-                self.inicioDead = time.time()
-                self.cronometrar2 = False
-            if time.time()-self.inicioDead>1:
+            self.action = "lose"
+            if self.timing2 == True:
+                self.initialDead = time.time()
+                self.timing2 = False
+            if time.time()-self.initialDead>1:
                 screen.blit(otherPlayer.Win, (300,200))
+

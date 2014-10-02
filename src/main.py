@@ -66,16 +66,16 @@ yp2d = yp2
 contador = 0
 playedOnce = False
 characters = ['goku','vegeta','gohan','trunks','frieza']
-player1 = Player(acaoInicial="down",playerId=1)
-player2 = Player(acaoInicial="down",playerId=2)
-playerPC = NPC(acaoInicial="down",playerId=0)
-power1 = SpriteAnimation(acaoInicial="void")
-power2 = SpriteAnimation(acaoInicial="void")
-power3 = SpriteAnimation(acaoInicial="void")
-powerDispute = SpriteAnimation(acaoInicial="void")
-powerDispute2 = SpriteAnimation(acaoInicial="void")
-effects = SpriteAnimation(acaoInicial="void")
-effects2 = SpriteAnimation(acaoInicial="void")
+player1 = Player(initialAction="down",playerId=1)
+player2 = Player(initialAction="down",playerId=2)
+playerPC = NPC(initialAction="down",playerId=0)
+power1 = SpriteAnimation(initialAction="void")
+power2 = SpriteAnimation(initialAction="void")
+power3 = SpriteAnimation(initialAction="void")
+powerDispute = SpriteAnimation(initialAction="void")
+powerDispute2 = SpriteAnimation(initialAction="void")
+effects = SpriteAnimation(initialAction="void")
+effects2 = SpriteAnimation(initialAction="void")
 player1.loadPower(power1)
 player1.loadPower(powerDispute)
 player2.loadPower(powerDispute2)
@@ -90,7 +90,7 @@ humanPlayers = [player1,player2]
 player2.powerDisputa = True
 playerPC.isPC = True
 powers = [power1,power2,power3]
-delta = 13 #Velocidade do movimento, quanto maior mais rapido
+delta = 13 #speed of the game
 player2.facingRight = False
 player2.x = 850
 player2.y = 350
@@ -104,8 +104,8 @@ def restart():
     """
     global vsPC
     if vsPC == True:
-        playerPC.acao = "down"
-        player1.acao = "down"
+        playerPC.action = "down"
+        player1.action = "down"
         player1.pos = 1
         playerPC.pos = 1
         player1.movex, player1.movey = 0,0
@@ -125,8 +125,8 @@ def restart():
         playerPC.inicio1Pc = time.time()
         player1.cronometrarDisputa = False
     else:
-        player2.acao = "down"
-        player1.acao = "down"
+        player2.action = "down"
+        player1.action = "down"
         player1.pos = 1
         player2.pos = 1
         player1.movex, player1.movey = 0,0
@@ -819,7 +819,7 @@ def playLoop():
         player1.defeated(screen,playerPC)
         player1.update(screen)
         player1.kamehamDispute(powerDispute,PCPlayers,powers)
-        playerPC.lockInsideScreenPC(width, height, delta, player1)
+        playerPC.lockInsideScreen(width, height, delta, player1)
         playerPC.physicalRect()
         playerPC.powerPlacing(power3)
         playerPC.statusBar(screen,width)
