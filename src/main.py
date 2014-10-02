@@ -2,6 +2,7 @@
 import pygame, sys, glob
 from pygame import *
 from spriteanimation import SpriteAnimation
+from npc import NPC
 from player import Player
 import time
 import ntpath
@@ -67,7 +68,7 @@ playedOnce = False
 characters = ['goku','vegeta','gohan','trunks','frieza']
 player1 = Player(acaoInicial="down",playerId=1)
 player2 = Player(acaoInicial="down",playerId=2)
-playerPC = Player(acaoInicial="down",playerId=0)
+playerPC = NPC(acaoInicial="down",playerId=0)
 power1 = SpriteAnimation(acaoInicial="void")
 power2 = SpriteAnimation(acaoInicial="void")
 power3 = SpriteAnimation(acaoInicial="void")
