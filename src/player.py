@@ -266,7 +266,7 @@ class Player(Characters):
     
     def playPlayer(self,eventArg, playerList, power1):
         """
-        Play movements and skills
+        Play player actions 
         """
         if self.HP>0:
             event = eventArg
@@ -462,7 +462,7 @@ class Player(Characters):
 
     def TurnAround(self,otherPlayer):
         """
-        Turn around automatically for player1 and player2
+        Turn around automatically
         """
         if self.x > otherPlayer.x:
             self.facingRight = False
@@ -491,7 +491,7 @@ class Player(Characters):
 
     def powerPlacing(self,power,dx1=45,dy1=25,dx2=930,dy2=20):
         """
-        Adjusting the power position of player1
+        Adjusting the power position of the player
         """
         if (self.facingRight == True):
             power.x = self.x+dx1
@@ -502,7 +502,7 @@ class Player(Characters):
 
     def physicalRect(self):
         """
-        Physical Rectangle of player1
+        Physical Rectangle of player
         """
         if self.action != "right":
             self.Rect = Rect(self.x, self.y, 35, 70)
@@ -531,7 +531,7 @@ class Player(Characters):
 
     def standUpPosition(self):
         """
-        Standard stand up position of player
+        Standard stand up position of the player
         """
         if self.movex or self.movey !=0:
             self.initialTime = time.time()
@@ -543,7 +543,7 @@ class Player(Characters):
 
     def defeated(self,screen,otherPlayer):
         """
-        Show the win picture of player1
+        Show the win picture of the player
         """
         if self.HP <= 0:
             #import pdb; pdb.set_trace()
