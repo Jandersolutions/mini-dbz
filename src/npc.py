@@ -48,6 +48,7 @@ class NPC(Characters):
         self.initialTime4 = time.time()*1000
         self.initialTime5 = time.time()*1000
         self.initialTime6 = time.time()*1000
+        self.initialTime7 = time.time()*1000
         self.initialSpark = time.time()*1000
         self.initialExplosion = time.time()*1000
         self.kamehamMs = 160
@@ -220,7 +221,7 @@ class NPC(Characters):
         """
         Teleport to a randon place
         """
-        if self.teleportBoolean == True:
+        if self.teleportBoolean == True and time.time()*1000-self.initialTime7>1100:
             if self.x > width-50 and abs(self.x-enemyPlayer.x)<60 or self.x<-5 and abs(self.x-enemyPlayer.x)<60:
                 self.action = "teleport"
                 self.pressed = True
@@ -233,6 +234,7 @@ class NPC(Characters):
                 self.x = random.randint(0,1170)
                 self.y = random.randint(0,738)
                 self.initialTime = time.time()
+            self.initialTime7 = time.time()*1000
 
     def kameham(self,enemyPlayer,power2):
         """
